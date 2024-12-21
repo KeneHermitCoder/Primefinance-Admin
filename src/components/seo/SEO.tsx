@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { toCapitalized } from "../../utils";
-import img from "../../assets/icons/logo.svg";
+import img from "../../assets/icons/logo.png";
 
 interface ISEO {
   url?: string;

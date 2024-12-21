@@ -1,4 +1,4 @@
-import yoris from "../assets/favicon.svg";
+import logoPNG from "../assets/icons/logo.png";
 import notification from "../assets/notification.svg";
 import profile from "../assets/profileImage.png";
 import Apple from "../assets/logo.png";
@@ -31,7 +31,6 @@ import inquiry from "../assets/inquiry-icon.svg";
 import earnings from "../assets/earnings-icon.svg";
 import greenArrowUp from "../assets/green-arrow-up.svg";
 import undo from "../assets/undo.svg";
-import yorisLogo from "../assets/yoris-logo.svg";
 import location from "../assets/location-icon.svg";
 import redArrowDown from "../assets/red-arrow-down.svg";
 import wifi from "../assets/wifi-icon.svg";
@@ -44,7 +43,6 @@ import room from "../assets/room-image.png";
 import profileRound from "../assets/profile-icon-individual.svg";
 import arrowDownDark from "../assets/arrow-down-dark.svg";
 import add from "../assets/add.svg";
-import cameraYoris from '../assets/camera.svg'
 import map from "../assets/map.png";
 import time from "../assets/time.svg";
 import documentUploadIcon from "../assets/upload-document.svg"
@@ -58,11 +56,9 @@ import ticketIcon from "../assets/ticket-icon.svg";
 import profileCamera from "../assets/profile-camera.svg";
 import close from "../assets/close-line.svg";
 import check from "../assets/check-line.svg";
-import yoris_ from "../assets/Yoris_Icon.svg";
 
 export default {
-	yoris,
-	yoris_,
+	logoPNG,
 	notification,
 	profile,
 	Apple,
@@ -94,7 +90,6 @@ export default {
 	earnings,
 	greenArrowUp,
 	undo,
-	yorisLogo,
 	location,
 	redArrowDown,
 	wifi,
@@ -120,6 +115,5 @@ export default {
 	profileImage,
 	ticketIcon,
 	profileCamera,
-	cameraYoris,
 	documentUploadIcon
 };

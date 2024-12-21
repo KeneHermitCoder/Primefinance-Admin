@@ -7,7 +7,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import "./index.css";
 import store from "./store";
-import { Login, Layout } from "./routes";
+import { Login, Layout, Register } from "./routes";
 import { ToastContainer } from "react-toastify";
 import ProtectedRoute from "./routes/protectedRoute";
 import { ResponsiveProvider } from "./context/responsiveContext";
@@ -16,6 +16,11 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
     errorElement: <ErrorPage />,
   },
   {
