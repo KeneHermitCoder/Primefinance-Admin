@@ -1,16 +1,28 @@
-import React from "react";
-import { ErrorPage } from "./components";
-import { Provider } from "react-redux";
-import "react-toastify/dist/ReactToastify.css";
-import { registerLicense } from "@syncfusion/ej2-base";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
 import "./index.css";
+import "react-toastify/dist/ReactToastify.css";
+
+import React from "react";
 import store from "./store";
-import { Login, Layout, Register, Dashboard, LoansHome, } from "./routes";
+import { Provider } from "react-redux";
+import { ErrorPage } from "./components";
 import { ToastContainer } from "react-toastify";
 import ProtectedRoute from "./routes/protectedRoute";
 import { ResponsiveProvider } from "./context/responsiveContext";
+import { createBrowserRouter, RouterProvider, } from "react-router-dom";
+import {
+  Bills,
+  Login,
+  Users,
+  Layout,
+  Escrow,
+  Logout,
+  Settings,
+  Register,
+  Dashboard,
+  LoansHome,
+  Transactions,
+  Notifications,
+} from "./routes";
 
 const router = createBrowserRouter([
   {
@@ -31,23 +43,51 @@ const router = createBrowserRouter([
         element: <Layout home />,
         errorElement: <ErrorPage />,
         children: [
-          /**
-           * dashboard-related routes
-           */
           {
             path: "/",
             element: <Dashboard />,
             errorElement: <ErrorPage />,
           },
-
-          /**
-           * loans-related routes
-           */
           {
             path: "/loans",
             element: <LoansHome />,
             errorElement: <ErrorPage />,
-          }
+          },
+          {
+            path: "/transactions",
+            element: <Transactions />,
+            errorElement: <ErrorPage />,
+          },
+          {
+            path: "/escrow",
+            element: <Escrow />,
+            errorElement: <ErrorPage />,
+          },
+          {
+            path: "/bills",
+            element: <Bills />,
+            errorElement: <ErrorPage />,
+          },
+          {
+            path: "/users",
+            element: <Users />,
+            errorElement: <ErrorPage />,
+          },
+          {
+            path: "/notifications",
+            element: <Notifications />,
+            errorElement: <ErrorPage />,
+          },
+          {
+            path: "/settings",
+            element: <Settings />,
+            errorElement: <ErrorPage />,
+          },
+          {
+            path: "/logout",
+            element: <Logout />,
+            errorElement: <ErrorPage />,
+          },
         ],
       },
     ],

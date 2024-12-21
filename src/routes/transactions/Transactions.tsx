@@ -1,12 +1,12 @@
 import { Stack } from "@mui/material";
 import { Reveal, } from "../../components";
 
-export function Logout() {
+export default function Transactions() {
   return (
     <>
       <Reveal>
         <Stack direction="column" spacing={3} paddingX={1} paddingY={1}>
-          <div>Logout goes in here...</div>
+          <div>Transactions goes in here...</div>
         </Stack>
       </Reveal>
     </>

@@ -1,6 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+const initialState: {
+  mainTab: string;
+  subTab: string;
+  tabs: {
+    id: string;
+    name: string;
+    bool: boolean;
+    children: {
+      id: string;
+      name: string;
+      bool: boolean;
+    }[];
+  }[];
+} = {
   mainTab: "Dashboard",
   subTab: "",
   tabs: [
@@ -12,7 +25,7 @@ const initialState = {
     },
     {
       id: "loans",
-      name: "Loan",
+      name: "Loans Management",
       bool: false,
       children: [
         // {
@@ -24,31 +37,31 @@ const initialState = {
     },
     {
       id: "transactions",
-      name: "Transactions",
+      name: "Transactions Management",
       bool: false,
       children: [],
     },
     {
       id: "escrow",
-      name: "Escrow",
+      name: "Escrow Management",
       bool: false,
       children: [],
     },
     {
       id: "bills",
-      name: "Bills",
+      name: "Bills Management",
       bool: false,
       children: [],
     },
     {
       id: "users",
-      name: "User",
+      name: "Users Management",
       bool: false,
       children: [],
     },
     {
       id: "notifications",
-      name: "Notifications",
+      name: "Notifications Management",
       bool: false,
       children: [],
     },
@@ -79,8 +92,8 @@ const navigationsSlice = createSlice({
     tabSwitch(state, action) {
       const tabId = action.payload;
           state.tabs.forEach((tab) => {
-          // @ts-ignore
-        tab.id === tabId ? (tab.bool = true) : (tab.bool = false);
+        // tab.id === tabId ? (tab.bool = true) : (tab.bool = false);
+        tab.bool = tab.id === tabId ? true : false;
         tab.children.forEach((childTab) => (childTab.bool = false));
       });
     },
