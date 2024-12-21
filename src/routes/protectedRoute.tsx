@@ -9,7 +9,7 @@ const ProtectedRoute = () => {
   // const { refreshToken } = useTokenRefresh();
   // Check for valid accessToken on App load and trigger token refresh if necessary
   // const accessToken = useAccessToken('get');
-  const accessToken = false;
+  const accessToken = true;
 
   return (
     //if refreshToken operation is successful

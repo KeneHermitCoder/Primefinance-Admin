@@ -2,9 +2,9 @@ import styled from "styled-components";
 import { lighten } from 'polished';
 
 export const Header = styled.div`
-  background: hsla(30, 7%, 6%, 0.9);
+  /* background: hsla(30, 7%, 6%, 0.9); */
+  background: #ffffff;
   backdrop-filter: blur(10px);
-  /* background: #100f0e; */
   display: flex;
   align-items: center;
   padding: 0 ${(props) => `${props.ww(4)}rem`};
@@ -106,8 +106,8 @@ export const StatsCardContainer = styled.div`
 export const StatsCard = styled.div`
     background: #100f0e;
     border-radius: 8px;
-    height: ${({ww, h}) => `${ww(h?? 150)}px`};
-    width: ${({ww, w}) => `${ww(w?? 232)}px`};
+    height: ${({ ww, h }) => `${ww(h ?? 150)}px`};
+    width: ${({ ww, w }) => `${ww(w ?? 232)}px`};
     padding: ${(props) => `${props.ww(12)}px`};
     display: flex;
     flex-direction: column;
@@ -169,13 +169,13 @@ export const TransactionUnit = styled.div`
     display: grid;
     color: #8993A8;
     gap: ${(props) => props.ww(6)}px;
-    padding-top: ${(props) => props.head? `${props.ww(10)}px`: `${props.ww(6)}px`};
-    padding-bottom: ${(props) => props.head? `${props.ww(10)}px`: `${props.ww(6)}px`};
+    padding-top: ${(props) => props.head ? `${props.ww(10)}px` : `${props.ww(6)}px`};
+    padding-bottom: ${(props) => props.head ? `${props.ww(10)}px` : `${props.ww(6)}px`};
     grid-template-columns: repeat(${(props) => props.children.length}, 1fr);
     // grid-template-columns: repeat(${(props) => props.children.length}, minmax(${(props) => props.ww(100)}px, ${(props) => props.ww(180)}px));
-    border-bottom: ${(props) => props.head? '1.5px solid #262A32': ''};
-    margin-bottom: ${(props) => props.head? `${props.ww(16)}px`: ''};
-    font-size: ${(props) => props.head? `${props.ww(16)}px`: `${props.ww(14)}px`};
+    border-bottom: ${(props) => props.head ? '1.5px solid #262A32' : ''};
+    margin-bottom: ${(props) => props.head ? `${props.ww(16)}px` : ''};
+    font-size: ${(props) => props.head ? `${props.ww(16)}px` : `${props.ww(14)}px`};
     justify-content: center;
     align-items: center;
     width: 100%;
@@ -206,21 +206,21 @@ export const TransactionUnitValue = styled.div`
 // Other Components
 export const FlexCard = styled.div` 
     display: flex;
-    flex-wrap: ${({wrap}) => wrap?? ''};
-    overflow: ${({overflow}) => overflow?? ''};
-    overflow-x: ${({overflowX}) => overflowX?? ''};
-    overflow-y: ${({overflowY}) => overflowY?? ''};
-    border: ${({border, ww}) => border? `${ww(2)}px solid ${border}`: ''};
-    border-style: ${({borderStyle, ww}) => borderStyle?? ''};
-    border-radius: ${({radius, ww}) => radius? `${ww(Number(radius))}px`: '8px'};
-    width: ${({ ww, w}) => typeof w === 'number'? `${ww(w)}px`: w};
-    height: ${({ ww, h}) => typeof h === 'number'? `${ww(h)}px`: h};
+    flex-wrap: ${({ wrap }) => wrap ?? ''};
+    overflow: ${({ overflow }) => overflow ?? ''};
+    overflow-x: ${({ overflowX }) => overflowX ?? ''};
+    overflow-y: ${({ overflowY }) => overflowY ?? ''};
+    border: ${({ border, ww }) => border ? `${ww(2)}px solid ${border}` : ''};
+    border-style: ${({ borderStyle, ww }) => borderStyle ?? ''};
+    border-radius: ${({ radius, ww }) => radius ? `${ww(Number(radius))}px` : '8px'};
+    width: ${({ ww, w }) => typeof w === 'number' ? `${ww(w)}px` : w};
+    height: ${({ ww, h }) => typeof h === 'number' ? `${ww(h)}px` : h};
     background: ${(props) => props.bg};
     flex-direction: ${(props) => props.direction};
     justify-content: ${(props) => props.justify};
     align-items: ${(props) => props.align};
     gap: ${(props) => props.ww(props.gap)}px;
-    padding: ${(props) => props.ww(props.p? props.p: 20)}px;
+    padding: ${(props) => props.ww(props.p ? props.p : 20)}px;
     padding-top: ${(props) => props.ww(Number(props.pt))}px;
     padding-right: ${(props) => props.ww(Number(props.pr))}px;
     padding-bottom: ${(props) => props.ww(props.pb)}px;
@@ -229,10 +229,10 @@ export const FlexCard = styled.div`
     margin-right: ${(props) => props.ww(props.mr)}px;
     margin-bottom: ${(props) => props.ww(props.mb)}px;
     margin-left: ${(props) => props.ww(props.ml)}px;
-    cursor: ${({mouse}) => mouse?? 'default'};
+    cursor: ${({ mouse }) => mouse ?? 'default'};
     &:hover {
-        background: ${(props) => props.hasOwnProperty('lightenOnHover')? lighten(0.09991, props.bg?? ''): ''};
-        color: ${(props) => props.hasOwnProperty('colourOnHover')? props.colourOnHover: 'default' };
+        background: ${(props) => props.hasOwnProperty('lightenOnHover') ? lighten(0.09991, props.bg ?? '') : ''};
+        color: ${(props) => props.hasOwnProperty('colourOnHover') ? props.colourOnHover : 'default'};
     };
     &::-webkit-scrollbar {
       display: none;
@@ -241,43 +241,43 @@ export const FlexCard = styled.div`
 
 export const GridBox = styled.div`
     display: grid;
-    grid-cols: ${({cols}) => cols}
+    grid-cols: ${({ cols }) => cols}
 `;
 
 export const StyledSpan = styled.span`
     display: flex;
     height: '100%'; 
     width: ${(props) => props.w};
-    color: ${({color}) => color?? 'inherit'};
-    background: ${({bg}) => bg?? 'inherit'};
-    text-transform: ${({textTransform}) => textTransform?? 'capitalize'};
+    color: ${({ color }) => color ?? 'inherit'};
+    background: ${({ bg }) => bg ?? 'inherit'};
+    text-transform: ${({ textTransform }) => textTransform ?? 'capitalize'};
     font-size: ${(props) => props.ww(props.fontSize)}px;
-    font-weight: ${({fontWeight}) => fontWeight? fontWeight: 300};
-    padding: ${(props) => props.ww(props.p? props.p: 0)}px;
+    font-weight: ${({ fontWeight }) => fontWeight ? fontWeight : 300};
+    padding: ${(props) => props.ww(props.p ? props.p : 0)}px;
     padding-right: ${(props) => props.ww(props.pr)}px;
     padding-left: ${(props) => props.ww(props.pl)}px;
     padding-top: ${(props) => props.ww(props.pt)}px;
     padding-bottom: ${(props) => props.ww(props.pb)}px;
-    border-right: ${({ww, br}) => br? `${ww(1.5)}px solid #262A32`: ''};
-    border-radius: ${({ww, radius}) => `${ww(radius?? 5)}px`}
+    border-right: ${({ ww, br }) => br ? `${ww(1.5)}px solid #262A32` : ''};
+    border-radius: ${({ ww, radius }) => `${ww(radius ?? 5)}px`}
 `;
 
 export const PositioningBox = styled.div`
-    position: ${ ({position}) => position };
-    top: ${ ({top}) => top }%;
-    right: ${ ({right}) => right }%;
-    bottom: ${ ({bottom}) => bottom }%;
-    left: ${({left}) => left}%;
-    z-index: ${({zIndex}) => zIndex };
-    width: ${({w}) => w?? 'auto'};
-    height: ${({h}) => h?? 'auto'};
+    position: ${({ position }) => position};
+    top: ${({ top }) => top}%;
+    right: ${({ right }) => right}%;
+    bottom: ${({ bottom }) => bottom}%;
+    left: ${({ left }) => left}%;
+    z-index: ${({ zIndex }) => zIndex};
+    width: ${({ w }) => w ?? 'auto'};
+    height: ${({ h }) => h ?? 'auto'};
     display: flex;
-    padding: ${({ww,p}) => ww(p? p: 0)}px;
-    padding-top: ${({ ww,pt }) => ww(pt)}px;
-    padding-right: ${({ ww,pr }) => ww(pr)}px;
-    padding-bottom: ${({ ww,pb }) => ww(pb)}px;
-    padding-left: ${({ ww,pl }) => ww(pl)}px;
-    flex-direction: ${ ({direction}) => direction };
+    padding: ${({ ww, p }) => ww(p ? p : 0)}px;
+    padding-top: ${({ ww, pt }) => ww(pt)}px;
+    padding-right: ${({ ww, pr }) => ww(pr)}px;
+    padding-bottom: ${({ ww, pb }) => ww(pb)}px;
+    padding-left: ${({ ww, pl }) => ww(pl)}px;
+    flex-direction: ${({ direction }) => direction};
 `;
 
 export const BasicTab = styled.div`
@@ -297,8 +297,8 @@ export const BasicTab = styled.div`
 `;
 
 export const CategoryTab = styled.div`
-    min-width: ${(props) => props.ww(props.w?? '')}px;
-    width: ${(props) => typeof props.w === 'number'? `${props.ww(props.w)}px`: props.w === 'full'? '100%': props.w};
+    min-width: ${(props) => props.ww(props.w ?? '')}px;
+    width: ${(props) => typeof props.w === 'number' ? `${props.ww(props.w)}px` : props.w === 'full' ? '100%' : props.w};
     margin-left: ${props => props.ml};
     &.active {
         background-color: #100f0e;
@@ -333,22 +333,22 @@ export const CategoryTab = styled.div`
 `;
 
 export const CategoryTabInner = styled.div`
-    min-width: ${(props) => props.ww(props.w?? '')}px;
+    min-width: ${(props) => props.ww(props.w ?? '')}px;
     height: 100%;
     font-weight: 400;
     display: flex;
     color: #5e687d;
     align-items: center;
     white-space: nowrap;
-    justify-content: ${({justify}) => justify};
-    gap: ${({ww, gap}) => ww(gap?? 6)}px;
-    font-size: ${({ww, fontSize}) => ww(fontSize? Number(fontSize): 18)}px;
-    padding: ${({ww, p}) => ww(p?? 10)}px;
-    padding-left: ${({ww, pl}) => ww(pl?? 16)}px;
-    padding-right: ${({ww, pr}) => ww(pr?? 16)}px;
-    background-color: ${({bg}) => bg?? '#100f0e'};
-    border-radius: ${({ww, radius}) => ww(radius?? '')}px;
-    cursor: ${(props) => props.hasOwnProperty('clickable')? 'pointer': 'default'};
+    justify-content: ${({ justify }) => justify};
+    gap: ${({ ww, gap }) => ww(gap ?? 6)}px;
+    font-size: ${({ ww, fontSize }) => ww(fontSize ? Number(fontSize) : 18)}px;
+    padding: ${({ ww, p }) => ww(p ?? 10)}px;
+    padding-left: ${({ ww, pl }) => ww(pl ?? 16)}px;
+    padding-right: ${({ ww, pr }) => ww(pr ?? 16)}px;
+    background-color: ${({ bg }) => bg ?? '#100f0e'};
+    border-radius: ${({ ww, radius }) => ww(radius ?? '')}px;
+    cursor: ${(props) => props.hasOwnProperty('clickable') ? 'pointer' : 'default'};
     &:hover {
         background-color: ${lighten(0.09991, '#100f0e')};
     };
@@ -356,8 +356,8 @@ export const CategoryTabInner = styled.div`
 
 export const CategoryTabSmallDot = styled.div`
     background-color: #564d2e;
-    width: ${({ww}) => ww(8)}px;
-    height: ${({ww}) => ww(8)}px;
+    width: ${({ ww }) => ww(8)}px;
+    height: ${({ ww }) => ww(8)}px;
     border-radius: 50%
 `;
 
@@ -370,8 +370,8 @@ export const CategoryGridContainer = styled.div`
 
 export const CategoryTabLargeDot = styled.div`
     background-color: #c3ad60;
-    width: ${({ww}) => ww(9)}px;
-    height: ${({ww}) => ww(9)}px;
+    width: ${({ ww }) => ww(9)}px;
+    height: ${({ ww }) => ww(9)}px;
     border-radius: 50%
 `;
 
@@ -386,9 +386,9 @@ export const BasicHeader = styled.h2`
     width: ${(props) => `${props.ww(props.w)}px`};
     height: ${(props) => `${props.ww(props.h)}px`};
     margin: 0;
-    text-transform: ${({textTransform}) => textTransform?? 'capitalize'};
-    font-weight: ${({fontWeight}) => fontWeight?? 300};
-    font-size: ${({ww, fontSize}) => `${ww(fontSize? fontSize: 18)}px`};
+    text-transform: ${({ textTransform }) => textTransform ?? 'capitalize'};
+    font-weight: ${({ fontWeight }) => fontWeight ?? 300};
+    font-size: ${({ ww, fontSize }) => `${ww(fontSize ? fontSize : 18)}px`};
     &:hover {
         // text-decoration: underline;
         color: #C3AD60;
@@ -399,19 +399,19 @@ export const BasicParagraph = styled.h2`
     width: ${(props) => `${props.ww(props.w)}px`};
     height: ${(props) => `${props.ww(props.h)}px`};
     margin: 0;
-    color: ${({color}) => color?? ''};
-    text-transform: ${({textTransform}) => textTransform?? 'normal'};
-    font-weight: ${({fontWeight}) => fontWeight?? 300};
-    font-size: ${({ww, fontSize}) => `${ww(fontSize? fontSize: 14)}px`};
+    color: ${({ color }) => color ?? ''};
+    text-transform: ${({ textTransform }) => textTransform ?? 'normal'};
+    font-weight: ${({ fontWeight }) => fontWeight ?? 300};
+    font-size: ${({ ww, fontSize }) => `${ww(fontSize ? fontSize : 14)}px`};
 `;
 
 // Forms
 export const BasicForm = styled.form`
     display: flex;
-    gap: ${({ww, gap}) => ww(gap?? 16)}px;
-    flex-direction: ${({direction}) => direction};
-    width: ${({ww, w}) => typeof w === 'number'? `${ww(w)}px`: w};
-    padding: ${({ ww,p }) => `${ww(p?? 10)}px`};
+    gap: ${({ ww, gap }) => ww(gap ?? 16)}px;
+    flex-direction: ${({ direction }) => direction};
+    width: ${({ ww, w }) => typeof w === 'number' ? `${ww(w)}px` : w};
+    padding: ${({ ww, p }) => `${ww(p ?? 10)}px`};
 `;
 
 export const CheckBox = styled.input`
@@ -424,32 +424,32 @@ export const CheckBox = styled.input`
     color: #8993A8;
 `;
 
-export const Button = styled.button.attrs(({type}) => ({
-    type: type?? 'button'
-  }))`
+export const Button = styled.button.attrs(({ type }) => ({
+    type: type ?? 'button'
+}))`
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     gap: 10px;
-    white-space: ${({w}) => !w && 'nowrap'};
-    width: ${({ww, w}) => typeof w === 'number'? `${ww(w)}px`: typeof w !== 'number'? w: 'auto' };
-    padding: ${({ww, p}) => p? ww(p): 10}px;
-    padding-top: ${({ww, pt}) => ww(pt)}px;
-    padding-right: ${({ww, pr}) => ww(pr)}px;
-    padding-bottom: ${({ww, pb}) => ww(pb)}px;
-    padding-left: ${({ww, pl}) => ww(pl)}px;
-    font-size: ${({ ww, fontSize }) => `${fontSize? ww(fontSize): ww(14)}px`};
-    font-weight: ${({ ww, fontWeight }) => fontWeight?? 700};
-    text-transform: ${({textTransform}) => textTransform?? 'normal'};
+    white-space: ${({ w }) => !w && 'nowrap'};
+    width: ${({ ww, w }) => typeof w === 'number' ? `${ww(w)}px` : typeof w !== 'number' ? w : 'auto'};
+    padding: ${({ ww, p }) => p ? ww(p) : 10}px;
+    padding-top: ${({ ww, pt }) => ww(pt)}px;
+    padding-right: ${({ ww, pr }) => ww(pr)}px;
+    padding-bottom: ${({ ww, pb }) => ww(pb)}px;
+    padding-left: ${({ ww, pl }) => ww(pl)}px;
+    font-size: ${({ ww, fontSize }) => `${fontSize ? ww(fontSize) : ww(14)}px`};
+    font-weight: ${({ ww, fontWeight }) => fontWeight ?? 700};
+    text-transform: ${({ textTransform }) => textTransform ?? 'normal'};
     height: ${(props) => `${props.ww(25)}px`};
     color: ${(props) => props.text};
-    background: ${({bg}) => bg?? 'transparent'};
-    border-radius: ${({ww, radius}) => `${ww(radius?? 8)}px`};
+    background: ${({ bg }) => bg ?? 'transparent'};
+    border-radius: ${({ ww, radius }) => `${ww(radius ?? 8)}px`};
     border: 1.5px solid ${(props) => props['border']};
     cursor: pointer;
     &:hover {
-        background: ${({bg}) => lighten(0.09991, bg)};
+        background: ${({ bg }) => lighten(0.09991, bg)};
     }
 `;
 
@@ -466,10 +466,10 @@ export const BasicInput = styled.input`
     padding-right: ${(props) => props.ww(Number(props.pr))}px;
     padding-bottom: ${(props) => props.ww(props.pb)}px;
     padding-left: ${(props) => props.ww(props.pl)}px;
-    border-radius: ${({ww, radius}) => ww(radius)}px;
+    border-radius: ${({ ww, radius }) => ww(radius)}px;
     font-weight: 400;
-    font-size: ${({ww, fontSize}) => ww(fontSize)}px;
-    color: ${({color}) => color?? '#3a3a3b'};
+    font-size: ${({ ww, fontSize }) => ww(fontSize)}px;
+    color: ${({ color }) => color ?? '#3a3a3b'};
 `;
 
 export const BasicTextArea = styled.textarea`
@@ -477,7 +477,7 @@ export const BasicTextArea = styled.textarea`
     width: ${(props) => `${props.ww(props.w)}px`};
     background: #1B1918;
     border: 1.5px solid #262A32;
-    resize: ${({resize}) => resize?? 'vertical'};
+    resize: ${({ resize }) => resize ?? 'vertical'};
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -489,17 +489,17 @@ export const BasicTextArea = styled.textarea`
     border-radius: ${(props) => props.ww(props.radius)}px;
     font-weight: 400;
     font-size: ${(props) => props.ww(props.fontSize)}px;
-    color: ${({color}) => color?? '#8993A8'};
+    color: ${({ color }) => color ?? '#8993A8'};
     margin: 0;
     &:focus {
-        outline: ${({ww}) => ww(2.0)}px solid #c3ad60;
+        outline: ${({ ww }) => ww(2.0)}px solid #c3ad60;
     };
 
     -webkit-appearance: none;scrollbar-width: thin;
     scrollbar-color: rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0.1);
     /* For WebKit (Safari and Chrome) */
     &::-webkit-scrollbar {
-      width: ${({ww}) => `${ww()}px`};
+      width: ${({ ww }) => `${ww()}px`};
     }
     &::-webkit-scrollbar-thumb {
       background-color: rgba(0, 0, 0, 0.3);
@@ -525,10 +525,10 @@ export const TransactionInput = styled.input`
     border-radius: ${(props) => props.ww(props.radius)}px;
     font-weight: 400;
     font-size: ${(props) => props.ww(props.fontSize)}px;
-    text-transform: ${({textTransform}) => textTransform?? 'normal'};
-    color: ${({color}) => color?? '#8993A8'};
+    text-transform: ${({ textTransform }) => textTransform ?? 'normal'};
+    color: ${({ color }) => color ?? '#8993A8'};
     &:focus {
-        outline: ${({ww}) => ww(2.0)}px solid #c3ad60;
+        outline: ${({ ww }) => ww(2.0)}px solid #c3ad60;
     };
     &[type='number']::-webkit-inner-spin-button,
     &[type='number']::-webkit-outer-spin-button {
@@ -540,28 +540,28 @@ export const TransactionInput = styled.input`
 export const BasicSelect = styled.select`
     height: ${(props) => `${props.ww(props.h)}px`};
     width: ${(props) => `${props.ww(props.w)}px`};
-    background: ${({bg}) => bg?? '#1B1918'};
-    border: ${({border}) => border?? '1.5px solid #262A32'};
+    background: ${({ bg }) => bg ?? '#1B1918'};
+    border: ${({ border }) => border ?? '1.5px solid #262A32'};
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: ${({ww, p}) => `${ww(p)}px`?? '13px 10px'};
-    border-radius: ${({radius}) => radius}px;
+    padding: ${({ ww, p }) => `${ww(p)}px` ?? '13px 10px'};
+    border-radius: ${({ radius }) => radius}px;
     font-weight: bolder;
     font-size: ${(props) => `${props.ww(props.fontSize)}px`};
-    text-transform:  ${({textTransform}) => textTransform?? 'capitalize'};
-    color: ${({color}) => color?? '#8993A8'};
+    text-transform:  ${({ textTransform }) => textTransform ?? 'capitalize'};
+    color: ${({ color }) => color ?? '#8993A8'};
     // appearance: none;
     &:focus {
-        border: ${({ww}) => ww(2.0)}px solid #c3ad60;
-        outline: ${({ww}) => ww(2.0)}px solid #c3ad60;
+        border: ${({ ww }) => ww(2.0)}px solid #c3ad60;
+        outline: ${({ ww }) => ww(2.0)}px solid #c3ad60;
     };
 `;
 
 export const CustomOption = styled.option`
     background-color: #c3ad60;
-    color: ${({color}) => color?? '#f1f1f1'};
-    padding: ${({ww, p}) => ww? (p? `${ww(p)}px`: `${ww(10)}px`): ''};
+    color: ${({ color }) => color ?? '#f1f1f1'};
+    padding: ${({ ww, p }) => ww ? (p ? `${ww(p)}px` : `${ww(10)}px`) : ''};
     cursor: pointer;
     text-transform: capitalize;
     &:hover {

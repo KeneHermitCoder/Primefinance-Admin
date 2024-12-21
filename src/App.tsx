@@ -7,7 +7,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import "./index.css";
 import store from "./store";
-import { Login, Layout, Register } from "./routes";
+import { Login, Layout, Register, Dashboard, LoansHome, } from "./routes";
 import { ToastContainer } from "react-toastify";
 import ProtectedRoute from "./routes/protectedRoute";
 import { ResponsiveProvider } from "./context/responsiveContext";
@@ -32,13 +32,22 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
           /**
-           * store-related routes
+           * dashboard-related routes
            */
           {
-            path: "/store",
-            // element: <Store store />,
+            path: "/",
+            element: <Dashboard />,
             errorElement: <ErrorPage />,
           },
+
+          /**
+           * loans-related routes
+           */
+          {
+            path: "/loans",
+            element: <LoansHome />,
+            errorElement: <ErrorPage />,
+          }
         ],
       },
     ],

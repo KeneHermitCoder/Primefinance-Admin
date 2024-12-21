@@ -1,162 +1,68 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  mainTab: "Dashboard Management",
+  mainTab: "Dashboard",
   subTab: "",
   tabs: [
     {
-      id: "dashBoard",
-      name: "Dashboard management",
+      id: "dashboard",
+      name: "Dashboard",
       bool: true,
       children: [],
     },
     {
-      id: "store",
-      name: "Store Management",
+      id: "loans",
+      name: "Loan",
       bool: false,
       children: [
-        {
-          id: "brands",
-          name: "Brand",
-          bool: false,
-        },
-        {
-          id: "products",
-          name: "Product",
-          bool: false,
-        },
-        {
-          id: "customers",
-          name: "Customer",
-          bool: false,
-        },
-        {
-          id: "business-reg",
-          name: "Buisness Registration",
-          bool: false,
-        },
-        {
-          id: "order-review",
-          name: "Review",
-          bool: false,
-        },
-        {
-          id: "add-brand",
-          name: "Add Brand",
-          bool: false,
-        },
-        {
-          id: "change",
-          name: "Change Details",
-          bool: false,
-        },
+        // {
+        //   id: "",
+        //   name: "Brand",
+        //   bool: false,
+        // },
       ],
     },
     {
-      id: "social",
-      name: "Social Management",
-      bool: false,
-      children: [
-        {
-          id: "user-accounts",
-          name: "User Accounts",
-          bool: false,
-        },
-        {
-          id: "report",
-          name: "Reports",
-          bool: false,
-        },
-      ],
-    },
-    {
-      id: "logistics",
-      name: "Logistics Management",
-      bool: false,
-      children: [
-        {
-          id: "local",
-          name: "Local logistics",
-          bool: false,
-        },
-        {
-          id: "international",
-          name: "International Logistics",
-          bool: false,
-        },
-        {
-          id: "franchise",
-          name: "Franchise Management",
-          bool: false,
-        },
-        {
-          id: "schedule-shipping",
-          name: "Schedule Shipping",
-          bool: false,
-        },
-        {
-          id: "riders",
-          name: "Riders",
-          bool: false,
-        },
-      ],
-    },
-    {
-      id: "finance",
-      name: "Finance Management",
+      id: "transactions",
+      name: "Transactions",
       bool: false,
       children: [],
     },
     {
-      id: "staff",
-      name: "Staff Management",
+      id: "escrow",
+      name: "Escrow",
       bool: false,
       children: [],
     },
     {
-      id: "event",
-      name: "Event Management",
+      id: "bills",
+      name: "Bills",
       bool: false,
       children: [],
     },
     {
-      id: "hotel",
-      name: "Hotel Management",
+      id: "users",
+      name: "User",
       bool: false,
-      children: [
-        {
-          id: "bookings",
-          name: "Bookings",
-          bool: false,
-        },
-      ],
+      children: [],
     },
     {
-      id: "verifier",
-      name: "Verifier Management",
+      id: "notifications",
+      name: "Notifications",
       bool: false,
-      children: [
-        {
-          id: "accepted",
-          name: "Accepted Verification",
-          bool: false,
-        },
-        {
-          id: "pending",
-          name: "Pending Verification",
-          bool: false,
-        },
-        {
-          id: "location",
-          name: "Verifier Location",
-          bool: false,
-        },
-        {
-          id: "business",
-          name: "Verifier Business",
-          bool: false,
-        },
-      ],
+      children: [],
+    },
+    {
+      id: "settings",
+      name: "Settings",
+      bool: false,
+      children: [],
+    },
+    {
+      id: "logout",
+      name: "Logout",
+      bool: false,
+      children: [],
     },
   ],
 };

@@ -4,15 +4,11 @@ import CircleLoader from "react-spinners/CircleLoader";
 import { ResponsiveContext } from "../context/responsiveContext";
 import "../styles/navigation.style.css";
 // eslint-disable-next-line
-import {
-  Outlet,
-  useNavigate,
-  useLocation,
-} from "react-router-dom";
+import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
 import { images } from "../constants";
 import {
   tabSwitch,
-  childTabSwitch, 
+  childTabSwitch,
   mainTabSwitch,
   subTabSwitch,
 } from "../features/navigation/navigationSlice";
@@ -35,6 +31,15 @@ import {
   AccordionLink,
   Navigation,
 } from "../styles";
+import {
+  CurrencyExchange,
+  Home,
+  Logout,
+  Money,
+  Notifications,
+  Settings,
+} from "@mui/icons-material";
+import { Button } from "@mui/material";
 
 export const siteTitle = "Yoris Admin";
 
@@ -52,8 +57,6 @@ const selectState = (state) => state;
 
 export default function Layout({
   children,
-  home,
-  store,
 }: {
   children?: React.ReactNode;
   home?: boolean;
@@ -83,13 +86,21 @@ export default function Layout({
       dispatch(mainTabSwitch(`${locArray[0]}`));
       dispatch(subTabSwitch(`${locArray[1]}`));
     } else {
-      dispatch(tabSwitch("dashBoard"));
-      dispatch(mainTabSwitch("dashBoard"));
+      dispatch(tabSwitch("dashboard"));
+      dispatch(mainTabSwitch("dashboard"));
     }
     setTimeout(() => {
       setLoading(false);
     }, 500);
   }, []);
+
+  const tabDecoration = (index: number) => (
+    <div
+      className={`w-[5px] ${
+        navigation.tabs[index].bool ? "bg-white" : ""
+      } rounded-r-lg mr-4`}
+    ></div>
+  );
 
   useEffect(() => {
     console.log({ navigation });
@@ -107,83 +118,96 @@ export default function Layout({
         />
       ) : (
         <>
-          <Header ww={ww} style={{}}>
-            <Group ww={ww}>
-              <img
-                src={images.yoris}
-                alt=""
-                style={{ height: ww(80), width: ww(80) }}
-              />
-              <Dir style={{ marginLeft: ww(150) }}>
-                {navigation.mainTab}{" "}
-                <img
-                  src={images.arrowRight}
-                  alt=""
-                  style={{ height: ww(24), width: ww(24) }}
-                />{" "}
-                {navigation.subTab}
-              </Dir>
-            </Group>
-            <ProfileGroup>
-              <Profile ww={ww}>
-                <SearchGroup>
-                  <Search ww={ww} type="text" placeholder="Search" />
-                  <Searchicon>
-                    <img
-                      src={images.search}
-                      alt=""
-                      style={{ height: ww(24), width: ww(24) }}
-                    />
-                  </Searchicon>
-                </SearchGroup>
-                <img
-                  src={images.notification}
-                  alt=""
-                  style={{ height: ww(32), width: ww(32) }}
-                />
-                <img
-                  src={images.profile}
-                  alt=""
-                  style={{ height: ww(32), width: ww(32) }}
-                />
-              </Profile>
-            </ProfileGroup>
-          </Header>
-          <Main ww={ww}>
-            <Navigation style={{ width: ww(320) }}>
-              <Accordion ww={ww}>
-                <AccordionContainer ww={ww}>
-                  {
-                    <AccordionLink
-                      ww={ww}
-                      to="/"
-                      style={{
-                        background: navigation.tabs[0].bool && "#c3ad60",
-                        color: navigation.tabs[0].bool && "#000",
-                        border: !navigation.tabs[0].bool && "none",
-                      }}
+          <div className="flex h-screen">
+            <nav className="bg-[#089C48] w-[220px] flex flex-col h-full overflow-hidden">
+              <Link
+                to="/"
+                className="flex items-center p-4 py-6 pl-10 text-white font-semibold"
+              >
+                PrimeFinance
+              </Link>
+              <div className="flex flex-col h-full justify-between">
+                <div className="flex flex-col">
+                  <div className="flex pl-[2px]">
+                    {tabDecoration(0)}
+                    <Link
+                      // to="/"
                       onClick={() => {
-                        dispatch(tabSwitch("dashBoard"));
-                        dispatch(mainTabSwitch("dashBoard"));
+                        dispatch(tabSwitch("dashboard"));
+                        dispatch(mainTabSwitch("dashboard"));
                       }}
+                      className="flex items-center gap-2 w-full p-4 py-4 text-white font-normal text-sm"
                     >
-                      Dashboard Management
-                    </AccordionLink>
-                  }
-                </AccordionContainer>
-              </Accordion>
-            </Navigation>
-
-            {home ? (
-              <AppComponent style={{ padding: ww(40) }}>
+                      <Home fontSize="small" />
+                      <span>Dashboard</span>
+                    </Link>
+                  </div>
+                  <div className="flex pl-[2px]">
+                    {tabDecoration(1)}
+                    <Link
+                      // to="/loans"
+                      onClick={() => {
+                        dispatch(tabSwitch("loans"));
+                        dispatch(mainTabSwitch("loans"));
+                      }}
+                      className="flex items-center gap-2 w-full p-4 py-4 text-white font-normal text-sm"
+                    >
+                      <CurrencyExchange fontSize="small" />
+                      <span>Loan</span>
+                    </Link>
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                    <div className="flex pl-[2px]">
+                    {tabDecoration(2)}
+                    <Link
+                      to="/settings"
+                      className="flex items-center gap-2 w-full p-4 py-4 text-white font-normal text-sm"
+                    >
+                      <Settings fontSize="small" />
+                      <span>Settings</span>
+                    </Link>
+                  </div>
+                  <div className="flex pl-[2px]">
+                    <div className="w-[5px] rounded-r-lg mr-4"></div>
+                    <Link
+                      to="/logout"
+                      className="flex items-center gap-2 w-full p-4 py-4 text-white font-normal text-sm"
+                    >
+                      <Logout fontSize="small" />
+                      <span>Logout</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </nav>
+            <div className="flex flex-col w-full h-full overflow-y-hidden bg-gray-200">
+              <header className="flex items-center bg-white w-full p-4">
+                <div className="flex items-center text-[#089C48] text-xl mr-auto">
+                  {navigation.mainTab}{" "}
+                </div>
+                <div className="flex items-center gap-2">
+                  <span>Kene Nnakwue</span>
+                  <span className="flex items-center justify-center w-10 h-10 bg-green-500 rounded-full">
+                    <img
+                      src={
+                        "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80"
+                      }
+                      alt=""
+                      className="w-9 h-9 rounded-full"
+                    />
+                  </span>
+                </div>
+                <button type="button" className="mx-3">
+                  <Notifications />
+                </button>
+              </header>
+              <main className="p-4 h-full overflow-y-scroll">
+                {/* {children} */}
                 <Outlet />
-              </AppComponent>
-            ) : (
-              <AppComponent style={{ padding: ww(40) }}>
-                <Outlet />
-              </AppComponent>
-            )}
-          </Main>
+              </main>
+            </div>
+          </div>
         </>
       )}
     </Container>
