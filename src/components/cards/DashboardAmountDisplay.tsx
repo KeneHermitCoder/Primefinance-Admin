@@ -1,5 +1,3 @@
-import cardFooterImage from "../../assets/images/savings-desktop.png";
-
 export default function DashboardAmountDisplay({
   title,
   trIcon,
@@ -11,17 +9,19 @@ export default function DashboardAmountDisplay({
   trIcon?: React.ReactNode;
   amount?: string;
   bottomItem?: React.ReactNode;
+  backgroundColour?: string;
 }) {
   return (
-    <div>
-      <div className="w-full flex flex-col justify-center items-center gap-10 md:gap-12 pt-8">
-        <p className="w-full max-w-lg sm:max-w-2xl md:max-w-2xl font-normal md:font-[400] text-sm sm:text-[16px] px-5 md:px-16 lg:px-24 text-start">
-          {title}
-        </p>
-        <div className="w-full flex flex-col md:flex-row justify-center items-center gap-4">
-          {" "}
-        </div>
+    <div
+      style={{ backgroundColor: backgroundColour }}
+      className="w-full max-w-[280px] flex flex-col justify-center items-center gap-1 rounded-[12px] overflow-hidden hover:cursor-pointer hover:shadow-lg transition-all duration-300 ease-in-out"
+    >
+      <div className='flex justify-between items-center w-full pl-3 pr-2 pt-2'>
+        <span>{title}</span>
+        <span>{trIcon}</span>
       </div>
+      <span className='w-full pl-3 pr-2 flex items-center text-4xl font-semibold text-gray-600 mb-auto'>{amount}</span>
+      <span className='w-full h-[65px]'>{bottomItem}</span>
     </div>
   );
 }

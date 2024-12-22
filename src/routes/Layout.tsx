@@ -45,7 +45,7 @@ export default function Layout({
     <Container>
       {loading ? (
         <CircleLoader
-          color={"#c3ad60"}
+          color={"#14ae5c"}
           loading={loading}
           cssOverride={override}
           size={150}
@@ -56,7 +56,7 @@ export default function Layout({
         <>
             <div className="flex h-screen">
               <SideNav />
-            <div className="flex flex-col w-full h-full overflow-y-hidden bg-gray-200">
+            <div className="flex flex-col w-full h-full overflow-y-hidden bg-[#f2f5f8]">
               <header className="flex items-center bg-white w-full p-4">
                 <div className="flex items-center text-gray-600 text-xl mr-auto">
                   {navigation.mainTab}{" "}

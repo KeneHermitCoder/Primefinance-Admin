@@ -91,7 +91,7 @@ export default function SideNav() {
   );
 
   return (
-    <nav className="bg-[#089C48] w-[220px] flex flex-col h-full overflow-hidden">
+    <nav className="bg-[#089C48] w-[300px] flex flex-col h-full overflow-hidden">
       <Link
         to="/"
         onClick={() => {
