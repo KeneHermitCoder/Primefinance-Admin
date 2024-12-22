@@ -1,14 +1,14 @@
-import { Stack } from "@mui/material";
-import { Reveal } from "../../components";
+import { Stack, } from "@mui/material";
 import images from "../../constants/images";
-import { DashboardAmountDisplay } from "../../components/cards";
-import { ArrowCircleDown, ArrowCircleUp } from "@mui/icons-material";
+import { BillsOverviewItem, Reveal, } from "../../components";
+import { ArrowCircleDown, ArrowCircleUp, } from "@mui/icons-material";
+import { DashboardAmountDisplay, LoanStatus, } from "../../components/";
 
 export function Dashboard() {
   return (
     <>
       <Reveal>
-        <Stack spacing={3} paddingX={1} paddingY={1}>
+        <Stack spacing={4} paddingX={1} paddingY={1}>
           <Stack direction="row" spacing={2.5} justifyContent="space-between">
             <DashboardAmountDisplay
               title="Total revenue"
@@ -46,14 +46,73 @@ export function Dashboard() {
               backgroundColour="#f5eac9"
             />
           </Stack>
-          <Stack direction="row" spacing={2.5} justifyContent="space-between">
+          <Stack
+            direction="row"
+            spacing={2.5}
+            justifyContent="space-between"
+            alignItems="start"
+          >
             <Stack
-              direction="row"
               spacing={2.5}
               justifyContent="space-between"
               className="w-2/5 bg-white p-4 rounded-[12px]"
             >
-              <div className="w-full">Stack 1 </div>
+              <Stack className="w-full text-xl">Loan Status</Stack>
+              <Stack
+                justifyContent="space-between"
+                paddingX={4}
+                spacing={2}
+                direction="row"
+              >
+                <Stack justifyContent="center" alignItems="center">
+                  <span className="text-3xl font-semibold">950</span>
+                  <span className="text-gray-600 font-hairline text-xs">
+                    Active loans
+                  </span>
+                </Stack>
+                <Stack justifyContent="space-between" alignItems="center">
+                  <span className="text-3xl font-semibold">250</span>
+                  <span className="text-gray-600 font-hairline text-xs">
+                    Repaid loans
+                  </span>
+                </Stack>
+                <Stack justifyContent="space-between" alignItems="center">
+                  <span className="text-3xl font-semibold">45</span>
+                  <span className="text-gray-600 font-hairline text-xs">
+                    Overdue loans
+                  </span>
+                </Stack>
+              </Stack>
+              <Stack spacing={1.5}>
+                <LoanStatus
+                  name="John Doe"
+                  status="failed"
+                  timestamp="12:37"
+                  details="Loan failed"
+                  photo="https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80"
+                />
+                <LoanStatus
+                  name="Kene Nnakwue"
+                  status="success"
+                  timestamp="17:37"
+                  details="Loan successful"
+                  photo="https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80"
+                />
+                <LoanStatus
+                  name="Code Hermit"
+                  status="overdue"
+                  timestamp="19:00"
+                  details="Loan overdue since 12/12/2024"
+                  photo="https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80"
+                />
+                <LoanStatus
+                  name="Lord Cypher"
+                  status="success"
+                  timestamp="04:50"
+                  details="Loan successful"
+                  photo="https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80"
+                />
+              </Stack>
             </Stack>
             <Stack
               spacing={2.5}
@@ -66,15 +125,49 @@ export function Dashboard() {
                 justifyContent="space-between"
                 className="bg-white p-4 rounded-[12px]"
               >
-                <div className="w-full">Stack 2 </div>
+                <div className="w-full">Stack 2</div>
               </Stack>
               <Stack
-                direction="row"
-                spacing={2.5}
+                spacing={1}
                 justifyContent="space-between"
                 className="bg-white p-4 rounded-[12px]"
               >
-                <div className="w-full">Stack 3 </div>
+                <div className="w-full text-xl">Bills Overview</div>
+                <Stack className="border border-gray-200 rounded-[12px] divide-y">
+                  <BillsOverviewItem
+                    key="airtime-3bdd92d-1e3e-4d7d-8a1e-6d7c0a0a0a0a"
+                    id="airtime-3bdd92d-1e3e-4d7d-8a1e-6d7c0a0a0a0a"
+                    name="Kene Nnakwue"
+                    status="completed"
+                    amount={`₦2,000`}
+                    type="Airtime"
+                    onClick={(e: React.MouseEvent) => {
+                      console.log(`clicked ${e.target.id}`);
+                    }}
+                  />
+                  <BillsOverviewItem
+                    key="gift-card-3bdd92d-1e3e-4d7d-8a1e-6d7c0a0a0a0a"
+                    id="gift-card-3bdd92d-1e3e-4d7d-8a1e-6d7c0a0a0a0a"
+                    name="Philemon Adamu"
+                    status="pending"
+                    amount={`₦34,000`}
+                    type="Gift Card"
+                    onClick={(e: React.MouseEvent) => {
+                      console.log(`clicked ${e.target.id}`);
+                    }}
+                  />
+                  <BillsOverviewItem
+                    key="internet-3bdd92d-1e3e-4d7d-8a1e-6d7c0a0a0a0a"
+                    id="internet-3bdd92d-1e3e-4d7d-8a1e-6d7c0a0a0a0a"
+                    name="Lord Cypher"
+                    status="failed"
+                    amount={`₦48,000`}
+                    type="Internet"
+                    onClick={(e: React.MouseEvent) => {
+                      console.log(`clicked ${e.target.id}`);
+                    }}
+                  />
+                </Stack>
               </Stack>
             </Stack>
           </Stack>

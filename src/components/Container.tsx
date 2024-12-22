@@ -3,7 +3,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 
-export function SimpleContainer() {
+export default function SimpleContainer() {
   return (
     <React.Fragment>
       <CssBaseline />
@@ -12,4 +12,4 @@ export function SimpleContainer() {
       </Container>
     </React.Fragment>
   );
-};
+}

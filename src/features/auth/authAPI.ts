@@ -1,54 +1,43 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-const process = 'DEV';
-const baseUrl =
-    process === 'PROD'
-        ? 'https://backend-api.yoris.africa:3208/admin'  // for production
-        : 'http://localhost:3108/admin';               // for development
+import { supabaseClient, } from '../../utils';
+import { createAsyncThunk, } from '@reduxjs/toolkit';
+import { SignInWithPasswordCredentials, SignUpWithPasswordCredentials, } from '@supabase/supabase-js';
 
-const handleError = (errorObject, data) =>
-	!errorObject.response?
-		{
-			status: 500,
-			type: 'error',
-			statusText: 'Network error',
-			data: data !== undefined && data !== null? data: []
-		}
-	:
-		{
-			status: errorObject.response.status,
-			type: 'error',
-			statusText: errorObject.response.statusText,
-			data: data !== undefined && data !== null? data: []
-		};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const handleError = (errorObject: any, data?: any) =>
+    !errorObject.response ?
+        {
+            status: 500,
+            type: 'error',
+            statusText: 'Network error',
+            data: data !== undefined && data !== null ? data : []
+        }
+        :
+        {
+            status: errorObject.response.status,
+            type: 'error',
+            statusText: errorObject.response.statusText,
+            data: data !== undefined && data !== null ? data : []
+        };
 
-const handleSuccess = (responseObject, data) => ({
-  status: responseObject.status,
-  statusText: responseObject.status,
-  data: data !== undefined && data !== null ? data : responseObject.data.data,
-  // data: data?? responseObject.data.data;
-});
 class authAPI {
-    register = createAsyncThunk('admin/register', async (registrationDetails) => {
-        try {
-            const response = await axios.post(`${baseUrl}/`, registrationDetails);
-            console.log('uibwuicbui')
-            return response.data;
-        } catch (error) {
-            throw new Error(error.message);
-        }
+    register = createAsyncThunk('admin/register', async (registrationDetails: SignUpWithPasswordCredentials, thunkAPI) => {
+        console.log({ registrationDetails, })
+        const { data, error, } = await supabaseClient.auth.signUp(registrationDetails);
+        if (error) {
+            console.log({ error });
+            const errorResponse = handleError(error);
+            return thunkAPI.rejectWithValue(errorResponse);
+        } else return data;
     });
-    login = createAsyncThunk('admin/login', async (loginDetails) => {
-        try {
-            console.log({loginDetails})
-            const response = await axios.post(`${baseUrl}/login`, loginDetails);
-            console.log(response.data.data);
-            return response.data.data;
-        } catch (error) {
-            console.log({error});
-			const errorResponse = handleError(error);
-			return thunkAPI.rejectWithValue(errorResponse);
-        }
+
+    login = createAsyncThunk('admin/login', async (loginDetails: SignInWithPasswordCredentials, thunkAPI) => {
+        console.log({ loginDetails })
+        const { data, error, } = await supabaseClient.auth.signInWithPassword(loginDetails);
+        if (error) {
+            console.log({ error });
+            const errorResponse = handleError(error);
+            return thunkAPI.rejectWithValue(errorResponse);
+        } else return data;
     });
 };
 

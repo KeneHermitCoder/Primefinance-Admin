@@ -1,9 +1,9 @@
-import "../../styles/navigation.style.css";
+import "../styles/navigation.style.css";
 
 
 import { Link, } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { tabSwitch, mainTabSwitch, } from "../../features/navigation/navigationSlice";
+import { tabSwitch, mainTabSwitch, } from "../features/navigation/navigationSlice";
 import {
   Home,
   Money,

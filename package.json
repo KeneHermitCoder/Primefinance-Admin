@@ -16,6 +16,7 @@
     "@mui/icons-material": "^6.1.7",
     "@mui/material": "^6.1.7",
     "@reduxjs/toolkit": "^2.5.0",
+    "@supabase/supabase-js": "^2.47.10",
     "@syncfusion/ej2-base": "^28.1.33",
     "aws-amplify": "^6.11.0",
     "axios": "^1.7.9",

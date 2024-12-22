@@ -5,7 +5,7 @@ import navigationReducer from "./navigation/navigationSlice";
 
 const rootReducer = combineReducers({
   navigation: navigationReducer,
-  // ...authReducers,
+  ...authReducers,
   // [authApi.reducerPath]: authApi.reducer,
 });
 
