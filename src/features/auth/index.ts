@@ -1,2 +1,2 @@
 export * from './authSlice';
-export { default as AuthAPI, } from './AuthAPI';
+export { default as AuthAPI, } from './AuthAPIs';

@@ -1,4 +1,4 @@
-import AuthAPI from './AuthAPI';
+import AuthAPI from './AuthAPIs';
 import { createSlice, } from '@reduxjs/toolkit';
 import useLocalStorage from '../hooks/useLocalStorage';
 
@@ -40,7 +40,7 @@ const authSlice = createSlice({
         }, 500);
         state.error = null;
         const { session, } = action.payload;
-        console.log({ session,})
+        console.log({ session, })
         state.admin = session as any;
         useLocalStorage('set', { name: 'adminDetails', value: state.admin });
       })
@@ -48,8 +48,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.admin = null;
         state.success = false;
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
+        // @ts-ignore
         state.error = action.error.message;
       })
       .addCase(register.pending, (state) => {
@@ -67,8 +66,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.success = false;
         state.admin = null;
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
+        // @ts-ignore
         state.error = action.error.message;
       });
   },

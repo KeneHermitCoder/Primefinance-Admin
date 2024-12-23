@@ -2,8 +2,8 @@ import { images } from "../../constants";
 import { RootState } from "../../features";
 import { useState, useEffect } from "react";
 import { AuthAPI } from "../../features/auth";
+import { Link, useLocation, } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Reveal } from "../../components";
 
@@ -11,11 +11,7 @@ import { Reveal } from "../../components";
 
 export function Login() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const location = useLocation();
-  // const { isLoading, error, success } = useSelector(
-  //   (state: RootState) => state.auth
-  // );
   const { isLoading, error, success } = useSelector(
     (state: RootState) => state.auth
   );
