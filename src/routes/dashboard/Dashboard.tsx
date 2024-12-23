@@ -142,7 +142,7 @@ export function Dashboard() {
                     amount={`₦2,000`}
                     type="Airtime"
                     onClick={(e: React.MouseEvent) => {
-                      console.log(`clicked ${e.target.id}`);
+                      console.log(`clicked ${e.target}`);
                     }}
                   />
                   <BillsOverviewItem
@@ -153,7 +153,7 @@ export function Dashboard() {
                     amount={`₦34,000`}
                     type="Gift Card"
                     onClick={(e: React.MouseEvent) => {
-                      console.log(`clicked ${e.target.id}`);
+                      console.log(`clicked ${e.target}`);
                     }}
                   />
                   <BillsOverviewItem
@@ -164,7 +164,7 @@ export function Dashboard() {
                     amount={`₦48,000`}
                     type="Internet"
                     onClick={(e: React.MouseEvent) => {
-                      console.log(`clicked ${e.target.id}`);
+                      console.log(`clicked ${e.target}`);
                     }}
                   />
                 </Stack>

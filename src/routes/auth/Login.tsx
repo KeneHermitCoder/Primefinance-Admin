@@ -1,14 +1,12 @@
 import { Reveal } from "../../components";
-import { useRef, useState, useContext, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { images, } from "../../constants";
+import { useState, useEffect, } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { images } from "../../constants";
 
 export function Login() {
   // const dispatch = useDispatch();
   const location = useLocation();
-  const errRef = useRef();
-  const [errMsg, setErrMsg] = useState("");
+  const [, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
   const [adminDetails, setAdminDetails] = useState({ email: "", password: "" });
   const isLoading = false;

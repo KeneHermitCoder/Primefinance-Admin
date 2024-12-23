@@ -1,14 +1,24 @@
 import React, { createContext, useState, useEffect } from "react";
 
-export const ResponsiveContext = createContext();
+interface ResponsiveContextProps {
+  ww: (a: number) => number;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-export const ResponsiveProvider = ({ children }) => {
+export const ResponsiveContext = createContext<
+  ResponsiveContextProps | undefined
+>(undefined);
+
+export const ResponsiveProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [loading, setLoading] = useState(true);
 
   function useWindowDimensions() {
     const [windowSize, setWindowSize] = useState({
-      width: undefined,
-      height: undefined,
+      width: 0,
+      height: 0,
     });
 
     useEffect(() => {
@@ -46,10 +56,10 @@ export const ResponsiveProvider = ({ children }) => {
    * @width: window width
    * @1440: window width from the figma design
    */
-  const ww = (a) => (width * a) / 1440;
+  const ww = (a: number) => ((width as unknown as number) * a) / 1440;
   return (
     <ResponsiveContext.Provider value={{ ww, loading, setLoading }}>
       {children}
     </ResponsiveContext.Provider>
   );
-};
+}

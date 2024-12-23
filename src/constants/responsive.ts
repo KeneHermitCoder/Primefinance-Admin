@@ -1,5 +1,4 @@
-import { useState, useEffect, useContext } from "react";
-import { ResponsiveContext } from "../context/responsiveContext";
+import { useState, useEffect, } from "react";
 
 export default function useWindowDimensions() {
   const [windowSize, setWindowSize] = useState({
@@ -14,7 +13,9 @@ export default function useWindowDimensions() {
       function handleResize() {
         // Set window width/height to state
         setWindowSize({
+          // @ts-expect-error - ignore
           width: window.innerWidth,
+          // @ts-expect-error - ignore
           height: window.innerHeight,
         });
       }

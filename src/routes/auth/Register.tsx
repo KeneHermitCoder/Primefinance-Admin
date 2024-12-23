@@ -1,14 +1,12 @@
 import { images } from "../../constants";
 import { Reveal } from "../../components";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { useRef, useState, useContext, useEffect } from "react";
 
 export function Register() {
   // const dispatch = useDispatch();
   const location = useLocation();
-  const errRef = useRef();
-  const [errMsg, setErrMsg] = useState("");
+  const [, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
   const [adminDetails, setAdminDetails] = useState({
     name: "",
