@@ -3,11 +3,10 @@ import { Container, } from "../styles";
 import { SideNav, } from "../components";
 import { useSelector, } from "react-redux";
 import { Outlet, } from "react-router-dom";
-import React, { useState, useEffect, } from "react";
+import { useState, useEffect, } from "react";
 import { Notifications, } from "@mui/icons-material";
 import CircleLoader from "react-spinners/CircleLoader";
 
-export const siteTitle = "Yoris Admin";
 
 const override = {
   display: "block",
@@ -19,15 +18,7 @@ const override = {
   transform: "translate(-50%, -50%)",
 };
 
-// const selectState = (state) => state;
-
-export default function Layout({
-  children,
-}: {
-  children?: React.ReactNode;
-  home?: boolean;
-  store?: boolean;
-}) {
+export default function Layout() {
   const { navigation, } = useSelector((state: any) => state);
   // const { data, isLoading, isSuccess, isError, error } = useGetAdminsQuery({
   // 	refetchOnMountOrArgChange: true,
@@ -47,6 +38,7 @@ export default function Layout({
         <CircleLoader
           color={"#14ae5c"}
           loading={loading}
+          // @ts-expect-error - @types/react-spinners is not up to date
           cssOverride={override}
           size={150}
           aria-label="Loading Spinner"
@@ -73,9 +65,9 @@ export default function Layout({
                     />
                   </span>
                 </div>
-                <button type="button" className="mx-3">
+                <span className="mx-3 cursor-pointer">
                   <Notifications />
-                </button>
+                </span>
               </header>
               <main className="p-4 h-full overflow-y-scroll">
                 {/* {children} */}

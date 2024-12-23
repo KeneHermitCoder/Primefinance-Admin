@@ -1,11 +1,13 @@
 import { combineReducers, } from "@reduxjs/toolkit";
 
-import authReducers from "./auth/authSlice";
+// import authReducers from "./auth/authSlice";
+import { auth, } from "./auth/authSlice";
 import navigationReducer from "./navigation/navigationSlice";
 
 const rootReducer = combineReducers({
   navigation: navigationReducer,
-  ...authReducers,
+  // ...authReducers,
+  ...auth,
   // [authApi.reducerPath]: authApi.reducer,
 });
 

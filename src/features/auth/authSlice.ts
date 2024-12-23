@@ -21,7 +21,7 @@ const authSlice = createSlice({
       else state.admin = null;
       console.log('Something shaa dey happen!');
     },
-    logout: (state, action: unknown) => {
+    logout: (state) => {
       state.admin = null;
     }
   },
@@ -40,9 +40,12 @@ const authSlice = createSlice({
         }, 500);
         state.error = null;
         const {
-          accessToken, actions, email, name,
-          permissions, refreshToken, role, _id: id
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          accessToken, actions, email, name, permissions, refreshToken, role, _id: id
         } = action.payload;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         state.admin = {
           accessToken, actions, email, name,
           permissions, refreshToken, role, id
@@ -53,6 +56,8 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.admin = null;
         state.success = false;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         state.error = action.error.message;
       })
       .addCase(register.pending, (state) => {
@@ -60,7 +65,7 @@ const authSlice = createSlice({
         state.success = false;
         state.error = null;
       })
-      .addCase(register.fulfilled, (state, action) => {
+      .addCase(register.fulfilled, (state) => {
         state.isLoading = false;
         state.success = true;
         //   state.admin = null;
@@ -70,12 +75,12 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.success = false;
         state.admin = null;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         state.error = action.error.message;
       });
   },
 });
 
-export default {
-  auth: authSlice.reducer
-};
-export const { getAdminCredentials, logout } = authSlice.actions;
+export const { reducer: auth, } = authSlice;
+export const { getAdminCredentials, logout, } = authSlice.actions
