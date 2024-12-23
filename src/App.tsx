@@ -105,6 +105,6 @@ const App = () => {
       </Provider>
     </React.StrictMode>
   );
-};
+}
 
 export default App;

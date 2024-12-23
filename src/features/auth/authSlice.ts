@@ -1,8 +1,8 @@
-import authAPI from './authAPI';
+import AuthAPI from './AuthAPI';
 import { createSlice, } from '@reduxjs/toolkit';
 import useLocalStorage from '../hooks/useLocalStorage';
 
-const authApi = new authAPI();
+const authApi = new AuthAPI();
 const login = authApi.login;
 const register = authApi.register;
 
@@ -36,20 +36,12 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.success = true;
         setTimeout(() => {
-          state.success = false;
+          // state.success = false;
         }, 500);
         state.error = null;
-        const {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-expect-error
-          accessToken, actions, email, name, permissions, refreshToken, role, _id: id
-        } = action.payload;
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
-        state.admin = {
-          accessToken, actions, email, name,
-          permissions, refreshToken, role, id
-        };
+        const { session, } = action.payload;
+        console.log({ session,})
+        state.admin = session as any;
         useLocalStorage('set', { name: 'adminDetails', value: state.admin });
       })
       .addCase(login.rejected, (state, action) => {

@@ -1,6 +1,6 @@
 // import { useDispatch } from "react-redux";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-// import useAccessToken from "../features/hooks/useAccessToken";
+import useAccessToken from "../features/hooks/useAccessToken";
 // import useTokenRefresh from '../features/hooks/useRefreshToken';
 
 const ProtectedRoute = () => {
@@ -8,8 +8,8 @@ const ProtectedRoute = () => {
   // const dispatch = useDispatch();
   // const { refreshToken } = useTokenRefresh();
   // Check for valid accessToken on App load and trigger token refresh if necessary
-  // const accessToken = useAccessToken('get');
-  const accessToken = true;
+  const accessToken = useAccessToken('get');
+  console.log({ accessToken });
 
   return (
     //if refreshToken operation is successful

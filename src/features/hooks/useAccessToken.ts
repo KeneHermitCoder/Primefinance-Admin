@@ -4,7 +4,7 @@ import useLocalStorage from './useLocalStorage';
 export function useAccessToken (action: 'get' | 'set', payload?: string | object) {
     const admin = useLocalStorage('get', 'adminDetails');
     if (action === 'get') {
-        const accessToken = admin?.accessToken;
+        const accessToken = admin?.access_token;
         return accessToken?? null;
     }
     if (action === 'set') {

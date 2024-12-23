@@ -7,9 +7,11 @@ import navigationReducer from "./navigation/navigationSlice";
 const rootReducer = combineReducers({
   navigation: navigationReducer,
   // ...authReducers,
-  ...auth,
+  auth,
   // [authApi.reducerPath]: authApi.reducer,
 });
+
+export type RootState = ReturnType<typeof rootReducer>;
 
 export default rootReducer;
 

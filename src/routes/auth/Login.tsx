@@ -1,15 +1,26 @@
+import { images } from "../../constants";
+import { RootState } from "../../features";
+import { useState, useEffect } from "react";
+import { AuthAPI } from "../../features/auth";
+import { toast, ToastContainer } from "react-toastify";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { Reveal } from "../../components";
-import { images, } from "../../constants";
-import { useState, useEffect, } from "react";
-import { Link, useLocation } from "react-router-dom";
+
+// const login = new AuthAPI().login;
 
 export function Login() {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
-  const [, setErrMsg] = useState("");
-  const [success, setSuccess] = useState(false);
+  // const { isLoading, error, success } = useSelector(
+  //   (state: RootState) => state.auth
+  // );
+  const { isLoading, error, success } = useSelector(
+    (state: RootState) => state.auth
+  );
+
   const [adminDetails, setAdminDetails] = useState({ email: "", password: "" });
-  const isLoading = false;
 
   const updateAdminDetails = (propToChange: string, value: string) => {
     setAdminDetails((prevDetails) => ({
@@ -20,36 +31,32 @@ export function Login() {
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
-    try {
-      console.log(adminDetails);
-      setSuccess(true);
-    } catch (err: any) {
-      console.log(err);
-      setErrMsg(err.message);
-    }
+    // @ts-ignore
+    dispatch(new AuthAPI().login(adminDetails));
   };
 
   useEffect(() => {
     const prevPage = location.state?.from?.pathname || "/";
-    if (success === true) window.location.href = prevPage;
-  }, [success]);
+    console.log({ prevPage, });
+    if (success === true) {
+      // navigate(prevPage);
+      toast("Login successful");
+      setTimeout(() => window.location.href = prevPage, 2000);
+    }
+    if (error) toast.error(error);
+  }, [success, error]);
 
-  const content = isLoading ? (
-    // <DefaultLoader loading={isLoading} />
-    <>Default Loader</>
-  ) : (
+  const content = (
     <Reveal>
       <div className="h-screen w-full flex flex-col items-center justify-center gap-3">
+        <ToastContainer />
         <div className="py-5 flex flex-col items-center">
           <img src={images.logoPNG} alt="logo" className="w-[100px] hidden" />
           <h1 className="text-xl font-normal text-gray-600">
             Admin Panel - Login
           </h1>
         </div>
-        <form
-          onSubmit={handleLogin}
-          className="w-[517px] flex flex-col gap-[20px]"
-        >
+        <form className="w-[517px] flex flex-col gap-[20px]">
           <div>
             <label htmlFor="email" className="hidden">
               Email
@@ -80,12 +87,17 @@ export function Login() {
               className="w-full max-w-[517px] h-[55px] px-[18px] py-[18px] border rounded-md bg-gray-100 focus:outline-[#089C48] focus:outline-1 font-inter text-gray-600 text-base font-normal leading-[19.36px] text-left underline-offset-0"
             />
           </div>
-          <div className='mt-4'>
+          <div className="mt-4">
             <button
               type="button"
-              className="w-full max-w-[517px] h-[55px] px-[18px] py-[18px] border rounded-md bg-[#089C48] font-inter text-white text-base font-medium leading-[19.36px] text-center underline-offset-0"
+              onClick={handleLogin}
+              className={`flex justify-center w-full max-w-[517px] h-[55px] px-[18px] py-[18px] border rounded-md bg-[#089C48] font-inter text-white text-base font-medium leading-[19.36px] text-center underline-offset-0`}
             >
-              Login
+              {isLoading ? (
+                <span className="flex h-6 w-6 mb-2 border-2 border-white border-b-transparent rounded-full transition-all animate-spin"></span>
+              ) : (
+                "Login"
+              )}
             </button>
           </div>
         </form>
