@@ -1,4 +1,4 @@
-import { Divider, FormControl, InputLabel, MenuItem, Select, Stack } from "@mui/material";
+import { Divider, Stack } from "@mui/material";
 import { Reveal, } from "../../components";
 import UsersKPIDisplay from "../../components/usersKPI";
 import {  
@@ -8,7 +8,6 @@ import {
   PersonAdd 
 } from "@mui/icons-material";
 import EnhancedTable from "../../components/EnhancedTable";
-import SearchField from "../../components/searchField";
 import TransactionOverview from "../../components/TransactionOverviewHeader";
 
 export default function Users() {

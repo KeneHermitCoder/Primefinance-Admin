@@ -4,11 +4,12 @@ import SearchField from './searchField';
 
 
 const TransactionOverview: React.FC = () => {
-  const [value, setValue] = React.useState('');
+  // const [value, setValue] = React.useState('');
+  const [value] = React.useState('');
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setValue(event.target.value as string);
-  };
+  // const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  //   setValue(event.target.value as string);
+  // };
 
   return (
     <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
