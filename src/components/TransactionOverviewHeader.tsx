@@ -2,65 +2,57 @@ import React from 'react';
 import { Stack, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import SearchField from './searchField';
 
+interface TransactionOverviewProps {
+  header: string; // Prop to accept the header text
+}
 
-const TransactionOverview: React.FC = () => {
-  // const [value, setValue] = React.useState('');
+const TransactionOverview: React.FC<TransactionOverviewProps> = ({ header }) => {
   const [value] = React.useState('');
-
-  // const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-  //   setValue(event.target.value as string);
-  // };
 
   return (
     <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
-      <div className="w-full text-xl">Transaction Overview</div>
+      <div className="w-full text-xl">{header}</div> {/* Dynamic header */}
       
       {/* Search Field */}
       <SearchField />
 
-      {/* Select Dropdown */}
-      <FormControl style={{ minWidth: 120}}>
-        <InputLabel id="demo-simple-select-label">Date</InputLabel>
+      {/* Select Dropdowns */}
+      <FormControl style={{ minWidth: 100 }} size="small" variant="outlined">
+        <InputLabel id="select-date-label">Date</InputLabel>
         <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
+          labelId="select-date-label"
+          id="select-date"
           value={value}
-          
-        //   onChange={handleChange}
         >
           <MenuItem value="today">Today</MenuItem>
-          <MenuItem value={20}>Yesterday</MenuItem>
-          <MenuItem value={30}>Week</MenuItem>
+          <MenuItem value="yesterday">Yesterday</MenuItem>
+          <MenuItem value="week">Week</MenuItem>
         </Select>
       </FormControl>
 
-      {/* Select Dropdown */}
-      <FormControl style={{ minWidth: 120 }}>
-        <InputLabel id="demo-simple-select-label">Type</InputLabel>
+      <FormControl style={{ minWidth: 100 }} size="small" variant="outlined">
+        <InputLabel id="select-type-label">Type</InputLabel>
         <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
+          labelId="select-type-label"
+          id="select-type"
           value={value}
-        //   onChange={handleChange}
         >
-          <MenuItem value="today">Today</MenuItem>
-          <MenuItem value={20}>Yesterday</MenuItem>
-          <MenuItem value={30}>Week</MenuItem>
+          <MenuItem value="type1">Type 1</MenuItem>
+          <MenuItem value="type2">Type 2</MenuItem>
+          <MenuItem value="type3">Type 3</MenuItem>
         </Select>
       </FormControl>
 
-      {/* Select Dropdown */}
-      <FormControl style={{ minWidth: 120 }}>
-        <InputLabel id="demo-simple-select-label">Status</InputLabel>
+      <FormControl style={{ minWidth: 100 }} size="small" variant="outlined">
+        <InputLabel id="select-status-label">Status</InputLabel>
         <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
+          labelId="select-status-label"
+          id="select-status"
           value={value}
-        //   onChange={handleChange}
         >
-          <MenuItem value="today">Today</MenuItem>
-          <MenuItem value={20}>Yesterday</MenuItem>
-          <MenuItem value={30}>Week</MenuItem>
+          <MenuItem value="status1">Status 1</MenuItem>
+          <MenuItem value="status2">Status 2</MenuItem>
+          <MenuItem value="status3">Status 3</MenuItem>
         </Select>
       </FormControl>
     </Stack>

@@ -72,12 +72,13 @@ export default function Users() {
 
           {/* user table */}
           <Stack
+            sx={{backgroundColor:'#fff', borderRadius:5}}
             spacing={1}
             justifyContent="space-between"
-            className="bg-white p-4 rounded-[12px]"
+            className=" p-4 "
           >
             {/* Trasanction Overview for table  */}
-          <TransactionOverview/>
+          <TransactionOverview header="Transaction Overview"/>
             {/* Table  */}
           <EnhancedTable data={userKPIData} columns={columns} />
           </Stack>
