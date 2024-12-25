@@ -1,8 +1,12 @@
 import { Stack, } from "@mui/material";
 import images from "../../constants/images";
-import { BillsOverviewItem, Reveal, } from "../../components";
 import { ArrowCircleDown, ArrowCircleUp, } from "@mui/icons-material";
-import { DashboardAmountDisplay, LoanStatus, } from "../../components/";
+import {
+  Reveal,
+  LoanStatus,
+  BillsOverviewItem,
+  DashboardAmountDisplay,
+} from "../../components";
 
 export function Dashboard() {
   return (
