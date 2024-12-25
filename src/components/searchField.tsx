@@ -15,7 +15,7 @@ const SearchField: React.FC = () => {
           </InputAdornment>
         ),
         style: {
-          backgroundColor: '#f5f5f5', // Gray background
+          backgroundColor: '#fff', // Gray background
           borderRadius: '25px',      // Rounded borders
           height: '30px',
           marginRight: '20px'

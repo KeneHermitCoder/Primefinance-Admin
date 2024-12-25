@@ -115,10 +115,10 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ data, columns }) => {
   };
 
   return (
-    <TableContainer>
+    <TableContainer >
       <Table>
-        <TableHead>
-          <TableRow>
+        <TableHead >
+          <TableRow >
             <TableCell padding="checkbox">
               <Checkbox
                 indeterminate={selected.length > 0 && selected.length < rowsPerPage}
@@ -147,7 +147,7 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ data, columns }) => {
             ))}
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody sx={{backgroundColor: '#fff'}}>
           {sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
             <TableRow hover key={index} selected={isSelected(row.UserID)}>
               <TableCell padding="checkbox">
