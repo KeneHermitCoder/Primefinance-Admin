@@ -1,23 +1,20 @@
 import React from "react";
 
-export default function BillPaymentKPIDisplay({
-  title,
-
+export default function BillsKPIDisplay({
+  subtitle,
   kpiIcon,
   total,
   backgroundColour,
 }: {
-  title?: string;
-
+  subtitle?: string;
   kpiIcon?: React.ReactNode;
   total: string;
-  bottomItem?: React.ReactNode;
   backgroundColour?: string;
 }) {
   return (
     <div
-      style={{ backgroundColor: backgroundColour || "#f5f5f5" }}
-      className="w-full max-w-[280px] flex flex-col justify-center items-center rounded-[12px] overflow-hidden hover:cursor-pointer hover:shadow-lg transition-all duration-300 ease-in-out p-4"
+      style={{ backgroundColor: backgroundColour || "#fff" }}
+      className="w-full max-w-[280px] flex flex-col justify-center items-center  overflow-hidden hover:cursor-pointer hover:shadow-lg transition-all duration-300 ease-in-out p-4"
     >
       {/* KPI Header */}
       <div className="flex items-center w-full mb-2">
@@ -28,19 +25,14 @@ export default function BillPaymentKPIDisplay({
 
         {/* Title and Subtitle */}
         <div className="flex flex-col ml-3">
-          <span className="text-lg font-semibold text-gray-800">{title}</span>
-          {/* {subtitle && (
+          <span className="text-lg font-semibold text-gray-800">{total}</span>
+          {subtitle && (
             <span className="text-sm text-gray-500 mt-1">{subtitle}</span>
-          )} */}
+          )}
         </div>
       </div>
 
-      {/* KPI Value */}
-      <span className="w-full text-4xl font-bold text-gray-600 mb-2">
-        {total}
-      </span>
-
-      
     </div>
+
   );
 }
