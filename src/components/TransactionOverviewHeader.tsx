@@ -11,7 +11,7 @@ const TransactionOverview: React.FC<TransactionOverviewProps> = ({ header }) => 
 
   return (
     <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
-      <div className="w-full text-xl">{header}</div> {/* Dynamic header */}
+      <div className="w-full text-xl bold">{header}</div> {/* Dynamic header */}
       
       {/* Search Field */}
       <SearchField />
