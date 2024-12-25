@@ -4,7 +4,7 @@ import { SignInWithPasswordCredentials, SignUpWithPasswordCredentials, } from '@
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleError = (errorObject: any, data?: any) =>
-    !errorObject.response ?
+    !errorObject.code ?
         {
             status: 500,
             type: 'error',
@@ -13,9 +13,9 @@ const handleError = (errorObject: any, data?: any) =>
         }
         :
         {
-            status: errorObject.response.status,
+            status: errorObject.code,
             type: 'error',
-            statusText: errorObject.response.statusText,
+            statusText: errorObject.message,
             data: data !== undefined && data !== null ? data : []
         };
 
@@ -34,8 +34,9 @@ class AuthAPI {
         const { data, error, } = await supabaseClient.auth.signInWithPassword(loginDetails);
         console.log({ loginDetails, data, })
         if (error) {
-            console.log({ error });
+            console.log({ error1: error, });
             const errorResponse = handleError(error);
+            console.log({ error2: error, errorResponse, });
             return thunkAPI.rejectWithValue(errorResponse);
         } else return data;
     });

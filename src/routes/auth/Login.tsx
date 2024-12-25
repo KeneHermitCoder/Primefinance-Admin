@@ -39,6 +39,7 @@ export function Login() {
       toast("Login successful");
       setTimeout(() => window.location.href = prevPage, 2000);
     }
+    console.log({ error2: error, })
     if (error) toast.error(error);
   }, [success, error]);
 
