@@ -8,46 +8,10 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
-import Checkbox from "@mui/material/Checkbox";
 import { visuallyHidden } from "@mui/utils";
-
-// interface Data {
-//   id: number;
-//   calories: number;
-//   carbs: number;
-//   fat: number;
-//   name: string;
-//   protein: number;
-// }
 
 interface Data {
   [key: string]: any;
-}
-
-// function createData(
-//   id: number,
-//   name: string,
-//   calories: number,
-//   fat: number,
-//   carbs: number,
-//   protein: number
-// ): Data {
-//   return {
-//     id,
-//     name,
-//     calories,
-//     fat,
-//     carbs,
-//     protein,
-//   };
-// }
-
-function createData(...args: [string, number | string][]): Data {
-  const data: Data = {};
-  args.forEach(([key, value]) => {
-    data[key] = value;
-  });
-  return data;
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -130,18 +94,18 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 export default function MainTable({
   rows = [],
-  title = "Main Table",
+  // title = "Main Table",
   headCells = [],
 }: {
   rows?: Data[];
-  title: string;
+  title?: string;
   headCells?: HeadCell[];
 }) {
   const [page, setPage] = React.useState(0);
   const [order, setOrder] = React.useState<Order>("asc");
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [orderBy, setOrderBy] = React.useState<keyof Data>("calories");
-  const [selected, setSelected] = React.useState<readonly number[]>([]);
+  const [selected] = React.useState<readonly number[]>([]);
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -190,9 +154,9 @@ export default function MainTable({
             headCells={headCells}
           />
           <TableBody>
-            {visibleRows.map((row, index) => {
+            {visibleRows.map((row) => {
               // const isItemSelected = selected.includes(row.id);
-              const labelId = `enhanced-table-checkbox-${index}`;
+              // const labelId = `enhanced-table-checkbox-${index}`;
 
               return (
                 <TableRow

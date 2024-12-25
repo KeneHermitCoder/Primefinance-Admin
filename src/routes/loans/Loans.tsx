@@ -1,6 +1,6 @@
 import { Divider, Stack } from "@mui/material";
-import { DropDown, MainTable, Reveal } from "../../components";
 import UsersKPIDisplay from "../../components/usersKPI";
+import { DropDownSelect, MainTable, Reveal } from "../../components";
 import {
   AttachMoney,
   FlagCircleRounded,
@@ -49,16 +49,36 @@ export default function Loans() {
             justifyContent="space-between"
             className="bg-white p-4 rounded-[12px]"
           >
-            <Stack direction="row" spacing={1}>
-              <div className="w-3/5 text-xl">Bills Overview</div>
-              <Stack direction="row" spacing={1} className='w-3/5'>
+            <div className='flex flex-col lg:flex-row md:justify-between gap-2'>
+              <div className="text-xl">Bills Overview</div>
+              <Stack direction="row" spacing={1} className=''>
                 {/* Search Field */}
                 <SearchField />
-                <div className="w-full text-xl">
-                  <DropDown />
+                <div className="flex w-full">
+                  <DropDownSelect
+                    options={[
+                      'Today',
+                      'Yesterday',
+                    ]}
+                    onSelected={(option: any) => console.log(option)}
+                  />
+                  <DropDownSelect
+                    options={[
+                      'Today',
+                      'Yesterday',
+                    ]}
+                    onSelected={(option: any) => console.log(option)}
+                  />
+                  <DropDownSelect
+                    options={[
+                      'Today',
+                      'Yesterday',
+                    ]}
+                    onSelected={(option: any) => console.log(option)}
+                  />
                 </div>
               </Stack>
-            </Stack>
+            </div>
             <Stack className="border border-gray-200 rounded-[12px] divide-y">
               <MainTable
                 key="airtime-3bdd92d-1e3e-4d7d-8a1e-6d7c0a0a0a0a"
