@@ -11,7 +11,7 @@ export default function Notifications() {
     { Name: 'John Doe', NotificationID: 'LN12345', Category: 'Payment reminder', Message: 'your payment is due since...', Date: '2024-12-01', Status: 'Sent' },
     { Name: 'Jane Smith', NotificationID: 'LN12345', Category: 'Payment reminder', Message: 'repay your loan as soon as ...', Date: '2024-11-25', Status: 'Scheduled' },
     { Name: 'Sam Green', NotificationID: 'LN12345', Category: 'Payment', Message: 'payment successful', Date: '2024-12-01', Status: 'Failed' },
-    { Name: 'Alice Brown', NotificationID: 'LN12345', Category: 'Loan update', Message: 'loan granted', Date: '2024-11-30', Status: 'Suspended' },
+    { Name: 'Alice Brown', NotificationID: 'LN22345', Category: 'Loan update', Message: 'loan granted', Date: '2024-11-30', Status: 'Suspended' },
   ];
 
   const columns = [
