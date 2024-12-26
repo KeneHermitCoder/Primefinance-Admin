@@ -165,14 +165,12 @@ export default function SearchFilterSortPaginateTable({
     <Box sx={{ width: "100%" }} className="flex flex-col gap-3">
       <div className="flex flex-col lg:flex-row md:justify-between gap-2">
         <div className="text-xl text-gray-700">{title}</div>
-        <Stack
-          direction="row"
-          spacing={1}
-          className="justify-between items-center"
+        <div
+          className="flex flex-col sm:flex-row justify-between items-center gap-2"
         >
           {/* Search Field */}
           <SearchField onChange={onSearch} />
-          <div className="flex justify-end gap-1">
+          <div className="flex items-end gap-1">
             <DropDownSelect
               options={["Today", "Yesterday"]}
               onSelected={(option: any) => console.log(option)}
@@ -182,7 +180,7 @@ export default function SearchFilterSortPaginateTable({
               onSelected={(option: any) => console.log(option)}
             />
           </div>
-        </Stack>
+        </div>
       </div>
       <Stack className="bg-white rounded-[8px] border" spacing={1}>
         <TableContainer>
