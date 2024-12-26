@@ -5,12 +5,16 @@ export default function LoanPieChart() {
     <PrimaryPieChart
       data={[
         {
-          label: "Windows",
+          label: "Deposit",
           value: 72.72,
         },
         {
-          label: "OS X",
+          label: "Withdrawal",
           value: 16.38,
+        },
+        {
+          label: "Loan Repayment",
+          value: 36.38,
         },
       ]}
     />
