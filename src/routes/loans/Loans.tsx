@@ -1,9 +1,6 @@
 import { Stack } from "@mui/material";
 import UsersKPIDisplay from "../../components/usersKPI";
-import {
-  Reveal,
-  SearchFilterSortPaginateTable,
-} from "../../components";
+import { Reveal, SearchFilterSortPaginateTable } from "../../components";
 import {
   PersonAdd,
   AttachMoney,
@@ -16,27 +13,33 @@ export default function Loans() {
     <>
       <Reveal>
         <Stack direction="column" spacing={3} paddingX={1} paddingY={1}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 md:divide-x-2 divide-y-2 lg:divide-y-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 md:divide-x-2 divide-y-2 lg:divide-y-0">
             <UsersKPIDisplay
-              subtitle="Total Users"
+              subtitle="Total Loans"
               kpiIcon={<AttachMoney sx={{ color: "success.main" }} />}
               total="12,345"
             />
 
             <UsersKPIDisplay
-              subtitle="Active Users"
+              subtitle="Active Loans"
               kpiIcon={<HandshakeRounded sx={{ color: "primary.main" }} />}
               total="1,200"
             />
 
             <UsersKPIDisplay
-              subtitle="Flagged Users"
+              subtitle="Repaid Loans"
               kpiIcon={<FlagCircleRounded sx={{ color: "error.main" }} />}
               total="1,200"
             />
 
             <UsersKPIDisplay
-              subtitle="New Users"
+              subtitle="Pending Applications"
+              kpiIcon={<PersonAdd sx={{ color: "primary.main" }} />}
+              total="1,200"
+            />
+
+            <UsersKPIDisplay
+              subtitle="Revenue"
               kpiIcon={<PersonAdd sx={{ color: "primary.main" }} />}
               total="1,200"
             />
@@ -50,11 +53,7 @@ export default function Loans() {
             <SearchFilterSortPaginateTable
               key="airtime-3bdd92d-1e3e-4d7d-8a1e-6d7c0a0a0a0a"
               title="Loan Overview"
-              searchParams={[
-                'customerName',
-                'loanId',
-                'status'
-              ]}
+              searchParams={["customerName", "loanId", "status"]}
               headCells={[
                 {
                   id: "customerName",
@@ -117,21 +116,38 @@ export default function Loans() {
                       "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
                   },
                 },
+                {
+                  customerName: "Chinwe Okafor",
+                  loanId: "LN12347",
+                  amount: "₦5,000",
+                  interest: "₦500",
+                  dueDate: "10/01/2025",
+                  status: "active",
+                  metadata: {
+                    itemPhoto:
+                      "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+                  },
+                },
               ]}
             />
-            {/* <SearchFilterSortPaginateTable
-                    key="gift-card-3bdd92d-1e3e-4d7d-8a1e-6d7c0a0a0a0a"
-                    onClick={(e: React.MouseEvent) => {
-                      console.log(`clicked ${e.target}`);
-                    }}
-                  />
-                  <SearchFilterSortPaginateTable
-                    key="internet-3bdd92d-1e3e-4d7d-8a1e-6d7c0a0a0a0a"
-                    onClick={(e: React.MouseEvent) => {
-                      console.log(`clicked ${e.target}`);
-                    }}
-                  /> */}
           </Stack>
+
+          <div className="flex flex-col md:flex-row gap-6">
+            <Stack
+              spacing={1}
+              justifyContent="space-between"
+              className="w-full md:w-3/5 bg-white p-4 rounded-[12px]"
+            >
+              f
+            </Stack>
+            <Stack
+              spacing={1}
+              justifyContent="space-between"
+              className="w-full md:w-2/5 bg-white p-4 rounded-[12px]"
+            >
+              f
+            </Stack>
+          </div>
         </Stack>
       </Reveal>
     </>
