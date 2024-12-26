@@ -2,12 +2,17 @@ import React from 'react';
 import { TextField, InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-const SearchField: React.FC = () => {
+const SearchField: React.FC<{ onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void }> = ({
+  onChange,
+}: {
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}) => {
   return (
     <TextField
       variant="outlined"
       placeholder="Search..."
       fullWidth
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange?.(e)}
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
