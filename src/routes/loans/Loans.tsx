@@ -1,6 +1,10 @@
 import { Stack } from "@mui/material";
 import UsersKPIDisplay from "../../components/usersKPI";
-import { Reveal, SearchFilterSortPaginateTable } from "../../components";
+import {
+  Reveal,
+  LoanPieChart,
+  SearchFilterSortPaginateTable,
+} from "../../components";
 import {
   PersonAdd,
   AttachMoney,
@@ -138,7 +142,7 @@ export default function Loans() {
               justifyContent="space-between"
               className="w-full md:w-3/5 bg-white p-4 rounded-[12px]"
             >
-              f
+              <LoanPieChart />
             </Stack>
             <Stack
               spacing={1}
