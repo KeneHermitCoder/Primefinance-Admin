@@ -240,6 +240,7 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ data, columns }) => {
   };
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null, newPage: number) => {
+    console.log(event);
     setPage(newPage);
   };
 
