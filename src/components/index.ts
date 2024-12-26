@@ -1,3 +1,4 @@
+export * from './tables';
 export * from './animations';
 export { default as SideNav, } from './Sidenav';
 export { default as Container, } from './Container';
