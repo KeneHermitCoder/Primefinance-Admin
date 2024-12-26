@@ -1,7 +1,22 @@
-import { PieAnimation } from "./charts";
+import { PrimaryPieChart, } from "./charts";
 
 export default function LoanPieChart() {
-    return (
-        <PieAnimation />
-    )
+  return (
+    <PrimaryPieChart
+      data={[
+        {
+          label: "Deposit",
+          value: 72.72,
+        },
+        {
+          label: "Withdrawal",
+          value: 16.38,
+        },
+        {
+          label: "Loan Repayment",
+          value: 36.38,
+        },
+      ]}
+    />
+  );
 }

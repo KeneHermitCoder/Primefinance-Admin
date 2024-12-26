@@ -142,14 +142,14 @@ export default function Loans() {
               justifyContent="space-between"
               className="w-full md:w-3/5 bg-white p-4 rounded-[12px]"
             >
-              <LoanPieChart />
+              f
             </Stack>
             <Stack
               spacing={1}
               justifyContent="space-between"
-              className="w-full md:w-2/5 bg-white p-4 rounded-[12px]"
+              className="w-full md:w-2/4 bg-white p-4 rounded-[12px]"
             >
-              f
+              <LoanPieChart />
             </Stack>
           </div>
         </Stack>
