@@ -1,1 +1,1 @@
-export { default as PieAnimation, } from './PieAnimation';
+export { default as PrimaryPieChart, } from './PrimaryPieChart';

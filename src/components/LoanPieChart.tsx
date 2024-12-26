@@ -1,7 +1,18 @@
-import { PieAnimation } from "./charts";
+import { PrimaryPieChart, } from "./charts";
 
 export default function LoanPieChart() {
-    return (
-        <PieAnimation />
-    )
+  return (
+    <PrimaryPieChart
+      data={[
+        {
+          label: "Windows",
+          value: 72.72,
+        },
+        {
+          label: "OS X",
+          value: 16.38,
+        },
+      ]}
+    />
+  );
 }
