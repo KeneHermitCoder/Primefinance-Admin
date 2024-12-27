@@ -2,7 +2,7 @@ import { Stack } from "@mui/material";
 import UsersKPIDisplay from "../../components/usersKPI";
 import {
   Reveal,
-  LoanPieChart,
+  PrimaryPieChart,
   SearchFilterSortPaginateTable,
 } from "../../components";
 import {
@@ -140,16 +140,34 @@ export default function Loans() {
             <Stack
               spacing={1}
               justifyContent="space-between"
-              className="w-full md:w-3/5 bg-white p-4 rounded-[12px]"
+              className="w-full md:w-3/5 bg-white p-4 rounded-[12px] self-start"
             >
-              f
+              Bar Chart here...
             </Stack>
             <Stack
               spacing={1}
-              justifyContent="space-between"
-              className="w-full md:w-2/4 bg-white p-4 rounded-[12px]"
+              className="w-full md:w-2/5 bg-white p-4 rounded-[12px]"
             >
-              <LoanPieChart />
+              <PrimaryPieChart
+                title="Loan Transactions"
+                data={[
+                  {
+                    label: "Deposit",
+                    value: 7272,
+                  },
+                  {
+                    label: "Withdrawal",
+                    value: 1638,
+                  },
+                  {
+                    label: "Loan Repayment",
+                    value: 3638,
+                  },
+                ]}
+                metadata={{
+                  currency: '₦'
+                }}
+              />
             </Stack>
           </div>
         </Stack>
