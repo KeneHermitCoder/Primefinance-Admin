@@ -142,7 +142,7 @@ export default function Transactions() {
               className="w-full md:w-2/5 bg-white p-4 rounded-[12px]"
             >
               <PrimaryPieChart
-                title="Loan Transactions"
+                title="Transaction"
                 data={[
                   {
                     label: "Deposit",

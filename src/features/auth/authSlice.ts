@@ -5,6 +5,7 @@ import useLocalStorage from '../hooks/useLocalStorage';
 const authApi = new AuthAPI();
 const login = authApi.login;
 const register = authApi.register;
+const logout = authApi.logout;
 
 const authSlice = createSlice({
   name: 'adminAuth',
@@ -68,9 +69,26 @@ const authSlice = createSlice({
         state.admin = null;
         // @ts-ignore
         state.error = action.error.message;
-      });
+      }).addCase(logout.pending, (state) => {
+        state.isLoading = true;
+        state.success = false;
+        state.error = null;
+      }).addCase(logout.fulfilled, (state) => {
+        state.isLoading = false;
+        state.success = true;
+        //   state.admin = null;
+        state.error = null;
+        useLocalStorage('set', { name: 'adminDetails', value: null, });
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.isLoading = false;
+        state.success = false;
+        state.admin = null;
+        // @ts-ignore
+        state.error = action.error.message;
+      })
   },
 });
 
 export const { reducer: auth, } = authSlice;
-export const { getAdminCredentials, logout, } = authSlice.actions
+export const { getAdminCredentials, } = authSlice.actions
