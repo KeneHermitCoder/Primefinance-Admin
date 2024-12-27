@@ -55,7 +55,6 @@ export default function Loans() {
             className="bg-white p-4 rounded-[12px]"
           >
             <SearchFilterSortPaginateTable
-              key="airtime-3bdd92d-1e3e-4d7d-8a1e-6d7c0a0a0a0a"
               title="Loan Overview"
               searchParams={["customerName", "loanId", "status"]}
               headCells={[
