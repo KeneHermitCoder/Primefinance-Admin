@@ -1,6 +1,6 @@
 import "../styles/navigation.style.css";
 
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   tabSwitch,
