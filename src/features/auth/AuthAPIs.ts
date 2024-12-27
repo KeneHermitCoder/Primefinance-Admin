@@ -1,6 +1,6 @@
 import { supabaseClient, } from '../../utils';
 import { createAsyncThunk, } from '@reduxjs/toolkit';
-import { SignInWithPasswordCredentials, SignUpWithPasswordCredentials, } from '@supabase/supabase-js';
+import { SignInWithPasswordCredentials, SignOut, SignUpWithPasswordCredentials, } from '@supabase/supabase-js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleError = (errorObject: any, data?: any) =>
@@ -39,6 +39,16 @@ class AuthAPI {
             console.log({ error2: error, errorResponse, });
             return thunkAPI.rejectWithValue(errorResponse);
         } else return data;
+    });
+
+    logout = createAsyncThunk('admin/logout', async (logoutDetails: SignOut, thunkAPI) => {
+        const { error, } = await supabaseClient.auth.signOut();
+        if (error) {
+            console.log({ error1: error, logoutDetails, });
+            const errorResponse = handleError(error);
+            console.log({ error2: error, errorResponse, });
+            return thunkAPI.rejectWithValue(errorResponse);
+        } else return;
     });
 }
 
