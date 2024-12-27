@@ -4,11 +4,17 @@ import { PieChart } from "@mui/x-charts/PieChart";
 
 export default function PrimaryPieChart({
   data,
+  title,
+  metadata,
 }: {
   data: {
     label: string;
     value: number;
   }[];
+  title?: string;
+  metadata?: {
+    currency?: string;
+  };
 }) {
   const [skipAnimation] = React.useState(false);
 
@@ -21,7 +27,7 @@ export default function PrimaryPieChart({
     ...data.map((v: { value: number; label: string }) => ({
       ...v,
       value: ((v: number, v2: number) => {
-        return Number.parseFloat(((v * v2) / 100).toFixed(2));
+        return Number.parseFloat(((v / v2) * 100).toFixed(2));
       })(v.value, providedChartDataValuesSum),
     })),
   ];
@@ -30,6 +36,18 @@ export default function PrimaryPieChart({
 
   return (
     <Box sx={{ width: "100%" }}>
+      {title && <h3 className="text-xl">{title}</h3>}
+      <div className="flex justify-around mt-4">
+        {data.map((v) => (
+          <div className="flex flex-col items-center">
+            <span className="text-lg font-semibold">
+              {metadata?.currency}
+              {v.value}
+            </span>
+            <span className="text-xs">{v.label}</span>
+          </div>
+        ))}
+      </div>
       <PieChart
         margin={{ bottom: 90, right: 90, left: 90 }}
         slotProps={{
@@ -43,8 +61,8 @@ export default function PrimaryPieChart({
         series={[
           {
             data: aggregatedChartData,
-            innerRadius: 50,
-            arcLabel: (params: any) => params.label ?? "",
+            innerRadius: 60,
+            // arcLabel: (params: any) => params.label ?? "",
             arcLabelMinAngle: 20,
             valueFormatter,
           },
