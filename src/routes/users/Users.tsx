@@ -121,7 +121,7 @@ export default function Users() {
                   label: "Last Login",
                 },
                 {
-                  id: "email",
+                  id: "userEmail",
                   numeric: true,
                   label: "Email",
                 },
@@ -146,7 +146,7 @@ export default function Users() {
                   name: "Kene Nnakwue",
                   userId: "LN12345",
                   lastLogin: "Just now",
-                  email: "kene.hermitcoder@me.com",
+                  userEmail: "kene.hermitcoder@me.com",
                   date: "10/01/2025",
                   status: "active",
                   metadata: {
@@ -157,7 +157,7 @@ export default function Users() {
                   name: "Chris Obi",
                   userId: "LN12346",
                   lastLogin: "yesterday",
-                  email: "chris.obi@me.com",
+                  userEmail: "chris.obi@me.com",
                   date: "10/12/2024",
                   status: "suspended",
                   metadata: {
@@ -168,6 +168,7 @@ export default function Users() {
                   name: "Chinwe Okafor",
                   userId: "LN12347",
                   lastLogin: "4:56pm",
+                  userEmail: "chinwe.okafor@me.com",
                   type: "deposit",
                   date: "10/01/2025",
                   status: "flagged",

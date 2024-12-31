@@ -51,7 +51,7 @@ export default function Transactions() {
           >
             <SearchFilterSortPaginateTable
               title="Transaction Overview"
-              searchParams={["customerName", "loanId", "status"]}
+              searchParams={["customerName", "transactionId", "status"]}
               filterParams={{
                 data: [
                   {

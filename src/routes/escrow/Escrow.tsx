@@ -47,7 +47,7 @@ export default function Escrow() {
           >
             <SearchFilterSortPaginateTable
               title="Transaction Overview"
-              searchParams={["customerName", "loanId", "status"]}
+              searchParams={["payer", "payee", "transactionId", "status"]}
               filterParams={{
                 data: [
                   {
