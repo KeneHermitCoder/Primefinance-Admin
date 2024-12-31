@@ -4,6 +4,7 @@ import {
   Reveal,
   PrimaryPieChart,
   SearchFilterSortPaginateTable,
+  PrimaryBarChart,
 } from "../../components";
 import {
   PersonAdd,
@@ -152,7 +153,7 @@ export default function Loans() {
               justifyContent="space-between"
               className="w-full md:w-3/5 bg-white p-4 rounded-[12px] self-start"
             >
-              Bar Chart here...
+              <PrimaryBarChart title="Loan Transactions" />
             </Stack>
             <Stack
               spacing={1}
