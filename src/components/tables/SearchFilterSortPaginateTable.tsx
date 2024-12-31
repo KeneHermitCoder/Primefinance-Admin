@@ -172,6 +172,7 @@ export default function SearchFilterSortPaginateTable({
   const handleSelectFilter = (option: string, label: string) => {
     setSelectedFilterLabel(label);
     setSelectedFilterOption(option);
+    handleFilter(label, option);
   }
 
   const handleFilter = (label: string, option: string) => {
@@ -181,9 +182,9 @@ export default function SearchFilterSortPaginateTable({
     }
   }
 
-  useEffect(() => {
-    handleFilter(selectedFilterLabel, selectedFilterOption);
-  }, [selectedFilterLabel, selectedFilterOption]);
+  // useEffect(() => {
+  //   handleFilter(selectedFilterLabel, selectedFilterOption);
+  // }, [selectedFilterLabel, selectedFilterOption]);
   // }, []);
 
   return (

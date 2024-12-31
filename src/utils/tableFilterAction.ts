@@ -5,7 +5,7 @@ export default function (label: string, selected: string, option: any) {
         case "date":
             // filter by date
             const comparator = (a: Date, b: Date, duration: number) => {
-                return a.getTime() - b.getTime() >= duration * 24 * 60 * 60 * 1000;
+                return a.getTime() - b.getTime() <= duration * 24 * 60 * 60 * 1000;
             };
             let providedDate = typeof option.date === "string" ? parseDate(option.date) : option.date;
             //Check if the returned date is actually a date
@@ -45,6 +45,6 @@ export default function (label: string, selected: string, option: any) {
             }
             return false;
         default:
-            return option[label] === selected;
+            return option[label.toLowerCase()] === selected;
     }
 }
