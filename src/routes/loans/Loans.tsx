@@ -66,7 +66,7 @@ export default function Loans() {
                   },
                   {
                     label: "Status",
-                    options: ["active", "flagged", "suspended"],
+                    options: ["overdue", "active", "pending", "repaid"],
                   },
                 ],
                 action: tableFilterAction,
