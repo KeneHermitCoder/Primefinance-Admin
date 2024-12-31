@@ -1,6 +1,6 @@
 import { Stack } from "@mui/material";
 import images from "../../constants/images";
-import { PrimaryPieChart, Reveal, SearchFilterSortPaginateTable } from "../../components";
+import { PrimaryLineChart, PrimaryPieChart, Reveal, SearchFilterSortPaginateTable } from "../../components";
 import { ArrowCircleDown, ArrowCircleUp } from "@mui/icons-material";
 import { DashboardAmountDisplay, LoanStatus } from "../../components/";
 import { tableFilterAction } from "../../utils";
@@ -144,7 +144,7 @@ export function Dashboard() {
                 justifyContent="space-between"
                 className="bg-white p-4 rounded-[12px]"
               >
-                <div className="w-full">Stack 2</div>
+                <PrimaryLineChart title="Transaction" />
               </Stack>
               <Stack
                 spacing={1}
