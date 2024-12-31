@@ -11,6 +11,7 @@ import {
   HandshakeRounded,
   FlagCircleRounded,
 } from "@mui/icons-material";
+import { tableFilterAction } from "../../utils";
 
 export default function Loans() {
   return (
@@ -57,6 +58,19 @@ export default function Loans() {
             <SearchFilterSortPaginateTable
               title="Loan Overview"
               searchParams={["customerName", "loanId", "status"]}
+              filterParams={{
+                data: [
+                  {
+                    label: "Date",
+                    options: ["Today", "This Week", "This Month", "This Year"],
+                  },
+                  {
+                    label: "Status",
+                    options: ["active", "flagged", "suspended"],
+                  },
+                ],
+                action: tableFilterAction,
+              }}
               headCells={[
                 {
                   id: "customerName",
@@ -79,7 +93,7 @@ export default function Loans() {
                   label: "Interest",
                 },
                 {
-                  id: "dueDate",
+                  id: "date",
                   numeric: false,
                   label: "Due Date",
                 },
@@ -100,7 +114,7 @@ export default function Loans() {
                   loanId: "LN12345",
                   amount: "₦2,000",
                   interest: "₦200",
-                  dueDate: "10/01/2025",
+                  date: "10/01/2025",
                   status: "active",
                   metadata: {
                     itemPhoto:
@@ -112,7 +126,7 @@ export default function Loans() {
                   loanId: "LN12346",
                   amount: "₦10,000",
                   interest: "₦100",
-                  dueDate: "10/12/2025",
+                  date: "10/12/2024",
                   status: "overdue",
                   metadata: {
                     itemPhoto:
@@ -124,7 +138,7 @@ export default function Loans() {
                   loanId: "LN12347",
                   amount: "₦5,000",
                   interest: "₦500",
-                  dueDate: "10/01/2025",
+                  date: "10/01/2025",
                   status: "active",
                   metadata: {
                     itemPhoto:
@@ -164,7 +178,7 @@ export default function Loans() {
                   },
                 ]}
                 metadata={{
-                  currency: '₦'
+                  currency: "₦",
                 }}
               />
             </Stack>

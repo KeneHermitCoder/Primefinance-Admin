@@ -1,6 +1,7 @@
 import { parseDate, } from "./format";
 
 export default function (label: string, selected: string, option: any) {
+
     switch (label.toLowerCase()) {
         case "date":
             // filter by date
@@ -16,27 +17,19 @@ export default function (label: string, selected: string, option: any) {
                     case "This Week":
                         return comparator(
                             providedDate,
-                            new Date(
-                                new Date().setDate(new Date().getDate() - 7)
-                            ),
+                            new Date(new Date().setDate(new Date().getDate() - 7)),
                             7
                         );
                     case "This Month":
                         return comparator(
                             providedDate,
-                            new Date(
-                                new Date().setMonth(new Date().getMonth() - 1)
-                            ),
+                            new Date(new Date().setMonth(new Date().getMonth() - 1)),
                             30
                         );
                     case "This Year":
                         return comparator(
                             providedDate,
-                            new Date(
-                                new Date().setFullYear(
-                                    new Date().getFullYear() - 1
-                                )
-                            ),
+                            new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
                             365.25
                         );
                     default:
@@ -47,4 +40,5 @@ export default function (label: string, selected: string, option: any) {
         default:
             return option[label.toLowerCase()] === selected;
     }
+
 }

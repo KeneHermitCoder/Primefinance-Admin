@@ -7,10 +7,10 @@ import { TableRow, Stack } from "@mui/material";
 import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
 import TableCell from "@mui/material/TableCell";
+import React, { useMemo, useState, } from "react";
 import TableContainer from "@mui/material/TableContainer";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import TablePagination from "@mui/material/TablePagination";
-import React, { useMemo, useState, useEffect, } from "react";
 
 interface Data {
   [key: string]: any;
@@ -116,8 +116,10 @@ export default function SearchFilterSortPaginateTable({
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [orderBy, setOrderBy] = useState<keyof Data>("calories");
   const [filteredRows, setFilteredRows] = useState<Data[]>(rows);
-  const [selectedFilterLabel, setSelectedFilterLabel] = useState(filterParams?.data[0]?.label || '');
-  const [selectedFilterOption, setSelectedFilterOption] = useState(filterParams?.data[0]?.options[0] || '');
+  // const [selectedFilterLabel, setSelectedFilterLabel] = useState(filterParams?.data[0]?.label || '');
+  // const [selectedFilterOption, setSelectedFilterOption] = useState(filterParams?.data[0]?.options[0] || '');
+  const [, setSelectedFilterLabel] = useState(filterParams?.data[0]?.label || '');
+  const [, setSelectedFilterOption] = useState(filterParams?.data[0]?.options[0] || '');
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -181,11 +183,6 @@ export default function SearchFilterSortPaginateTable({
       setFilteredRows(filtered);
     }
   }
-
-  // useEffect(() => {
-  //   handleFilter(selectedFilterLabel, selectedFilterOption);
-  // }, [selectedFilterLabel, selectedFilterOption]);
-  // }, []);
 
   return (
     <Box sx={{ width: "100%" }} className="flex flex-col gap-3">
