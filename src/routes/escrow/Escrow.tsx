@@ -1,15 +1,13 @@
 import { Stack } from "@mui/material";
 import UsersKPIDisplay from "../../components/usersKPI";
-import {
-  Reveal,
-  SearchFilterSortPaginateTable,
-} from "../../components";
+import { Reveal, SearchFilterSortPaginateTable } from "../../components";
 import {
   PersonAdd,
   AttachMoney,
   HandshakeRounded,
   FlagCircleRounded,
 } from "@mui/icons-material";
+import { tableFilterAction } from "../../utils";
 
 export default function Escrow() {
   return (
@@ -50,6 +48,19 @@ export default function Escrow() {
             <SearchFilterSortPaginateTable
               title="Transaction Overview"
               searchParams={["customerName", "loanId", "status"]}
+              filterParams={{
+                data: [
+                  {
+                    label: "Date",
+                    options: ["Today", "This Week", "This Month", "This Year"],
+                  },
+                  {
+                    label: "Status",
+                    options: ["released", "cancelled", "held"],
+                  },
+                ],
+                action: tableFilterAction,
+              }}
               headCells={[
                 {
                   id: "payer",
@@ -96,8 +107,7 @@ export default function Escrow() {
                   date: "10/01/2025",
                   status: "released",
                   metadata: {
-                    itemPhoto:
-                      "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+                    itemPhoto: "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
                   },
                 },
                 {
@@ -108,8 +118,7 @@ export default function Escrow() {
                   date: "10/12/2025",
                   status: "held",
                   metadata: {
-                    itemPhoto:
-                      "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+                    itemPhoto: "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
                   },
                 },
                 {
@@ -117,11 +126,10 @@ export default function Escrow() {
                   transactionId: "LN12347",
                   amount: "₦5,000",
                   payee: "Philemon Adamu",
-                  date: "10/01/2025",
+                  date: "10/01/2024",
                   status: "cancelled",
                   metadata: {
-                    itemPhoto:
-                      "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+                    itemPhoto: "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
                   },
                 },
               ]}

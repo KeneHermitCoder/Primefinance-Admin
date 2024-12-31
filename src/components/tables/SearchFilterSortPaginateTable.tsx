@@ -1,4 +1,3 @@
-import React, { useMemo, useState } from "react";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import SearchField from "../searchField";
@@ -8,6 +7,7 @@ import { TableRow, Stack } from "@mui/material";
 import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
 import TableCell from "@mui/material/TableCell";
+import React, { useMemo, useState, } from "react";
 import TableContainer from "@mui/material/TableContainer";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import TablePagination from "@mui/material/TablePagination";
@@ -95,13 +95,19 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 export default function SearchFilterSortPaginateTable({
   rows = [],
+  filterParams,
   headCells = [],
-  // filterParams = [],
   title = "Table Title",
 }: {
   rows?: Data[];
   title?: string;
-  filterParams?: any[];
+  filterParams?: {
+    data: {
+      label: string;
+      options: string[];
+    }[];
+    action: (label: string, selected: any, option: any) => boolean;
+  };
   searchParams: any[];
   headCells?: HeadCell[];
 }) {
@@ -110,6 +116,10 @@ export default function SearchFilterSortPaginateTable({
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [orderBy, setOrderBy] = useState<keyof Data>("calories");
   const [filteredRows, setFilteredRows] = useState<Data[]>(rows);
+  // const [selectedFilterLabel, setSelectedFilterLabel] = useState(filterParams?.data[0]?.label || '');
+  // const [selectedFilterOption, setSelectedFilterOption] = useState(filterParams?.data[0]?.options[0] || '');
+  const [, setSelectedFilterLabel] = useState(filterParams?.data[0]?.label || '');
+  const [, setSelectedFilterOption] = useState(filterParams?.data[0]?.options[0] || '');
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -145,7 +155,7 @@ export default function SearchFilterSortPaginateTable({
     [order, orderBy, page, rowsPerPage, filteredRows]
   );
 
-  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value.toLowerCase();
     console.log(searchTerm);
 
@@ -159,27 +169,40 @@ export default function SearchFilterSortPaginateTable({
     console.log({ filtered });
     // Set the filtered values to filteredRows
     setFilteredRows(filtered);
-  };
+  }
+
+  const handleSelectFilter = (option: string, label: string) => {
+    setSelectedFilterLabel(label);
+    setSelectedFilterOption(option);
+    handleFilter(label, option);
+  }
+
+  const handleFilter = (label: string, option: string) => {
+    if (filterParams) {
+      const filtered = rows.filter((row) => filterParams.action(label, option, row));
+      setFilteredRows(filtered);
+    }
+  }
 
   return (
     <Box sx={{ width: "100%" }} className="flex flex-col gap-3">
-      <div className="flex flex-col lg:flex-row md:justify-between gap-2">
+      <div className="flex flex-col lg:flex-row lg:items-center md:justify-between gap-2">
         <div className="text-xl text-gray-700">{title}</div>
-        <div
-          className="flex flex-col sm:flex-row justify-between items-center gap-2"
-        >
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
           {/* Search Field */}
-          <SearchField onChange={onSearch} />
-          <div className="flex items-end gap-1">
-            <DropDownSelect
-              options={["Today", "Yesterday"]}
-              onSelected={(option: any) => console.log(option)}
-            />
-            <DropDownSelect
-              options={["Pending", "Completed"]}
-              onSelected={(option: any) => console.log(option)}
-            />
-          </div>
+          <SearchField onChange={handleSearch} />
+          {filterParams && filterParams.data?.length > 0 && (
+            <div className="flex items-end gap-1">
+              {filterParams.data.map((param, index) => (
+                <DropDownSelect
+                  key={index}
+                  options={param.options}
+                  label={param.label}
+                  onSelected={handleSelectFilter}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
       <Stack className="bg-white rounded-[8px] border" spacing={1}>
