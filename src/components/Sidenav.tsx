@@ -1,6 +1,6 @@
 import "../styles/navigation.style.css";
 
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   tabSwitch,
@@ -9,6 +9,7 @@ import {
 import {
   Home,
   Money,
+  Clear,
   Logout,
   Settings,
   Notifications,
@@ -79,7 +80,11 @@ const navData = [
   ],
 ];
 
-export default function SideNav() {
+export default function SideNav({
+  toggleSideNav,
+}: {
+  toggleSideNav: () => void;
+}) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -100,11 +105,16 @@ export default function SideNav() {
 
   return (
     <nav className="bg-[#089C48] w-[300px] flex flex-col h-full overflow-hidden">
-      <div
-        onClick={() => handleNavigation("/", "dashboard")}
-        className="flex items-center p-4 py-6 pl-10 text-white font-semibold text-sm cursor-pointer"
-      >
-        PrimeFinance
+      <div className="flex items-center justify-between p-4">
+        <div
+          onClick={() => handleNavigation("/", "dashboard")}
+          className="flex items-center p-4 py-6 pl-10 text-white font-semibold text-sm cursor-pointer"
+        >
+          PrimeFinance
+        </div>
+        <button type='button' className="lg:hidden text-white" onClick={toggleSideNav}>
+          <Clear />
+        </button>
       </div>
       <div className="flex flex-col h-full justify-between">
         {navData.map((items, index) => (
