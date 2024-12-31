@@ -1,4 +1,5 @@
-import { Stack, } from "@mui/material";
+import { Stack } from "@mui/material";
+import { tableFilterAction } from "../../utils";
 import UsersKPIDisplay from "../../components/usersKPI";
 import {
   Reveal,
@@ -51,6 +52,23 @@ export default function Transactions() {
             <SearchFilterSortPaginateTable
               title="Transaction Overview"
               searchParams={["customerName", "loanId", "status"]}
+              filterParams={{
+                data: [
+                  {
+                    label: "Date",
+                    options: ["Today", "This Week", "This Month", "This Year"],
+                  },
+                  {
+                    label: "Type",
+                    options: ["deposit", "withdrawal", "transfer"],
+                  },
+                  {
+                    label: "Status",
+                    options: ["active", "flagged", "suspended"],
+                  },
+                ],
+                action: tableFilterAction,
+              }}
               headCells={[
                 {
                   id: "name",
@@ -106,7 +124,7 @@ export default function Transactions() {
                   transactionId: "LN12346",
                   amount: "₦10,000",
                   type: "deposit",
-                  date: "10/12/2025",
+                  date: "10/12/2024",
                   status: "suspended",
                   metadata: {
                     itemPhoto:
