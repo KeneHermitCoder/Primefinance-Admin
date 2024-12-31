@@ -1,12 +1,11 @@
 import "../styles/navigation.style.css";
-import { Container, } from "../styles";
-import { SideNav, } from "../components";
-import { useSelector, } from "react-redux";
-import { Outlet, } from "react-router-dom";
-import { useState, useEffect, } from "react";
-import { Notifications, } from "@mui/icons-material";
+import { Container } from "../styles";
+import { SideNav } from "../components";
+import { useSelector } from "react-redux";
+import { Outlet } from "react-router-dom";
+import { useState, useEffect } from "react";
 import CircleLoader from "react-spinners/CircleLoader";
-
+import { Notifications, Menu } from "@mui/icons-material";
 
 const override = {
   display: "block",
@@ -19,18 +18,22 @@ const override = {
 };
 
 export default function Layout() {
-  const { navigation, } = useSelector((state: any) => state);
+  const { navigation } = useSelector((state: any) => state);
   // const { data, isLoading, isSuccess, isError, error } = useGetAdminsQuery({
   // 	refetchOnMountOrArgChange: true,
   // });
   const [loading, setLoading] = useState(true);
+  const [sideNavVisible, setSideNavVisible] = useState(false);
 
-  
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 500);
   }, [loading]);
+
+  const toggleSideNav = () => {
+    setSideNavVisible(!sideNavVisible);
+  };
 
   return (
     <Container>
@@ -46,15 +49,28 @@ export default function Layout() {
         />
       ) : (
         <>
-            <div className="flex h-screen">
-              <SideNav />
+          <div className="flex h-screen">
+            <div
+              className={`fixed h-screen z-50 lg:relative lg:z-auto ${
+                sideNavVisible ? "block" : "hidden"
+              } lg:block`}
+            >
+              <SideNav toggleSideNav={toggleSideNav} />
+            </div>
             <div className="flex flex-col w-full h-full overflow-y-hidden bg-[#f2f5f8]">
               <header className="flex items-center bg-white w-full p-4">
                 <div className="flex items-center text-gray-600 text-xl mr-auto">
+                  <button
+                    className="lg:hidden mr-4"
+                    onClick={toggleSideNav}
+                    aria-label="Toggle navigation"
+                  >
+                    <Menu />
+                  </button>
                   {navigation.mainTab}{" "}
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className='text-xs text-gray-600'>Kene Nnakwue</span>
+                  <span className="text-xs text-gray-600">Kene Nnakwue</span>
                   <span className="flex items-center justify-center w-9 h-9 bg-green-500 rounded-full">
                     <img
                       src={

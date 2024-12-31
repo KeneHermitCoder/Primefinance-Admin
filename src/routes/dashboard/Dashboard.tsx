@@ -47,16 +47,17 @@ export function Dashboard() {
               backgroundColour="#f5eac9"
             />
           </Stack>
-          <Stack
+          {/* <Stack
             direction="row"
             spacing={2.5}
             justifyContent="space-between"
             alignItems="start"
-          >
+          > */}
+          <div className="flex flex-col md:flex-row gap-6">
             <Stack
               spacing={2.5}
               justifyContent="space-between"
-              className="w-2/5 bg-white p-4 rounded-[12px]"
+              className="w-full md:w-2/5 bg-white p-4 rounded-[12px]"
             >
               {/* <Stack className="w-full text-xl">Loan Status</Stack>
               <Stack
@@ -151,7 +152,6 @@ export function Dashboard() {
                 justifyContent="space-between"
                 className="bg-white p-4 rounded-[12px]"
               >
-
                 <SearchFilterSortPaginateTable
                   title="Loan Overview"
                   // searchParams={[]}
@@ -235,7 +235,8 @@ export function Dashboard() {
                 />
               </Stack>
             </Stack>
-          </Stack>
+          </div>
+          {/* </Stack> */}
         </Stack>
       </Reveal>
     </>
