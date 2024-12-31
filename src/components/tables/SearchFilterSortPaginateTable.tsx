@@ -98,6 +98,7 @@ export default function SearchFilterSortPaginateTable({
   filterParams,
   headCells = [],
   title = "Table Title",
+  searchParams,
 }: {
   rows?: Data[];
   title?: string;
@@ -108,7 +109,7 @@ export default function SearchFilterSortPaginateTable({
     }[];
     action: (label: string, selected: any, option: any) => boolean;
   };
-  searchParams: any[];
+  searchParams?: any[];
   headCells?: HeadCell[];
 }) {
   const [page, setPage] = useState(0);
@@ -157,17 +158,18 @@ export default function SearchFilterSortPaginateTable({
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value.toLowerCase();
-    console.log(searchTerm);
 
     // Filter out rows based on search params
     const filtered = rows.filter((row) => {
-      return Object.values(row).some((value) =>
-        value.toString().toLowerCase().includes(searchTerm)
-      );
+      // return Object.values(row).some((value) =>
+      //   value.toString().toLowerCase().includes(searchTerm)
+      // );
+      return Object.entries(row).some(([key, value]) => {
+        if (typeof value === "string")
+          return value.toLowerCase().includes(searchTerm) && searchParams?.includes(key);
+        return false;
+      })
     });
-
-    console.log({ filtered });
-    // Set the filtered values to filteredRows
     setFilteredRows(filtered);
   }
 
@@ -190,7 +192,7 @@ export default function SearchFilterSortPaginateTable({
         <div className="text-xl text-gray-700">{title}</div>
         <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
           {/* Search Field */}
-          <SearchField onChange={handleSearch} />
+          { searchParams && searchParams.length > 0 && <SearchField onChange={handleSearch} />}
           {filterParams && filterParams.data?.length > 0 && (
             <div className="flex items-end gap-1">
               {filterParams.data.map((param, index) => (
