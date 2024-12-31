@@ -35,7 +35,7 @@ export default function DropDownSelect({
         aria-haspopup="true"
         onClick={handleClick}
       >
-        <div className="text-sm">{selectedItem}</div>
+        <div className="flex max-w-[70px] truncate text-sm">{selectedItem}</div>
         <KeyboardArrowDownIcon />
       </IconButton>
       <Menu

@@ -101,11 +101,6 @@ export default function SearchFilterSortPaginateTable({
 }: {
   rows?: Data[];
   title?: string;
-  // filterParams?: {
-  //   label: string;
-  //   options: string[];
-  //   action: (selected: any, option: any) => boolean;
-  // }[];
   filterParams?: {
     data: {
       label: string;
@@ -193,7 +188,7 @@ export default function SearchFilterSortPaginateTable({
 
   return (
     <Box sx={{ width: "100%" }} className="flex flex-col gap-3">
-      <div className="flex flex-col lg:flex-row md:justify-between gap-2">
+      <div className="flex flex-col lg:flex-row lg:items-center md:justify-between gap-2">
         <div className="text-xl text-gray-700">{title}</div>
         <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
           {/* Search Field */}
