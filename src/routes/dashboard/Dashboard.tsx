@@ -1,16 +1,21 @@
 import { Stack } from "@mui/material";
 import images from "../../constants/images";
-import { PrimaryLineChart, PrimaryPieChart, Reveal, SearchFilterSortPaginateTable } from "../../components";
+import { tableFilterAction } from "../../utils";
 import { ArrowCircleDown, ArrowCircleUp } from "@mui/icons-material";
 import { DashboardAmountDisplay, LoanStatus } from "../../components/";
-import { tableFilterAction } from "../../utils";
+import {
+  PrimaryLineChart,
+  PrimaryPieChart,
+  Reveal,
+  SearchFilterSortPaginateTable,
+} from "../../components";
 
 export function Dashboard() {
   return (
     <>
       <Reveal>
         <Stack spacing={4} paddingX={1} paddingY={1}>
-          <Stack direction="row" spacing={2.5} justifyContent="space-between">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             <DashboardAmountDisplay
               title="Total revenue"
               amount="$100,000"
@@ -46,45 +51,13 @@ export function Dashboard() {
               amount="$100,826"
               backgroundColour="#f5eac9"
             />
-          </Stack>
-          {/* <Stack
-            direction="row"
-            spacing={2.5}
-            justifyContent="space-between"
-            alignItems="start"
-          > */}
-          <div className="flex flex-col md:flex-row gap-6">
+          </div>
+          <div className="flex flex-col lg:flex-row gap-6">
             <Stack
               spacing={2.5}
               justifyContent="space-between"
-              className="w-full md:w-2/5 bg-white p-4 rounded-[12px]"
+              className="w-full lg:w-2/5 bg-white p-4 rounded-[12px]"
             >
-              {/* <Stack className="w-full text-xl">Loan Status</Stack>
-              <Stack
-                justifyContent="space-between"
-                paddingX={4}
-                spacing={2}
-                direction="row"
-              >
-                <Stack justifyContent="center" alignItems="center">
-                  <span className="text-3xl font-semibold">950</span>
-                  <span className="text-gray-600 font-hairline text-xs">
-                    Active loans
-                  </span>
-                </Stack>
-                <Stack justifyContent="space-between" alignItems="center">
-                  <span className="text-3xl font-semibold">250</span>
-                  <span className="text-gray-600 font-hairline text-xs">
-                    Repaid loans
-                  </span>
-                </Stack>
-                <Stack justifyContent="space-between" alignItems="center">
-                  <span className="text-3xl font-semibold">45</span>
-                  <span className="text-gray-600 font-hairline text-xs">
-                    Overdue loans
-                  </span>
-                </Stack>
-              </Stack> */}
               <PrimaryPieChart
                 title="Loan Status"
                 data={[
@@ -137,7 +110,7 @@ export function Dashboard() {
             <Stack
               spacing={2.5}
               justifyContent="space-between"
-              className="w-3/5"
+              className="w-full lg:w-3/5"
             >
               <Stack
                 direction="row"

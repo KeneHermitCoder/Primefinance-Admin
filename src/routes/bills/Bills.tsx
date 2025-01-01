@@ -1,5 +1,5 @@
 // import { Divider, Stack } from "@mui/material";
-import { Stack, } from "@mui/material";
+import { Stack } from "@mui/material";
 import { Reveal, SearchFilterSortPaginateTable } from "../../components";
 import BillPaymentKPIDisplay from "../../components/billPaymentKPITop";
 import PaymentsIcon from "@mui/icons-material/Payments";
@@ -79,7 +79,8 @@ export default function Bills() {
       <Reveal>
         <Stack direction="column" spacing={3} paddingX={1} paddingY={1}>
           {/* Top KPI  */}
-          <Stack direction="row" spacing={2}>
+          {/* <Stack direction="row" spacing={2}> */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             {/* Total Payments */}
             <BillPaymentKPIDisplay
               title="Total Payments"
@@ -121,7 +122,11 @@ export default function Bills() {
               total="230"
               backgroundColour="#fff8e1"
             />
-          </Stack>
+          </div>
+          {/* </Stack> */}
+
+          {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 md:divide-x-2 divide-y-2 lg:divide-y-0"> */}
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 md:divide-x-2 divide-y-2 lg:divide-y-0">
             {/* sub KPI  */}
             <BillsKPIDisplay
@@ -218,7 +223,8 @@ export default function Bills() {
                   date: "10/01/2025",
                   status: "completed",
                   metadata: {
-                    itemPhoto: "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+                    itemPhoto:
+                      "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
                   },
                 },
                 {
@@ -229,7 +235,8 @@ export default function Bills() {
                   date: "10/12/2025",
                   status: "failed",
                   metadata: {
-                    itemPhoto: "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+                    itemPhoto:
+                      "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
                   },
                 },
                 {
@@ -240,7 +247,8 @@ export default function Bills() {
                   date: "10/01/2024",
                   status: "pending",
                   metadata: {
-                    itemPhoto: "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+                    itemPhoto:
+                      "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
                   },
                 },
               ]}

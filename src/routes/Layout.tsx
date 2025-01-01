@@ -1,4 +1,3 @@
-import "../styles/navigation.style.css";
 import { Container } from "../styles";
 import { SideNav } from "../components";
 import { useSelector } from "react-redux";
@@ -6,16 +5,6 @@ import { Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
 import CircleLoader from "react-spinners/CircleLoader";
 import { Notifications, Menu } from "@mui/icons-material";
-
-const override = {
-  display: "block",
-  margin: "auto auto",
-  borderColor: "green",
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-};
 
 export default function Layout() {
   const { navigation } = useSelector((state: any) => state);
@@ -41,8 +30,15 @@ export default function Layout() {
         <CircleLoader
           color={"#14ae5c"}
           loading={loading}
-          // @ts-expect-error - @types/react-spinners is not up to date
-          cssOverride={override}
+          cssOverride={{
+            display: "block",
+            margin: "auto auto",
+            borderColor: "green",
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
           size={150}
           aria-label="Loading Spinner"
           data-testid="loader"
@@ -55,7 +51,7 @@ export default function Layout() {
                 sideNavVisible ? "block" : "hidden"
               } lg:block`}
             >
-              <SideNav toggleSideNav={toggleSideNav} />
+              <SideNav toggleSideNav={toggleSideNav} visible={sideNavVisible} />
             </div>
             <div className="flex flex-col w-full h-full overflow-y-hidden bg-[#f2f5f8]">
               <header className="flex items-center bg-white w-full p-4">

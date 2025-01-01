@@ -14,7 +14,7 @@ export default function BillsKPIDisplay({
   return (
     <div
       style={{ backgroundColor: backgroundColour || "#fff" }}
-      className="w-full max-w-[280px] flex flex-col justify-center items-center  overflow-hidden hover:cursor-pointer hover:shadow-lg transition-all duration-300 ease-in-out p-4"
+      className="w-full flex flex-col justify-center items-center  overflow-hidden hover:cursor-pointer hover:shadow-lg transition-all duration-300 ease-in-out p-4"
     >
       {/* KPI Header */}
       <div className="flex items-center w-full mb-2">
