@@ -63,7 +63,7 @@ export default function Layout() {
                   >
                     <Menu />
                   </button>
-                  {navigation.mainTab}{" "}
+                  <h1 className='truncate max-w-[120px] md:max-w-[300px]'>{navigation.mainTab}{" "}</h1>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-gray-600">Kene Nnakwue</span>
