@@ -1,5 +1,6 @@
 import "../styles/navigation.style.css";
 
+import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -81,12 +82,15 @@ const navData = [
 ];
 
 export default function SideNav({
+  visible,
   toggleSideNav,
 }: {
+  visible: boolean;
   toggleSideNav: () => void;
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const sidenavRef = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { navigation } = useSelector((state: { navigation: any }) => state);
   const tabDecoration = (index: number) => (
@@ -101,10 +105,37 @@ export default function SideNav({
     dispatch(tabSwitch(tab));
     dispatch(mainTabSwitch(tab));
     navigate(link, { state: { from: { pathname: location.pathname } } });
+    toggleSideNav();
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        sidenavRef.current &&
+        !sidenavRef.current.contains(event.target as Node)
+      ) {
+        toggleSideNav();
+      }
+    };
+
+    if (visible) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [visible, toggleSideNav]);
+
   return (
-    <nav className="bg-[#089C48] w-[300px] flex flex-col h-full overflow-hidden">
+    <nav
+      ref={sidenavRef}
+      className={`bg-[#089C48] w-[300px] flex flex-col h-full overflow-hidden sidenav fixed z-50 lg:relative lg:z-auto ${
+        visible ? "sidenav-visible" : "sidenav-hidden"
+      }`}
+    >
       <div className="flex items-center justify-between p-4">
         <div
           onClick={() => handleNavigation("/", "dashboard")}
@@ -112,7 +143,11 @@ export default function SideNav({
         >
           PrimeFinance
         </div>
-        <button type='button' className="lg:hidden text-white" onClick={toggleSideNav}>
+        <button
+          type="button"
+          className="lg:hidden text-white"
+          onClick={toggleSideNav}
+        >
           <Clear />
         </button>
       </div>

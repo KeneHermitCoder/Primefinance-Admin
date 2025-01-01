@@ -1,53 +1,22 @@
-import { Divider, Stack } from "@mui/material";
-import { Reveal, SearchFilterSortPaginateTable } from "../../components";
+import { Stack, } from "@mui/material";
+import { tableFilterAction } from "../../utils";
 import UsersKPIDisplay from "../../components/usersKPI";
+import { Reveal, SearchFilterSortPaginateTable } from "../../components";
 import {
   AttachMoney,
   FlagCircleRounded,
   HandshakeRounded,
   PersonAdd,
 } from "@mui/icons-material";
-import { tableFilterAction } from "../../utils";
-// import EnhancedTable from "../../components/EnhancedTable";
-// import TransactionOverview from "../../components/TransactionOverviewHeader";
 
 export default function Users() {
-  // const userKPIData = [
-  //   { Name: 'John Doe', UserID: '1', LastLogin: '2024-12-22', Email: 'john.doe@example.com', Date: '2024-12-01', Status: 'Active' },
-  //   { Name: 'Jane Smith', UserID: '2', LastLogin: '2024-12-21', Email: 'jane.smith@example.com', Date: '2024-11-25', Status: 'Inactive' },
-  //   { Name: 'Sam Green', UserID: '3', LastLogin: '2024-12-23', Email: 'sam.green@example.com', Date: '2024-12-01', Status: 'Active' },
-  //   { Name: 'Alice Brown', UserID: '4', LastLogin: '2024-12-20', Email: 'alice.brown@example.com', Date: '2024-11-30', Status: 'Inactive' },
-  // ];
-
-  // const columns = [
-  //   { label: 'Name', field: 'Name', sortable: true },
-  //   { label: 'User ID', field: 'UserID', sortable: true },
-  //   { label: 'Last Login', field: 'LastLogin', sortable: false },
-  //   { label: 'Email', field: 'Email', sortable: false },
-  //   { label: 'Date', field: 'Date', sortable: true },
-  //   {
-  //     label: 'Status',
-  //     field: 'Status',
-  //     sortable: false,
-  //     render: (value: string) => (
-  //       <span style={{ color: value === 'Active' ? 'green' : 'red' }}>
-  //         {value}
-  //       </span>
-  //     )
-  //   },
-  //   { label: 'Actions', field: 'Actions', sortable: false },
-  // ];
-
   return (
     <>
       <Reveal>
         <Stack direction="column" spacing={3} paddingX={1} paddingY={1}>
           {/* KPI Section */}
-          <Stack
-            direction="row"
-            sx={{ backgroundColor: "#fff", padding: "12px" }}
-            divider={<Divider orientation="vertical" flexItem />}
-          >
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 md:divide-x-2 divide-y-2 lg:divide-y-0">
             <UsersKPIDisplay
               subtitle="Total Users"
               kpiIcon={<AttachMoney sx={{ color: "success.main" }} />}
@@ -71,17 +40,7 @@ export default function Users() {
               kpiIcon={<PersonAdd sx={{ color: "primary.main" }} />}
               total="1,200"
             />
-          </Stack>
-
-          {/* <Stack
-            sx={{backgroundColor:'#fff', borderRadius:5}}
-            spacing={1}
-            justifyContent="space-between"
-            className=" p-4 "
-          >
-          <TransactionOverview header="Transaction Overview"/>
-          <EnhancedTable data={userKPIData} columns={columns} />
-          </Stack> */}
+          </div>
 
           <Stack
             spacing={1}
@@ -89,7 +48,7 @@ export default function Users() {
             className="bg-white p-4 rounded-[12px]"
           >
             <SearchFilterSortPaginateTable
-              title="Transaction Overview"
+              title="Users Overview"
               searchParams={["name", "userId", "userEmail", "status"]}
               filterParams={{
                 data: [
@@ -150,7 +109,8 @@ export default function Users() {
                   date: "10/01/2025",
                   status: "active",
                   metadata: {
-                    itemPhoto: "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+                    itemPhoto:
+                      "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
                   },
                 },
                 {
@@ -161,7 +121,8 @@ export default function Users() {
                   date: "10/12/2024",
                   status: "suspended",
                   metadata: {
-                    itemPhoto: "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+                    itemPhoto:
+                      "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
                   },
                 },
                 {
@@ -173,7 +134,8 @@ export default function Users() {
                   date: "10/01/2025",
                   status: "flagged",
                   metadata: {
-                    itemPhoto: "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+                    itemPhoto:
+                      "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
                   },
                 },
               ]}
