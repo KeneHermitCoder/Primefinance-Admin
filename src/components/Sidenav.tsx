@@ -95,6 +95,8 @@ export default function SideNav({
   const navigate = useNavigate();
   const sidenavRef = useRef<HTMLDivElement>(null);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+  // @ts-ignore
+	const { isLoading, error, success } = useSelector((state) => state.auth);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { navigation } = useSelector((state: { navigation: any }) => state);
   const tabDecoration = (index: number) => (
@@ -121,6 +123,8 @@ export default function SideNav({
     // @ts-ignore
     dispatch(new AuthAPI().logout(getAccessToken()));
     setLogoutModalOpen(false);
+    // navigate("/login", { state: { from: { pathname: location.pathname } } });
+    navigate("/login");
   };
 
   useEffect(() => {
@@ -155,6 +159,7 @@ export default function SideNav({
         handleOpen={toggleSideNav}
         acceptAction={handleLogout}
         rejectAction={handleCancelLogout}
+        acceptActionInProgress={isLoading}
       />
       <nav
         ref={sidenavRef}

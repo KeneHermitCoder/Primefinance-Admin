@@ -48,7 +48,10 @@ class AuthAPI {
             const errorResponse = handleError(error);
             console.log({ error2: error, errorResponse, });
             return thunkAPI.rejectWithValue(errorResponse);
-        } else return;
+        } else {
+            console.log({ logoutDetails, });
+            return;
+        };
     });
 }
 
