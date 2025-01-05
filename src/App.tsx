@@ -15,7 +15,6 @@ import {
   Users,
   Layout,
   Escrow,
-  Logout,
   Settings,
   Register,
   Dashboard,
@@ -81,11 +80,6 @@ const router = createBrowserRouter([
           {
             path: "/settings",
             element: <Settings />,
-            errorElement: <ErrorPage />,
-          },
-          {
-            path: "/logout",
-            element: <Logout />,
             errorElement: <ErrorPage />,
           },
         ],
