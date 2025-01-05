@@ -118,6 +118,7 @@ export default function SideNav({
     setLogoutModalOpen(false);
   };
   const handleLogout = async () => {
+    // @ts-ignore
     dispatch(new AuthAPI().logout(getAccessToken()));
     setLogoutModalOpen(false);
   };
