@@ -1,11 +1,16 @@
+import { useState } from "react";
 import { Stack } from "@mui/material";
 import {
-  GeneralSettings,
-  NotificationSettings,
   Reveal,
   SettingsNav,
+  GeneralSettings,
+  NotificationSettings,
+  SystemConfigSettings,
+  DataManagementSettings,
+  SecurityPrivacySettings,
+  UserPermissionsSettings,
+  PaymentIntegrationSettings,
 } from "../../components";
-import { useState } from "react";
 
 const navigationData = [
   {
@@ -16,7 +21,27 @@ const navigationData = [
     id: "notifications",
     component: <NotificationSettings />,
   },
-];
+  {
+    id: "security_&_privacy",
+    component: <SecurityPrivacySettings />,
+  },
+  {
+    id: 'user_permissions',
+    component: <UserPermissionsSettings />
+  },
+  {
+    id: 'payment_integrations',
+    component: <PaymentIntegrationSettings />
+  },
+  {
+    id: 'system_config',
+    component: <SystemConfigSettings />
+  },
+  {
+    id: 'data_management',
+    component: <DataManagementSettings />
+  },
+]
 
 export default function Settings() {
   const [currentNavItem, setCurrentNavItem] = useState(navigationData[0]);
