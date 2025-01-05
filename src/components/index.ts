@@ -1,5 +1,6 @@
 export * from './charts';
 export * from './tables';
+export * from './settings';
 export * from './animations';
 export { default as SideNav, } from './Sidenav';
 export { default as Container, } from './Container';
