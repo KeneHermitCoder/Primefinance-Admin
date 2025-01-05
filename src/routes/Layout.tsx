@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
 import CircleLoader from "react-spinners/CircleLoader";
-import { Notifications, Menu } from "@mui/icons-material";
+import { Notifications, Menu, } from "@mui/icons-material";
 
 export default function Layout() {
   const { navigation } = useSelector((state: any) => state);

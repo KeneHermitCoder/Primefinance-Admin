@@ -1,12 +1,12 @@
 import * as React from "react";
+import Slide from "@mui/material/Slide";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
+import DialogContentText from "@mui/material/DialogContentText";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -26,6 +26,7 @@ export default function SlideInAlertDialog({
   handleOpen,
   acceptAction,
   rejectAction,
+  acceptActionInProgress,
 }: {
   open: boolean;
   title: string;
@@ -33,6 +34,7 @@ export default function SlideInAlertDialog({
   acceptText: string;
   rejectText: string;
   handleOpen: () => void;
+  acceptActionInProgress: boolean;
   acceptAction: () => Promise<void>;
   rejectAction: () => Promise<void>;
 }) {
@@ -91,7 +93,16 @@ export default function SlideInAlertDialog({
               handleClose();
             }}
           >
-            {acceptText}
+            {
+              acceptActionInProgress ? (
+                <div className="flex items-center">
+                  <div className="mr-2">Please wait...</div>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                </div>
+              ) : (
+                acceptText
+              )
+            }
           </Button>
         </DialogActions>
       </Dialog>
