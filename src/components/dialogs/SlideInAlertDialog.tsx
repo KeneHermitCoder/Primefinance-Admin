@@ -48,6 +48,16 @@ export default function SlideInAlertDialog({
         keepMounted
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
+        fullWidth={true}
+        maxWidth={"xs"}
+        sx={{
+          "& .MuiDialog-paper": {
+            borderRadius: "10px",
+          },
+          "& .MuiDialogActions-root": {
+            padding: "20px",
+          },
+        }}
       >
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
@@ -55,8 +65,17 @@ export default function SlideInAlertDialog({
             {message}
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
+        <DialogActions
+          sx={{
+            //spacing between buttons
+            "& > :not(:first-of-type)": {
+              ml: 3,
+            },
+          }}
+        >
           <Button
+            color="primary"
+            variant="contained"
             onClick={async () => {
               await rejectAction();
               handleClose();
@@ -65,6 +84,8 @@ export default function SlideInAlertDialog({
             {rejectText}
           </Button>
           <Button
+            color="error"
+            variant="contained"
             onClick={async () => {
               await acceptAction();
               handleClose();
