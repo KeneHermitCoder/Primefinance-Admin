@@ -13,3 +13,26 @@ export interface ILoanOverviewTableData {
     page: number,
     limit: number,
 }
+
+export interface ILoanSliceState {
+    loans: {
+        id: string,
+        first_name: string,
+        last_name: string,
+        amount: string,
+        status: string,
+        repayment_date: string,
+        percentage: string,
+        base64Image: string
+    }[],
+    totalLoans: number,
+    activeLoans: number,
+    repaidloans: number,
+    dueLoans: number,
+    overdueLoans: number,
+    loanRevenue: number,
+    loanInterest: number,
+    success: boolean,
+    isLoading: boolean,
+    error: string | null,
+}

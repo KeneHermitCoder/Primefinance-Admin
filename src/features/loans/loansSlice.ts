@@ -1,3 +1,4 @@
+import { ILoanSliceState } from '../../contracts';
 import LoansAPI from './LoansAPI';
 import { ActionReducerMapBuilder, createSlice, } from '@reduxjs/toolkit';
 
@@ -8,6 +9,13 @@ const loansSlice = createSlice({
     name: 'loans',
     initialState: {
         loans: [],
+        totalLoans: 0,
+        activeLoans: 0,
+        repaidloans: 0,
+        dueLoans: 0,
+        overdueLoans: 0,
+        loanRevenue: 0,
+        loanInterest: 0,
         error: null,
         success: false,
         isLoading: false
@@ -30,8 +38,17 @@ const loansSlice = createSlice({
                 }, 500);
                 state.error = null;
                 const response = action.payload;
-                console.log({ response, })
-                state.loans = response as any;
+                // state = {
+                //     ...state,
+                //     ...response
+                // }
+                state.loans = response.loans;
+                state.totalLoans = response.totalLoans;
+                state.activeLoans = response.activeLoans;
+                state.repaidloans = response.repaidloans;
+                state.dueLoans = response.dueLoans;
+                state.overdueLoans = response.overdueLoans;
+                state.loanRevenue = response.loanRevenue;
             })
             .addCase(getMutipleLoans.rejected, (state, action) => {
                 state.isLoading = false;
@@ -43,19 +60,9 @@ const loansSlice = createSlice({
     },
 } as {
     name: string;
-    initialState: {
-        loans: any[];
-        error: null | string;
-        success: boolean;
-        isLoading: boolean;
-    };
+    initialState: ILoanSliceState;
     reducers: any;
-    extraReducers: (builder: ActionReducerMapBuilder<{
-        loans: any[];
-        error: null | string;
-        success: boolean;
-        isLoading: boolean;
-    }>) => void;
+    extraReducers: (builder: ActionReducerMapBuilder<ILoanSliceState>) => void;
 });
 
 export const { reducer: loans, } = loansSlice;

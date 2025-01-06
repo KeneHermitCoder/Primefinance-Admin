@@ -12,7 +12,7 @@ import {
   HandshakeRounded,
   FlagCircleRounded,
 } from "@mui/icons-material";
-import { tableFilterAction } from "../../utils";
+import { formatNumberToMultipleCommas, tableFilterAction } from "../../utils";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../features";
 import LoansAPI from "../../features/loans/LoansAPI";
@@ -21,68 +21,85 @@ import { useEffect, useState } from "react";
 export default function Loans() {
   const dispatch = useDispatch();
   const [rows, setRows] = useState<{ [key: string]: any }[]>([]);
-  const { loans, isLoading, success, error } = useSelector(
+  const {
+    loans, 
+    totalLoans,
+    activeLoans,
+    repaidloans,
+    dueLoans,
+    overdueLoans,
+    success,
+    loanRevenue,
+    // loanInterest,
+    // isLoading,
+    // error,
+  } = useSelector(
     (state: RootState) => state.loans
   );
 
   useEffect(() => {
     // Fetch loans when the component mounts
     // @ts-ignore
-    dispatch(new LoansAPI().getMultipleLoans({ page: 1, limit: 10 }));
+    dispatch(new LoansAPI().getMultipleLoans({ page: 0, limit: 10 }));
   }, [dispatch]);
 
   useEffect(() => {
     console.log({ loans });
-    setRows(
-      loans.map((loan: any) => {
-        return {
-          customerName: `${loan.first_name} ${loan.last_name}`,
-          loanId: loan.id,
-          amount: loan.amount,
-          interest: ((loan.percentage / 100) * loan.amount).toFixed(2),
-          date: loan.repayment_date,
-          status: loan.status,
-          metadata: {
-            itemPhoto: loan.base64Image ||
-              "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
-          }
-        };
-      })
-    );
+    const modifiedLoansData = loans.map((loan: any) => {
+      return {
+        customerName: `${loan.first_name} ${loan.last_name}`,
+        loanId: loan.id,
+        amount: loan.amount,
+        interest: ((loan.percentage / 100) * loan.amount).toFixed(2),
+        date: loan.repayment_date,
+        status: loan.status,
+        metadata: {
+          itemPhoto: loan.base64Image ||
+            "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+        }
+      };
+    })
+    setRows(() => modifiedLoansData);
   }, [loans, success]);
 
   return (
     <Reveal>
       <Stack direction="column" spacing={3} paddingX={1} paddingY={1}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 md:divide-x-2 divide-y-2 lg:divide-y-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 md:divide-x-2 divide-y-2 lg:divide-y-0">
           <UsersKPIDisplay
             subtitle="Total Loans"
             kpiIcon={<AttachMoney sx={{ color: "success.main" }} />}
-            total={`${loans.length}`}
+            total={`${formatNumberToMultipleCommas(totalLoans)}`}
           />
 
           <UsersKPIDisplay
             subtitle="Active Loans"
             kpiIcon={<HandshakeRounded sx={{ color: "primary.main" }} />}
-            total="1,200"
+            total={`${formatNumberToMultipleCommas(activeLoans)}`}
           />
 
           <UsersKPIDisplay
             subtitle="Repaid Loans"
             kpiIcon={<FlagCircleRounded sx={{ color: "error.main" }} />}
-            total="1,200"
+            total={`${formatNumberToMultipleCommas(repaidloans)}`}
           />
 
           <UsersKPIDisplay
-            subtitle="Pending Applications"
+            subtitle="Due"
             kpiIcon={<PersonAdd sx={{ color: "primary.main" }} />}
-            total="1,200"
+            total={`${formatNumberToMultipleCommas(dueLoans)}`}
+          />
+
+          <UsersKPIDisplay
+            subtitle="Overdue"
+            kpiIcon={<PersonAdd sx={{ color: "primary.main" }} />}
+            total={`${formatNumberToMultipleCommas(overdueLoans)}`}
           />
 
           <UsersKPIDisplay
             subtitle="Revenue"
             kpiIcon={<PersonAdd sx={{ color: "primary.main" }} />}
-            total="1,200"
+            total={`₦${formatNumberToMultipleCommas(loanRevenue)}`}
           />
         </div>
 
@@ -102,7 +119,7 @@ export default function Loans() {
                 },
                 {
                   label: "Status",
-                  options: ["overdue", "active", "pending", "repaid"],
+                  options: ["", "active", "pending", "repaid"],
                 },
               ],
               action: tableFilterAction,
