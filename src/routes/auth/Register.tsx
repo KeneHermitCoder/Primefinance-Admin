@@ -10,7 +10,10 @@ export function Register() {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoading, error, success, } = useSelector(
+  // const { isLoading, error, success, } = useSelector(
+  //   (state: RootState) => state.auth
+  // );
+  const { isLoading, success, } = useSelector(
     (state: RootState) => state.auth
   );
   const [adminDetails, setAdminDetails] = useState({
