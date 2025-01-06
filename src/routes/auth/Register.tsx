@@ -1,20 +1,24 @@
 import { images } from "../../constants";
 import { Reveal } from "../../components";
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { RootState } from "../../features";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { AuthAPI } from "../../features/auth";
 
 export function Register() {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const location = useLocation();
-  const [, setErrMsg] = useState("");
-  const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
+  const { isLoading, error, success, } = useSelector(
+    (state: RootState) => state.auth
+  );
   const [adminDetails, setAdminDetails] = useState({
     name: "",
     email: "",
     password: "",
   });
   const [confirmPassword, setConfirmPassword] = useState("");
-  const isLoading = false;
 
   const updateAdminDetails = (
     propToChange: "name" | "email" | "password",
@@ -28,26 +32,20 @@ export function Register() {
 
   const handleRegister = async (e: any) => {
     e.preventDefault();
-    try {
-      console.log(adminDetails);
-      if (adminDetails.password !== confirmPassword)
-        throw new Error("Password not matching");
-      setSuccess(true);
-    } catch (err: any) {
-      console.log(err);
-      setErrMsg(err.message);
-    }
+    if (adminDetails.password !== confirmPassword)
+      throw new Error("Password not matching");
+
+    // @ts-ignore
+    dispatch(new AuthAPI().register(adminDetails));
   };
 
   useEffect(() => {
     const prevPage = location.state?.from?.pathname || "/";
-    if (success === true) window.location.href = prevPage;
+    if (success === true)
+      navigate("/", { state: { from: { pathname: prevPage } } });
   }, [success]);
 
-  const content = isLoading ? (
-    // <DefaultLoader loading={isLoading} />
-    <>Default Loader</>
-  ) : (
+  return (
     <Reveal>
       <div className="h-screen w-full flex flex-col items-center justify-center gap-3">
         <div className="py-5 flex flex-col items-center">
@@ -119,12 +117,17 @@ export function Register() {
               className="w-full max-w-[517px] h-[55px] px-[18px] py-[18px] border rounded-md bg-gray-100 focus:outline-[#089C48] focus:outline-1 font-inter text-gray-600 text-base font-normal leading-[19.36px] text-left underline-offset-0"
             />
           </div>
-          <div className='mt-4'>
+          <div className="mt-4">
             <button
-              type="button"
-              className="w-full max-w-[517px] h-[55px] px-[18px] py-[18px] border rounded-md bg-[#089C48] font-inter text-white text-base font-medium leading-[19.36px] text-center underline-offset-0"
+              // type="button"
+              type="submit"
+              className="flex items-center justify-center w-full max-w-[517px] h-[55px] px-[18px] py-[18px] border rounded-md bg-[#089C48] font-inter text-white text-base font-medium leading-[19.36px] text-center underline-offset-0"
             >
-              Register
+              {
+                isLoading
+                  ? <span className='flex h-6 w-6 animate-spin rounded-full border-b-2 border-white'></span>
+                  : "Register"
+              }
             </button>
           </div>
         </form>
@@ -137,6 +140,4 @@ export function Register() {
       </div>
     </Reveal>
   );
-
-  return content;
 }

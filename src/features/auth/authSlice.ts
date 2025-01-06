@@ -1,4 +1,4 @@
-import AuthAPI from './AuthAPIs';
+import AuthAPI from './AuthAPI';
 import { createSlice, } from '@reduxjs/toolkit';
 import useLocalStorage from '../hooks/useLocalStorage';
 
