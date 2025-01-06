@@ -117,10 +117,6 @@ export default function SearchFilterSortPaginateTable({
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [orderBy, setOrderBy] = useState<keyof Data>("calories");
   const [filteredRows, setFilteredRows] = useState<Data[]>(rows);
-  // const [selectedFilterLabel, setSelectedFilterLabel] = useState(filterParams?.data[0]?.label || '');
-  // const [selectedFilterOption, setSelectedFilterOption] = useState(filterParams?.data[0]?.options[0] || '');
-  const [, setSelectedFilterLabel] = useState(filterParams?.data[0]?.label || '');
-  const [, setSelectedFilterOption] = useState(filterParams?.data[0]?.options[0] || '');
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -161,9 +157,6 @@ export default function SearchFilterSortPaginateTable({
 
     // Filter out rows based on search params
     const filtered = rows.filter((row) => {
-      // return Object.values(row).some((value) =>
-      //   value.toString().toLowerCase().includes(searchTerm)
-      // );
       return Object.entries(row).some(([key, value]) => {
         if (typeof value === "string")
           return value.toLowerCase().includes(searchTerm) && searchParams?.includes(key);
@@ -173,11 +166,7 @@ export default function SearchFilterSortPaginateTable({
     setFilteredRows(filtered);
   }
 
-  const handleSelectFilter = (option: string, label: string) => {
-    setSelectedFilterLabel(label);
-    setSelectedFilterOption(option);
-    handleFilter(label, option);
-  }
+  const handleSelectFilter = (option: string, label: string) => handleFilter(label, option);
 
   const handleFilter = (label: string, option: string) => {
     if (filterParams) {

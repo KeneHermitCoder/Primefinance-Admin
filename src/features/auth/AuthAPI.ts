@@ -1,28 +1,12 @@
-import { supabaseClient, } from '../../utils';
 import { createAsyncThunk, } from '@reduxjs/toolkit';
-import { SignInWithPasswordCredentials, SignOut, SignUpWithPasswordCredentials, } from '@supabase/supabase-js';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleError = (errorObject: any, data?: any) =>
-    !errorObject.code ?
-        {
-            status: 500,
-            type: 'error',
-            statusText: 'Network error',
-            data: data !== undefined && data !== null ? data : []
-        }
-        :
-        {
-            status: errorObject.code,
-            type: 'error',
-            statusText: errorObject.message,
-            data: data !== undefined && data !== null ? data : []
-        };
+import { handleError, supabaseClient, } from '../../utils';
+import { AdminUserAttributes, SignInWithPasswordCredentials, SignOut, } from '@supabase/supabase-js';
 
 class AuthAPI {
-    register = createAsyncThunk('admin/register', async (registrationDetails: SignUpWithPasswordCredentials, thunkAPI) => {
+    register = createAsyncThunk('admin/register', async (registrationDetails: AdminUserAttributes, thunkAPI) => {
         console.log({ registrationDetails, })
-        const { data, error, } = await supabaseClient.auth.signUp(registrationDetails);
+        // const { data, error, } = await supabaseClient.auth.signUp(registrationDetails);
+        const { data, error, } = await supabaseClient.auth.admin.createUser(registrationDetails);
         if (error) {
             console.log({ error });
             const errorResponse = handleError(error);
