@@ -16,29 +16,40 @@ import { tableFilterAction } from "../../utils";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../features";
 import LoansAPI from "../../features/loans/LoansAPI";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Loans() {
   const dispatch = useDispatch();
-  const { loans, isLoading, success, error } = useSelector((state: RootState) => state.loans);
+  const [rows, setRows] = useState<{ [key: string]: any }[]>([]);
+  const { loans, isLoading, success, error } = useSelector(
+    (state: RootState) => state.loans
+  );
 
   useEffect(() => {
     // Fetch loans when the component mounts
     // @ts-ignore
-    dispatch(new LoansAPI().getMultipleLoans({ page: 3, limit: 10 }));
+    dispatch(new LoansAPI().getMultipleLoans({ page: 1, limit: 10 }));
   }, [dispatch]);
 
   useEffect(() => {
     console.log({ loans });
+    setRows(
+      loans.map((loan: any) => {
+        return {
+          customerName: `${loan.first_name} ${loan.last_name}`,
+          loanId: loan.id,
+          amount: loan.amount,
+          interest: ((loan.percentage / 100) * loan.amount).toFixed(2),
+          date: loan.repayment_date,
+          status: loan.status,
+          metadata: {
+            itemPhoto: loan.base64Image ||
+              "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+          }
+        };
+      })
+    );
   }, [loans, success]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
 
   return (
     <Reveal>
@@ -47,7 +58,7 @@ export default function Loans() {
           <UsersKPIDisplay
             subtitle="Total Loans"
             kpiIcon={<AttachMoney sx={{ color: "success.main" }} />}
-            total="12,345"
+            total={`${loans.length}`}
           />
 
           <UsersKPIDisplay
@@ -133,44 +144,7 @@ export default function Loans() {
                 label: "Actions",
               },
             ]}
-            rows={[
-              {
-                customerName: "Kene Nnakwue",
-                loanId: "LN12345",
-                amount: "₦2,000",
-                interest: "₦200",
-                date: "10/01/2025",
-                status: "active",
-                metadata: {
-                  itemPhoto:
-                    "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
-                },
-              },
-              {
-                customerName: "Chris Obi",
-                loanId: "LN12346",
-                amount: "₦10,000",
-                interest: "₦100",
-                date: "10/12/2024",
-                status: "overdue",
-                metadata: {
-                  itemPhoto:
-                    "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
-                },
-              },
-              {
-                customerName: "Chinwe Okafor",
-                loanId: "LN12347",
-                amount: "₦5,000",
-                interest: "₦500",
-                date: "10/01/2025",
-                status: "active",
-                metadata: {
-                  itemPhoto:
-                    "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
-                },
-              },
-            ]}
+            rows={rows}
           />
         </Stack>
 
