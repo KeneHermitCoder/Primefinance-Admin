@@ -10,7 +10,7 @@ export default function handleError(errorObject: any, data?: any) {
         {
             status: errorObject.code,
             type: 'error',
-            statusText: errorObject.message,
+            statusText: errorObject.message || 'An error occurred...!',
             data: data !== undefined && data !== null ? data : []
         };
 }
