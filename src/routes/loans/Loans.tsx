@@ -1,46 +1,46 @@
-import { Stack } from "@mui/material";
+import {
+  // Alert,
+  Stack
+} from "@mui/material";
 import { RootState } from "../../features";
 import { useEffect, useState } from "react";
 import LoansAPI from "../../features/loans/LoansAPI";
 import { useDispatch, useSelector } from "react-redux";
-import UsersKPIDisplay from "../../components/usersKPI";
+// import UsersKPIDisplay from "../../components/usersKPI";
 import {
   Reveal,
   PrimaryPieChart,
   SearchFilterSortPaginateTable,
   PrimaryBarChart,
   PrimaryTableSkeleton,
-  KPILoadingSkeleton,
+  // KPILoadingSkeleton,
+  TableErrorComponent,
 } from "../../components";
+// import {
+//   PersonAdd,
+//   AttachMoney,
+//   HandshakeRounded,
+//   FlagCircleRounded,
+// } from "@mui/icons-material";
 import {
-  PersonAdd,
-  AttachMoney,
-  HandshakeRounded,
-  FlagCircleRounded,
-} from "@mui/icons-material";
-import { formatNumberToMultipleCommas, tableFilterAction } from "../../utils";
+  // formatNumberToMultipleCommas,
+  tableFilterAction
+} from "../../utils";
 
 export default function Loans() {
   const dispatch = useDispatch();
   const {
-    loans,
-    // success,
-    dueLoans,
-    totalLoans,
-    activeLoans,
-    repaidloans,
-    loanRevenue,
-    overdueLoans,
-    // loanInterest,
-    isLoading,
-    // error,
-  } = useSelector((state: RootState) => state.loans);
+    data: loans,
+    error: loanOverviewError,
+    // success: loanOverviewSuccess,
+    isLoading: isLoadingLoanOverview,
+  } = useSelector((state: RootState) => state.loans.loanOverviewData);
   const [rows, setRows] = useState<{ [key: string]: any }[]>([]);
 
   useEffect(() => {
     // Fetch loans when the component mounts
     // @ts-ignore
-    dispatch(new LoansAPI().getMultipleLoans({ page: 0, limit: 10 }));
+    dispatch(new LoansAPI().getLoanOverviewData({ page: 0, limit: 10 }));
   }, [dispatch]);
 
   useEffect(() => {
@@ -48,8 +48,8 @@ export default function Loans() {
       const modifiedLoansData = loans.map((loan: any) => ({
         customerName: `${loan.first_name} ${loan.last_name}`,
         loanId: loan.id,
-        amount: loan.amount,
-        interest: ((loan.percentage / 100) * loan.amount).toFixed(2),
+        amount: `₦${loan.amount}`,
+        interest: `₦${((loan.percentage / 100) * loan.amount).toFixed(2)}`,
         date: loan.repayment_date,
         status: loan.status,
         metadata: {
@@ -64,7 +64,7 @@ export default function Loans() {
   return (
     <Reveal>
       <Stack direction="column" spacing={3} paddingX={1} paddingY={1}>
-        {isLoading ? (
+        {/* {isLoading ? (
           <KPILoadingSkeleton />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 md:divide-x-2 divide-y-2 lg:divide-y-0">
@@ -104,16 +104,24 @@ export default function Loans() {
               total={`₦${formatNumberToMultipleCommas(loanRevenue)}`}
             />
           </div>
-        )}
+        )} */}
 
         <Stack
           spacing={1}
           justifyContent="space-between"
           className="bg-white p-4 rounded-[12px]"
         >
-          {isLoading ? (
+          {isLoadingLoanOverview ? (
             <PrimaryTableSkeleton />
-          ) : (
+          ) : loanOverviewError ? (
+              <TableErrorComponent
+                message={loanOverviewError}
+                onRetry={() => {
+                  // @ts-ignore
+                  dispatch(new LoansAPI().getLoanOverviewData({ page: 0, limit: 10 }))
+                }}
+              />
+          ): (
             <SearchFilterSortPaginateTable
               title="Loan Overview"
               searchParams={["customerName", "loanId", "status"]}
@@ -125,7 +133,7 @@ export default function Loans() {
                   },
                   {
                     label: "Status",
-                    options: ["", "active", "pending", "repaid"],
+                    options: ["pending", "active", "repaid"],
                   },
                 ],
                 action: tableFilterAction,
