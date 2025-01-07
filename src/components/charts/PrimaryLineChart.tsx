@@ -18,7 +18,7 @@ export default function ({ title = "Transaction" }: { title?: string }) {
         </div>
       </Stack>
       <LineChart
-        width={650}
+        // width={650}
         height={400}
         series={[
           { data: pData, label: "Deposit" },
