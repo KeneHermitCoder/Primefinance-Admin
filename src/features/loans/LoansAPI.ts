@@ -26,9 +26,20 @@ export default class LoansAPI {
         )//.range((page - 1) * limit, page * limit - 1);
         if (error) return thunkAPI.rejectWithValue(handleError(error));
         // if (error) return thunkAPI.abort('An error occurred!');
+        else return data;
+    });
+
+    public getLoansKPIData = createAsyncThunk('loans/getLoansKPIData', async (_, thunkAPI) => {
+        const { data, error, } = await supabaseClient.from('loans').select('*')
+        if (error) return thunkAPI.rejectWithValue(handleError(error));
+        // if (error) return thunkAPI.abort('An error occurred!');
         else return {
-            data,
-            totalLoans: data.length
-        };
+            totalLoans: data.length,
+            activeLoans: (data.filter((loan: any) => loan.status === 'active')).length,
+            repaidLoans: (data.filter((loan: any) => loan.status === 'repaid')).length,
+            dueLoans: (data.filter((loan: any) => loan.status === 'due')).length,
+            overdueLoans: (data.filter((loan: any) => loan.status === 'overdue')).length,
+            totalLoanRevenue: (data.reduce((acc: number, loan: any) => acc + Number.parseFloat(isNaN(loan.amount) ? 0 : loan.amount)), 0),
+        }
     });
 }
