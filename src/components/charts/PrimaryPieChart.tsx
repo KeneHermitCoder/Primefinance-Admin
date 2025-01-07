@@ -35,7 +35,7 @@ export default function PrimaryPieChart({
   const valueFormatter = (item: { value: number }) => `${item.value}%`;
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box width="100%">
       {title && <h3 className="text-xl">{title}</h3>}
       <div className="flex justify-around mt-4">
         {data.map((v) => (
@@ -49,12 +49,12 @@ export default function PrimaryPieChart({
         ))}
       </div>
       <PieChart
-        margin={{ bottom: 90, right: 90, left: 90 }}
+        margin={{ bottom: 80, top: 20, left: 0, right: 0 }}
         slotProps={{
           legend: {
             direction: "column",
             position: { vertical: "bottom", horizontal: "left" },
-            padding: { top: 20 },
+            padding: { top: 250 },
           },
         }}
         height={400}
