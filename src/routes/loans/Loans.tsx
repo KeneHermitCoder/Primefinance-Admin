@@ -1,51 +1,49 @@
-import {
-  // Alert,
-  Stack
-} from "@mui/material";
+import { Stack } from "@mui/material";
 import { RootState } from "../../features";
 import { useEffect, useState } from "react";
 import LoansAPI from "../../features/loans/LoansAPI";
 import { useDispatch, useSelector } from "react-redux";
-// import UsersKPIDisplay from "../../components/usersKPI";
+import UsersKPIDisplay from "../../components/usersKPI";
 import {
   Reveal,
   PrimaryPieChart,
   SearchFilterSortPaginateTable,
   PrimaryBarChart,
   PrimaryTableSkeleton,
-  // KPILoadingSkeleton,
+  KPILoadingSkeleton,
   TableErrorComponent,
 } from "../../components";
-// import {
-//   PersonAdd,
-//   AttachMoney,
-//   HandshakeRounded,
-//   FlagCircleRounded,
-// } from "@mui/icons-material";
 import {
-  // formatNumberToMultipleCommas,
-  tableFilterAction
+  PersonAdd,
+  AttachMoney,
+  HandshakeRounded,
+  FlagCircleRounded,
+} from "@mui/icons-material";
+import {
+  tableFilterAction,
+  formatNumberToMultipleCommas,
 } from "../../utils";
 
 export default function Loans() {
   const dispatch = useDispatch();
-  const {
-    data: loans,
-    error: loanOverviewError,
-    // success: loanOverviewSuccess,
-    isLoading: isLoadingLoanOverview,
-  } = useSelector((state: RootState) => state.loans.loanOverviewData);
   const [rows, setRows] = useState<{ [key: string]: any }[]>([]);
+
+  const {
+    loanKPIData,
+    loanOverviewData,
+  } = useSelector((state: RootState) => state.loans);
 
   useEffect(() => {
     // Fetch loans when the component mounts
     // @ts-ignore
     dispatch(new LoansAPI().getLoanOverviewData({ page: 0, limit: 10 }));
+    // @ts-ignore
+    dispatch(new LoansAPI().getLoansKPIData());
   }, [dispatch]);
 
   useEffect(() => {
-    if (loans.length > 0) {
-      const modifiedLoansData = loans.map((loan: any) => ({
+    if (loanOverviewData.data.length > 0) {
+      const modifiedLoansData = loanOverviewData.data.map((loan: any) => ({
         customerName: `${loan.first_name} ${loan.last_name}`,
         loanId: loan.id,
         amount: `₦${loan.amount}`,
@@ -58,64 +56,65 @@ export default function Loans() {
         },
       }));
       setRows(modifiedLoansData);
+      console.log({ modifiedLoansData });
     }
-  }, [loans]);
+  }, [loanOverviewData.data, setRows]);
 
   return (
     <Reveal>
       <Stack direction="column" spacing={3} paddingX={1} paddingY={1}>
-        {/* {isLoading ? (
+        {loanKPIData.isLoading ? (
           <KPILoadingSkeleton />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 md:divide-x-2 divide-y-2 lg:divide-y-0">
             <UsersKPIDisplay
               subtitle="Total Loans"
               kpiIcon={<AttachMoney sx={{ color: "success.main" }} />}
-              total={`${formatNumberToMultipleCommas(totalLoans)}`}
+              total={`${formatNumberToMultipleCommas(loanKPIData.data.totalLoans)}`}
             />
 
             <UsersKPIDisplay
               subtitle="Active Loans"
               kpiIcon={<HandshakeRounded sx={{ color: "primary.main" }} />}
-              total={`${formatNumberToMultipleCommas(activeLoans)}`}
+              total={`${formatNumberToMultipleCommas(loanKPIData.data.activeLoans)}`}
             />
 
             <UsersKPIDisplay
               subtitle="Repaid Loans"
               kpiIcon={<FlagCircleRounded sx={{ color: "error.main" }} />}
-              total={`${formatNumberToMultipleCommas(repaidloans)}`}
+              total={`${formatNumberToMultipleCommas(loanKPIData.data.repaidLoans)}`}
             />
 
             <UsersKPIDisplay
               subtitle="Due"
               kpiIcon={<PersonAdd sx={{ color: "primary.main" }} />}
-              total={`${formatNumberToMultipleCommas(dueLoans)}`}
+              total={`${formatNumberToMultipleCommas(loanKPIData.data.dueLoans)}`}
             />
 
             <UsersKPIDisplay
               subtitle="Overdue"
               kpiIcon={<PersonAdd sx={{ color: "primary.main" }} />}
-              total={`${formatNumberToMultipleCommas(overdueLoans)}`}
+              total={`${formatNumberToMultipleCommas(loanKPIData.data.overdueLoans)}`}
             />
 
             <UsersKPIDisplay
               subtitle="Revenue"
               kpiIcon={<PersonAdd sx={{ color: "primary.main" }} />}
-              total={`₦${formatNumberToMultipleCommas(loanRevenue)}`}
+              total={`₦${formatNumberToMultipleCommas(loanKPIData.data.totalLoanRevenue)}`}
             />
           </div>
-        )} */}
+        )}
 
         <Stack
           spacing={1}
           justifyContent="space-between"
           className="bg-white p-4 rounded-[12px]"
         >
-          {isLoadingLoanOverview ? (
+          {loanOverviewData.isLoading ? (
             <PrimaryTableSkeleton />
-          ) : loanOverviewError ? (
+          ) : loanOverviewData.error ? (
               <TableErrorComponent
-                message={loanOverviewError}
+                message={loanOverviewData.error}
                 onRetry={() => {
                   // @ts-ignore
                   dispatch(new LoansAPI().getLoanOverviewData({ page: 0, limit: 10 }))

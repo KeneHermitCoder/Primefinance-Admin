@@ -3,8 +3,30 @@ import { ILoanSliceState } from '../../contracts';
 import { ActionReducerMapBuilder, createSlice, } from '@reduxjs/toolkit';
 
 const loansAPI = new LoansAPI();
+const getLoansKPIData = loansAPI.getLoansKPIData;
 const getMutipleLoans = loansAPI.getMultipleLoans;
 const getLoanOverviewData = loansAPI.getLoanOverviewData;
+
+
+const handleRejectedState = (target: string) => (state: any, action: any) => {
+    state[target].isLoading = false;
+    state[target].success = false;
+    // state.loanOverviewData.error = action.error.message || null;
+    state[target].error = (action.payload as any)?.statusText || null;
+}
+
+const handleFulfilledState = (target: string) => (state: any, action: any) => {
+    state[target].isLoading = false;
+    state[target].success = true;
+    state[target].error = null;
+    state[target].data = action.payload;
+}
+
+const handlePendingState = (target: string) => (state: any) => {
+    state[target].isLoading = true;
+    state[target].success = false;
+    state[target].error = null;
+}
 
 const loansSlice = createSlice({
     name: 'loans',
@@ -20,46 +42,33 @@ const loansSlice = createSlice({
             error: null,
             isLoading: true,
             success: false,
+        },
+        loanKPIData: {
+            data: {
+                dueLoans: 0,
+                totalLoans: 0,
+                activeLoans: 0,
+                repaidLoans: 0,
+                overdueLoans: 0,
+                totalLoanRevenue: 0,
+            },
+            error: null,
+            isLoading: true,
+            success: false,
         }
     },
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(getMutipleLoans.pending, (state) => {
-                state.allLoansData.isLoading = true;
-                state.allLoansData.success = false;
-                state.allLoansData.error = null;
-            })
-            .addCase(getMutipleLoans.fulfilled, (state, action) => {
-                state.allLoansData.isLoading = false;
-                state.allLoansData.success = true;
-                state.allLoansData.error = null;
-                state.allLoansData.data = action.payload;
-            })
-            .addCase(getMutipleLoans.rejected, (state, action) => {
-                state.allLoansData.isLoading = false;
-                state.allLoansData.success = false;
-                state.allLoansData.error = action.error.message || null;
-            })
-            .addCase(getLoanOverviewData.pending, (state) => {
-                state.loanOverviewData.isLoading = true;
-                state.loanOverviewData.success = false;
-                state.loanOverviewData.error = null;
-            })
-            .addCase(getLoanOverviewData.fulfilled, (state, action) => {
-                state.loanOverviewData.isLoading = false;
-                state.loanOverviewData.success = true;
-                state.loanOverviewData.error = null;
-                state.loanOverviewData.data = action.payload?.data || [];
-                state.loanOverviewData.totalLoans = action.payload?.totalLoans || 0;
-            })
-            .addCase(getLoanOverviewData.rejected, (state, action) => {
-                console.log({ rejectedAction: action, });
-                state.loanOverviewData.isLoading = false;
-                state.loanOverviewData.success = false;
-                // state.loanOverviewData.error = action.error.message || null;
-                state.loanOverviewData.error = (action.payload as any)?.statusText || null;
-            })
+            .addCase(getMutipleLoans.pending, handlePendingState('allLoansData'))
+            .addCase(getMutipleLoans.fulfilled, handleFulfilledState('allLoansData'))
+            .addCase(getMutipleLoans.rejected, handleRejectedState('allLoansData'))
+            .addCase(getLoanOverviewData.pending, handlePendingState('loanOverviewData'))
+            .addCase(getLoanOverviewData.fulfilled, handleFulfilledState('loanOverviewData'))
+            .addCase(getLoanOverviewData.rejected, handleRejectedState('loanOverviewData'))
+            .addCase(getLoansKPIData.pending, handlePendingState('loanKPIData'))
+            .addCase(getLoansKPIData.fulfilled, handleFulfilledState('loanKPIData'))
+            .addCase(getLoansKPIData.rejected, handleRejectedState('loanKPIData'));
     },
 } as {
     name: string;

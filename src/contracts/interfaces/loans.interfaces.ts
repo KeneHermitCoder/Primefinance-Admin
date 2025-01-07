@@ -1,6 +1,6 @@
 import { IResponseState } from "./common.interfaces";
 
-export interface ILoanOverview {
+interface ILoanOverview {
     data: {
         id: string;
         first_name: string;
@@ -13,15 +13,19 @@ export interface ILoanOverview {
         percentage: string;
         base64Image: string
     }[];
-    totalLoans?: number;
     page?: number;
     limit?: number;
-    success: boolean;
-    isLoading: boolean;
-    error: string | null;
 }
 
 export interface ILoanSliceState {
     allLoansData: IResponseState<any[]>;
+    loanKPIData: IResponseState<{
+        totalLoans: number;
+        activeLoans: number;
+        repaidLoans: number;
+        dueLoans: number;
+        overdueLoans: number;
+        totalLoanRevenue: number;
+    }>;
     loanOverviewData: IResponseState<any[]> & ILoanOverview;
 }
