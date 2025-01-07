@@ -34,8 +34,9 @@ const loansSlice = createSlice({
                 state.isLoading = false;
                 state.success = true;
                 setTimeout(() => {
+                    // state.isLoading = false;
                     // state.success = false;
-                }, 500);
+                }, 1000);
                 state.error = null;
                 const response = action.payload;
                 // state = {
