@@ -2,20 +2,18 @@ import { images } from "../../constants";
 import { Reveal } from "../../components";
 import { useState, useEffect } from "react";
 import { RootState } from "../../features";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthAPI } from "../../features/auth";
+import { useDispatch, useSelector, } from "react-redux";
+import { Link, useLocation, useNavigate, } from "react-router-dom";
 
 export function Register() {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-  // const { isLoading, error, success, } = useSelector(
-  //   (state: RootState) => state.auth
-  // );
-  const { isLoading, success, } = useSelector(
-    (state: RootState) => state.auth
-  );
+  // const { isLoading, error, success, } = useSelector((state: RootState) => state.auth);
+
+  const { isLoading, success, } = useSelector((state: RootState) => state.auth);
+
   const [adminDetails, setAdminDetails] = useState({
     name: "",
     email: "",
