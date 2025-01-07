@@ -39,7 +39,7 @@ export default class LoansAPI {
             repaidLoans: (data.filter((loan: any) => loan.status === 'repaid')).length,
             dueLoans: (data.filter((loan: any) => loan.status === 'due')).length,
             overdueLoans: (data.filter((loan: any) => loan.status === 'overdue')).length,
-            totalLoanRevenue: (data.reduce((acc: number, loan: any) => acc + Number.parseFloat(isNaN(loan.amount) ? 0 : loan.amount)), 0),
+            totalLoanRevenue: (data.reduce((acc: number, loan: any) => acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount)), 0)),
         }
     });
 }
