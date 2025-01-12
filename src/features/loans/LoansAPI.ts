@@ -2,6 +2,7 @@ import { createAsyncThunk, } from '@reduxjs/toolkit';
 import { handleError, supabaseClient, } from '../../utils';
 
 export default class LoansAPI {
+
     public getMultipleLoans = createAsyncThunk('loans/getallLoans', async ({
         // page = 1,
         // limit = 10,
@@ -34,12 +35,17 @@ export default class LoansAPI {
         if (error) return thunkAPI.rejectWithValue(handleError(error));
         // if (error) return thunkAPI.abort('An error occurred!');
         else return {
-            totalLoans: data.length,
+            totalLoans: data.length || 0,
+            dueLoans: (data.filter((loan: any) => loan.status === 'due')).length,
             activeLoans: (data.filter((loan: any) => loan.status === 'active')).length,
             repaidLoans: (data.filter((loan: any) => loan.status === 'repaid')).length,
-            dueLoans: (data.filter((loan: any) => loan.status === 'due')).length,
             overdueLoans: (data.filter((loan: any) => loan.status === 'overdue')).length,
-            totalLoanRevenue: (data.reduce((acc: number, loan: any) => acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount)), 0)),
+            totalLoansRevenue: (data.reduce((acc: number, loan: any) => acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount)), 0)),
+            dueLoansRevenue: (data.filter((loan: any) => loan.status === 'due')).reduce((acc: number, loan: any) => acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount)), 0),
+            activeLoansRevenue: (data.filter((loan: any) => loan.status === 'active')).reduce((acc: number, loan: any) => acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount)), 0),
+            repaidLoansRevenue: (data.filter((loan: any) => loan.status === 'repaid')).reduce((acc: number, loan: any) => acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount)), 0),
+            overdueLoansRevenue: (data.filter((loan: any) => loan.status === 'overdue')).reduce((acc: number, loan: any) => acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount)), 0),
         }
     });
+
 }
