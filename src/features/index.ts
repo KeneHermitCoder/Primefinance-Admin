@@ -6,9 +6,9 @@ import { loans } from "./loans/loansSlice";
 import { bills } from "./bills/billsSlice";
 import { users, } from "./users/usersSlice";
 import { escrow } from "./escrow/escrowSlice";
+import navigationReducer from "./navigation/navigationSlice";
 import { transactions } from "./transactions/transactionsSlice";
 import { notifications } from "./notifications/notificationsSlice";
-import navigationReducer from "./navigation/navigationSlice";
 
 const rootReducer = combineReducers({
   navigation: navigationReducer,

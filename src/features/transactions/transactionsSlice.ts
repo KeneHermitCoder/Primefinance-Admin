@@ -1,38 +1,35 @@
 import TransactionsAPI from './TransactionsAPI';
-import { ILoanSliceState } from '../../contracts';
 import { ActionReducerMapBuilder, createSlice, } from '@reduxjs/toolkit';
 import { handleFulfilledState, handlePendingState, handleRejectedState } from '../../utils';
+import { ITransactionSliceState } from '../../contracts/interfaces/transactions.interrface';
 
 const transactionsAPI = new TransactionsAPI();
-const getMutipleLoans = transactionsAPI.getMultipleLoans;
+// const getTransactionsKPIData = transactionsAPI.getTransactionsKPIData;
+const getMultipleTransactions = transactionsAPI.getMultipleTransactions;
+// const getTransactionOverviewData = transactionsAPI.getTransactionOverviewData;
 
 const transactionsSlice = createSlice({
     name: 'transactions',
     initialState: {
-        allLoansData: {
+        allTransactionsData: {
             data: [],
             error: null,
             isLoading: true,
             success: false,
         },
-        loanOverviewData: {
+        transactionOverviewData: {
             data: [],
             error: null,
             isLoading: true,
             success: false,
         },
-        loanKPIData: {
+        transactionKPIData: {
             data: {
-                dueLoans: 0,
-                totalLoans: 0,
-                activeLoans: 0,
-                repaidLoans: 0,
-                overdueLoans: 0,
-                dueLoansRevenue: 0,
-                totalLoansRevenue: 0,
-                activeLoansRevenue: 0,
-                repaidLoansRevenue: 0,
-                overdueLoansRevenue: 0,
+                totalTranxCount: 0,
+                totalTransactions: 0,
+                pendingTranxCount: 0,
+                failedTranxCount: 0,
+                successfulTranxCount: 0,
             },
             error: null,
             isLoading: true,
@@ -42,15 +39,15 @@ const transactionsSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(getMutipleLoans.pending, handlePendingState('allLoansData'))
-            .addCase(getMutipleLoans.fulfilled, handleFulfilledState('allLoansData'))
-            .addCase(getMutipleLoans.rejected, handleRejectedState('allLoansData'))
+            .addCase(getMultipleTransactions.pending, handlePendingState('allLoansData'))
+            .addCase(getMultipleTransactions.fulfilled, handleFulfilledState('allLoansData'))
+            .addCase(getMultipleTransactions.rejected, handleRejectedState('allLoansData'))
     },
 } as {
     name: string;
-    initialState: ILoanSliceState;
+    initialState: ITransactionSliceState;
     reducers: any;
-    extraReducers: (builder: ActionReducerMapBuilder<ILoanSliceState>) => void;
+    extraReducers: (builder: ActionReducerMapBuilder<ITransactionSliceState>) => void;
 });
 
 export const { reducer: transactions, } = transactionsSlice;
