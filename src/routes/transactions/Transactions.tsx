@@ -4,8 +4,8 @@ import UsersKPIDisplay from "../../components/usersKPI";
 import {
   Reveal,
   PrimaryPieChart,
-  SearchFilterSortPaginateTable,
   PrimaryLineChart,
+  SearchFilterSortPaginateTable,
 } from "../../components";
 import {
   PersonAdd,
