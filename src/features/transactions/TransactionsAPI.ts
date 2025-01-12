@@ -23,21 +23,23 @@ export default class TransactionsAPI {
         limit?: number;
     }, thunkAPI) => {
         const { data, error, } = await supabaseClient.from('transactions').select(
-            'id, first_name, last_name, amount, status, repayment_date, percentage, base64Image'
+            'id, name, amount, type, status, created_at'
         )//.range((page - 1) * limit, page * limit - 1);
+        console.log({ error, data });
         if (error) return thunkAPI.rejectWithValue(handleError(error));
         else return data;
     });
 
     public getTransactionsKPIData = createAsyncThunk('transactions/getTransactionsKPIData', async (_, thunkAPI) => {
         const { data, error, } = await supabaseClient.from('transactions').select('*')
+        console.log({ error, data });
         if (error) return thunkAPI.rejectWithValue(handleError(error));
         else return {
             totalTranxCount: data.length || 0,
-            totalTransactions: (data.filter((transaction: any) => transaction.status === 'due')).length,
-            pendingTranxCount: (data.filter((transaction: any) => transaction.status === 'due')).length,
+            totalTransactions: data.reduce((acc: number, transaction: any) => acc + transaction.amount, 0),
+            pendingTranxCount: (data.filter((transaction: any) => transaction.status === 'active')).length,
             failedTranxCount: (data.filter((transaction: any) => transaction.status === 'failed')).length,
-            successfulTranxCount: (data.filter((transaction: any) => transaction.status === 'paid')).length,
+            successfulTranxCount: (data.filter((transaction: any) => transaction.status === 'success')).length,
         }
     });
 

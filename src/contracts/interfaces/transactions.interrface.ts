@@ -3,12 +3,11 @@ import { IResponseState } from "./common.interfaces";
 interface ITransactionOverview {
     data: {
         id: string;
-        first_name: string;
-        last_name: string;
-        amount: string;
+        name: string;
         type: string;
-        date: string;
+        amount: string;
         status: string;
+        created_at: string;
     }[];
     page?: number;
     limit?: number;
