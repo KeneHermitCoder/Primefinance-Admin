@@ -20,12 +20,16 @@ interface ILoanOverview {
 export interface ILoanSliceState {
     allLoansData: IResponseState<any[]>;
     loanKPIData: IResponseState<{
+        dueLoans: number;
         totalLoans: number;
         activeLoans: number;
         repaidLoans: number;
-        dueLoans: number;
         overdueLoans: number;
-        totalLoanRevenue: number;
+        dueLoansRevenue: number;
+        totalLoansRevenue: number;
+        activeLoansRevenue: number;
+        repaidLoansRevenue: number;
+        overdueLoansRevenue: number;
     }>;
     loanOverviewData: IResponseState<any[]> & ILoanOverview;
 }

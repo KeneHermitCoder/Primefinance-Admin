@@ -56,7 +56,6 @@ export default function Loans() {
         },
       }));
       setRows(modifiedLoansData);
-      console.log({ modifiedLoansData });
     }
   }, [loanOverviewData.data, setRows]);
 
@@ -100,7 +99,7 @@ export default function Loans() {
             <UsersKPIDisplay
               subtitle="Revenue"
               kpiIcon={<PersonAdd sx={{ color: "primary.main" }} />}
-              total={`₦${formatNumberToMultipleCommas(loanKPIData.data.totalLoanRevenue)}`}
+              total={`₦${formatNumberToMultipleCommas(loanKPIData.data.totalLoansRevenue)}`}
             />
           </div>
         )}
@@ -185,7 +184,16 @@ export default function Loans() {
             justifyContent="space-between"
             className="w-full md:w-3/5 bg-white p-4 rounded-[12px] self-start"
           >
-            <PrimaryBarChart title="Loan Transactions" />
+            <PrimaryBarChart
+              title="Loan Transactions"
+              data={loanKPIData.isLoading ? ([]) : [
+                loanKPIData.data.activeLoansRevenue,
+                loanKPIData.data.repaidLoansRevenue || 6500,
+                loanKPIData.data.dueLoansRevenue,
+                loanKPIData.data.overdueLoansRevenue || 3000,
+              ]}
+              xLabels={["Active", "Repaid", "Overdue", "Pending"]}
+            />
           </Stack>
           <Stack
             spacing={1}
@@ -196,15 +204,11 @@ export default function Loans() {
               data={[
                 {
                   label: "Deposit",
-                  value: 7272,
-                },
-                {
-                  label: "Withdrawal",
-                  value: 1638,
+                  value: loanKPIData.isLoading ? 0 : loanKPIData.data.totalLoansRevenue || 2000,
                 },
                 {
                   label: "Loan Repayment",
-                  value: 3638,
+                  value: loanKPIData.isLoading ? 0 : loanKPIData.data.repaidLoansRevenue || 3000,
                 },
               ]}
               metadata={{

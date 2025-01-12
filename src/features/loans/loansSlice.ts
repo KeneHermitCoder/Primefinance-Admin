@@ -15,11 +15,11 @@ const handleRejectedState = (target: string) => (state: any, action: any) => {
     state[target].error = (action.payload as any)?.statusText || null;
 }
 
-const handleFulfilledState = (target: string) => (state: any, action: any) => {
+const handleFulfilledState = <T>(target: string) => (state: any, action: any) => {
     state[target].isLoading = false;
     state[target].success = true;
     state[target].error = null;
-    state[target].data = action.payload;
+    state[target].data = <T>action.payload;
 }
 
 const handlePendingState = (target: string) => (state: any) => {
@@ -50,7 +50,11 @@ const loansSlice = createSlice({
                 activeLoans: 0,
                 repaidLoans: 0,
                 overdueLoans: 0,
-                totalLoanRevenue: 0,
+                dueLoansRevenue: 0,
+                totalLoansRevenue: 0,
+                activeLoansRevenue: 0,
+                repaidLoansRevenue: 0,
+                overdueLoansRevenue: 0,
             },
             error: null,
             isLoading: true,
