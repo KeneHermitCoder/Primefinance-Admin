@@ -1,38 +1,34 @@
 import UsersAPI from './UsersAPI';
-import { ILoanSliceState } from '../../contracts';
+import { IUserSliceState } from '../../contracts';
 import { ActionReducerMapBuilder, createSlice, } from '@reduxjs/toolkit';
 import { handleFulfilledState, handlePendingState, handleRejectedState } from '../../utils';
 
 const usersAPI = new UsersAPI();
-const getMutipleLoans = usersAPI.getMultipleLoans;
+const getUsersKPIData = usersAPI.getUsersKPIData;
+const getMultipleUsers = usersAPI.getMultipleUsers;
+const getUserOverviewData = usersAPI.getUserOverviewData;
 
 const usersSlice = createSlice({
     name: 'users',
     initialState: {
-        allLoansData: {
+        allUsersData: {
             data: [],
             error: null,
             isLoading: true,
             success: false,
         },
-        loanOverviewData: {
+        userOverviewData: {
             data: [],
             error: null,
             isLoading: true,
             success: false,
         },
-        loanKPIData: {
+        userKPIData: {
             data: {
-                dueLoans: 0,
-                totalLoans: 0,
-                activeLoans: 0,
-                repaidLoans: 0,
-                overdueLoans: 0,
-                dueLoansRevenue: 0,
-                totalLoansRevenue: 0,
-                activeLoansRevenue: 0,
-                repaidLoansRevenue: 0,
-                overdueLoansRevenue: 0,
+                newUsersCount: 0,
+                totalUsersCount: 0,
+                activeUsersCount: 0,
+                flaggedUsersCount: 0,
             },
             error: null,
             isLoading: true,
@@ -42,15 +38,21 @@ const usersSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(getMutipleLoans.pending, handlePendingState('allLoansData'))
-            .addCase(getMutipleLoans.fulfilled, handleFulfilledState('allLoansData'))
-            .addCase(getMutipleLoans.rejected, handleRejectedState('allLoansData'))
+            .addCase(getMultipleUsers.pending, handlePendingState('allUsersData'))
+            .addCase(getMultipleUsers.fulfilled, handleFulfilledState('allUsersData'))
+            .addCase(getMultipleUsers.rejected, handleRejectedState('allUsersData'))
+            .addCase(getUserOverviewData.pending, handlePendingState('userOverviewData'))
+            .addCase(getUserOverviewData.fulfilled, handleFulfilledState('userOverviewData'))
+            .addCase(getUserOverviewData.rejected, handleRejectedState('userOverviewData'))
+            .addCase(getUsersKPIData.pending, handlePendingState('userKPIData'))
+            .addCase(getUsersKPIData.fulfilled, handleFulfilledState('userKPIData'))
+            .addCase(getUsersKPIData.rejected, handleRejectedState('userKPIData'));
     },
 } as {
     name: string;
-    initialState: ILoanSliceState;
+    initialState: IUserSliceState;
     reducers: any;
-    extraReducers: (builder: ActionReducerMapBuilder<ILoanSliceState>) => void;
+    extraReducers: (builder: ActionReducerMapBuilder<IUserSliceState>) => void;
 });
 
 export const { reducer: users, } = usersSlice;

@@ -1,7 +1,7 @@
 import TransactionsAPI from './TransactionsAPI';
 import { ActionReducerMapBuilder, createSlice, } from '@reduxjs/toolkit';
 import { handleFulfilledState, handlePendingState, handleRejectedState } from '../../utils';
-import { ITransactionSliceState } from '../../contracts/interfaces/transactions.interrface';
+import { ITransactionSliceState } from '../../contracts/interfaces/transactions.interfaces';
 
 const transactionsAPI = new TransactionsAPI();
 const getTransactionsKPIData = transactionsAPI.getTransactionsKPIData;
