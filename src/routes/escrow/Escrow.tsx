@@ -14,7 +14,7 @@ export default function Escrow() {
     <>
       <Reveal>
         <Stack direction="column" spacing={3} paddingX={1} paddingY={1}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 md:divide-x-2 divide-y-2 lg:divide-y-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 md:divide-x-2 divide-y-2 lg:divide-y-0">
             <UsersKPIDisplay
               subtitle="Total Funds"
               kpiIcon={<AttachMoney sx={{ color: "success.main" }} />}
