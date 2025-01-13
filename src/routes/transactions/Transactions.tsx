@@ -42,7 +42,8 @@ export default function Transactions() {
         (transaction: any) => ({
           name: `${transaction.name}`,
           transactionId: transaction.id,
-          type: transaction.type,
+          // type: transaction.type,
+          type: transaction.category,
           amount: `₦${transaction.amount}`,
           date: transaction.created_at,
           status: transaction.status,
@@ -165,7 +166,9 @@ export default function Transactions() {
             justifyContent="space-between"
             className="w-full md:w-3/5 bg-white p-4 rounded-[12px] self-start"
           >
-            <PrimaryLineChart title="Transactions" />
+            <PrimaryLineChart
+              title="Transactions"
+            />
           </Stack>
           <Stack
             spacing={1}
@@ -175,16 +178,16 @@ export default function Transactions() {
               title="Transaction"
               data={[
                 {
-                  label: "Deposit",
-                  value: 7272,
+                  label: "Failed",
+                  value: transactionKPIData.isLoading ? 0 : transactionKPIData.data.failedTransactions,
                 },
                 {
-                  label: "Withdrawal",
-                  value: 1638,
+                  label: "Pending",
+                  value: transactionKPIData.isLoading ? 0 : transactionKPIData.data.pendingTransactions,
                 },
                 {
-                  label: "Loan Repayment",
-                  value: 3638,
+                  label: "Successfull",
+                  value: transactionKPIData.isLoading ? 0 : transactionKPIData.data.successfullTransactions,
                 },
               ]}
               metadata={{

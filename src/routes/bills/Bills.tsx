@@ -1,258 +1,215 @@
 // import { Divider, Stack } from "@mui/material";
 import { Stack } from "@mui/material";
-import { Reveal, SearchFilterSortPaginateTable } from "../../components";
+import {
+  KPILoadingSkeleton,
+  PrimaryTableSkeleton,
+  Reveal,
+  SearchFilterSortPaginateTable,
+} from "../../components";
 import BillPaymentKPIDisplay from "../../components/billPaymentKPITop";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import FlagIcon from "@mui/icons-material/Flag";
-import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import BillsKPIDisplay from "../../components/billsKPI";
+import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import {
   AttachMoney,
   CardGiftcard,
   ElectricalServices,
   Subscriptions,
 } from "@mui/icons-material";
-// import EnhancedTable from "../../components/EnhancedTable";
-// import TransactionOverview from "../../components/TransactionOverviewHeader";
-import { tableFilterAction } from "../../utils";
+import { formatNumberToMultipleCommas, tableFilterAction } from "../../utils";
+import { RootState } from "../../features";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { BillsAPI } from "../../features/bills";
 
 export default function Bills() {
-  // dummy data
-  // const billsKPIData = [
-  //   {
-  //     Name: "John Doe",
-  //     TransactionID: "1",
-  //     Amount: "2000",
-  //     Type: "Airtime",
-  //     Date: "2024-12-01",
-  //     Status: "Failed",
-  //   },
-  //   {
-  //     Name: "Jane Smith",
-  //     TransactionID: "2",
-  //     Amount: "3000",
-  //     Type: "GiftCard",
-  //     Date: "2024-11-25",
-  //     Status: "completed",
-  //   },
-  //   {
-  //     Name: "Sam Green",
-  //     TransactionID: "3",
-  //     Amount: "4000",
-  //     Type: "Subscription",
-  //     Date: "2024-12-01",
-  //     Status: "pending",
-  //   },
-  //   {
-  //     Name: "Alice Brown",
-  //     TransactionID: "4",
-  //     Amount: "5000",
-  //     Type: "Electricity",
-  //     Date: "2024-11-30",
-  //     Status: "completed",
-  //   },
-  // ];
+  const dispatch = useDispatch();
+  const [rows, setRows] = useState<{ [key: string]: any }[]>([]);
 
-  // const columns = [
-  //   { label: "Name", field: "Name", sortable: true },
-  //   { label: "Transaction ID", field: "TransactionID", sortable: true },
-  //   { label: "Amount", field: "Amount", sortable: false },
-  //   { label: "Type", field: "Type", sortable: false },
-  //   { label: "Date", field: "Date", sortable: true },
+  const { billKPIData, billOverviewData } = useSelector(
+    (state: RootState) => state.bills
+  );
 
-  //   {
-  //     label: "Status",
-  //     field: "Status",
-  //     sortable: false,
-  //     render: (value: string) => (
-  //       <span style={{ color: value === "Active" ? "green" : "red" }}>
-  //         {value}
-  //       </span>
-  //     ),
-  //   },
-  //   { label: "Actions", field: "Actions", sortable: false },
-  // ];
+  useEffect(() => {
+    // Fetch transactions when the component mounts
+    // @ts-ignore
+    dispatch(new BillsAPI().getBillOverviewData({ page: 0, limit: 10 }));
+    // @ts-ignore
+    dispatch(new BillsAPI().getBillsKPIData());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (billOverviewData.data.length > 0) {
+      const modifiedBillData = billOverviewData.data.map(
+        (bill: any) => ({
+          name: `${bill.name}`,
+          transactionId: bill.id,
+          // type: bill.type,
+          type: bill.category,
+          amount: `₦${bill.amount}`,
+          date: bill.created_at,
+          status: bill.status,
+          metadata: {
+            itemPhoto:
+              "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+          },
+        })
+      );
+      setRows(modifiedBillData);
+    }
+  }, [billOverviewData.data, setRows]);
 
   return (
     <>
       <Reveal>
         <Stack direction="column" spacing={3} paddingX={1} paddingY={1}>
-          {/* Top KPI  */}
-          {/* <Stack direction="row" spacing={2}> */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {/* Total Payments */}
-            <BillPaymentKPIDisplay
-              title="Total Payments"
-              kpiIcon={
-                <PaymentsIcon style={{ fontSize: 32, color: "#4caf50" }} />
-              }
-              total="15,345"
-              backgroundColour="lightgreen"
-            />
+          {billKPIData.isLoading ? (
+            <KPILoadingSkeleton />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+              <BillPaymentKPIDisplay
+                title="Total Payments"
+                kpiIcon={
+                  <PaymentsIcon style={{ fontSize: 32, color: "#4caf50" }} />
+                }
+                total={`${formatNumberToMultipleCommas(billKPIData.data.totalBillsCount)}`}
+                backgroundColour="lightgreen"
+              />
 
-            {/* Total Bill Revenue */}
-            <BillPaymentKPIDisplay
-              title="Total Bill Revenue"
-              kpiIcon={
-                <MonetizationOnIcon
-                  style={{ fontSize: 32, color: "#1976d2" }}
-                />
-              }
-              total="$100,876"
-              backgroundColour="#fff"
-            />
+              <BillPaymentKPIDisplay
+                title="Total Bill Revenue"
+                kpiIcon={
+                  <MonetizationOnIcon
+                    style={{ fontSize: 32, color: "#1976d2" }}
+                  />
+                }
+                total={`₦${formatNumberToMultipleCommas(billKPIData.data.totalBills)}`}
+                backgroundColour="#fff"
+              />
 
-            {/* Flagged Accounts */}
-            <BillPaymentKPIDisplay
-              title="Flagged Accounts"
-              kpiIcon={<FlagIcon style={{ fontSize: 32, color: "#f44336" }} />}
-              total="150"
-              backgroundColour="lightblue"
-            />
+              <BillPaymentKPIDisplay
+                title="Flagged Accounts"
+                kpiIcon={
+                  <FlagIcon style={{ fontSize: 32, color: "#f44336" }} />
+                }
+                total="150"
+                backgroundColour="lightblue"
+              />
 
-            {/* Pending Transactions */}
-            <BillPaymentKPIDisplay
-              title="Pending Transactions"
-              kpiIcon={
-                <PendingActionsIcon
-                  style={{ fontSize: 32, color: "#ff9800" }}
-                />
-              }
-              total="230"
-              backgroundColour="#fff8e1"
-            />
-          </div>
-          {/* </Stack> */}
+              <BillPaymentKPIDisplay
+                title="Pending Transactions"
+                kpiIcon={
+                  <PendingActionsIcon
+                    style={{ fontSize: 32, color: "#ff9800" }}
+                  />
+                }
+                total={`${formatNumberToMultipleCommas(billKPIData.data.pendingBillsCount)}`}
+                backgroundColour="#fff8e1"
+              />
+            </div>
+          )}
 
-          {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 md:divide-x-2 divide-y-2 lg:divide-y-0"> */}
+          {billKPIData.isLoading ? (
+            <KPILoadingSkeleton />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 md:divide-x-2 divide-y-2 lg:divide-y-0">
+              <BillsKPIDisplay
+                subtitle="Airtime & Internet"
+                total={`${formatNumberToMultipleCommas(billKPIData.data.airtimeBillsCount)}`}
+                kpiIcon={<AttachMoney sx={{ color: "success.main" }} />}
+              />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 md:divide-x-2 divide-y-2 lg:divide-y-0">
-            {/* sub KPI  */}
-            <BillsKPIDisplay
-              subtitle="Airtime & Internet"
-              total="12,345"
-              kpiIcon={<AttachMoney sx={{ color: "success.main" }} />}
-            />
+              <BillsKPIDisplay
+                subtitle="Tv subscription"
+                total={`${formatNumberToMultipleCommas(billKPIData.data.tvSubscriptionBillsCount)}`}
+                kpiIcon={<Subscriptions sx={{ color: "primary.main" }} />}
+              />
 
-            <BillsKPIDisplay
-              subtitle="Tv subscription"
-              total="9,876"
-              kpiIcon={<Subscriptions sx={{ color: "primary.main" }} />}
-            />
+              <BillsKPIDisplay
+                subtitle="Gift Cards"
+                total={`${formatNumberToMultipleCommas(billKPIData.data.giftCardBillsCount)}`}
+                kpiIcon={<CardGiftcard sx={{ color: "error.main" }} />}
+              />
 
-            <BillsKPIDisplay
-              subtitle="Gift Cards"
-              total="150,00"
-              kpiIcon={<CardGiftcard sx={{ color: "error.main" }} />}
-            />
+              <BillsKPIDisplay
+                subtitle="Electricity"
+                total={`${formatNumberToMultipleCommas(billKPIData.data.electricityBillsCount)}`}
+                kpiIcon={<ElectricalServices sx={{ color: "warning.main" }} />}
+              />
+            </div>
+          )}
 
-            <BillsKPIDisplay
-              subtitle="Electricity"
-              total="23,000"
-              kpiIcon={<ElectricalServices sx={{ color: "warning.main" }} />}
-            />
-          </div>
-
-          {/* Data Table  */}
-          {/* user table */}
           <Stack
             spacing={1}
             justifyContent="space-between"
             className="bg-white p-4 rounded-[12px]"
           >
-            <SearchFilterSortPaginateTable
-              title="Bills Table"
-              searchParams={["name", "transactionId", "status"]}
-              filterParams={{
-                data: [
+            {billOverviewData.isLoading ? (
+              <PrimaryTableSkeleton />
+            ) : (
+              <SearchFilterSortPaginateTable
+                title="Bills Table"
+                searchParams={["name", "transactionId", "status"]}
+                filterParams={{
+                  data: [
+                    {
+                      label: "Date",
+                      options: [
+                        "Today",
+                        "This Week",
+                        "This Month",
+                        "This Year",
+                      ],
+                    },
+                    {
+                      label: "Status",
+                      options: ["failed", "pending", "completed"],
+                    },
+                  ],
+                  action: tableFilterAction,
+                }}
+                headCells={[
                   {
+                    id: "name",
+                    numeric: false,
+                    label: "Name",
+                  },
+                  {
+                    id: "transactionId",
+                    numeric: false,
+                    label: "Transaction Id",
+                  },
+                  {
+                    id: "amount",
+                    numeric: true,
+                    label: "Amount",
+                  },
+                  {
+                    id: "type",
+                    numeric: false,
+                    label: "Type",
+                  },
+                  {
+                    id: "date",
+                    numeric: false,
                     label: "Date",
-                    options: ["Today", "This Week", "This Month", "This Year"],
                   },
                   {
+                    id: "status",
+                    numeric: false,
                     label: "Status",
-                    options: ["failed", "pending", "completed"],
                   },
-                ],
-                action: tableFilterAction,
-              }}
-              headCells={[
-                {
-                  id: "name",
-                  numeric: false,
-                  label: "Name",
-                },
-                {
-                  id: "transactionId",
-                  numeric: false,
-                  label: "Transaction Id",
-                },
-                {
-                  id: "amount",
-                  numeric: true,
-                  label: "Amount",
-                },
-                {
-                  id: "type",
-                  numeric: false,
-                  label: "Type",
-                },
-                {
-                  id: "date",
-                  numeric: false,
-                  label: "Date",
-                },
-                {
-                  id: "status",
-                  numeric: false,
-                  label: "Status",
-                },
-                {
-                  id: "actions",
-                  numeric: false,
-                  label: "Actions",
-                },
-              ]}
-              rows={[
-                {
-                  name: "Kene Nnakwue",
-                  transactionId: "LN12345",
-                  amount: "₦2,000",
-                  type: "airtime",
-                  date: "10/01/2025",
-                  status: "completed",
-                  metadata: {
-                    itemPhoto:
-                      "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+                  {
+                    id: "actions",
+                    numeric: false,
+                    label: "Actions",
                   },
-                },
-                {
-                  name: "Chris Obi",
-                  transactionId: "LN12346",
-                  amount: "₦10,000",
-                  type: "tv",
-                  date: "10/12/2025",
-                  status: "failed",
-                  metadata: {
-                    itemPhoto:
-                      "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
-                  },
-                },
-                {
-                  name: "Chinwe Okafor",
-                  transactionId: "LN12347",
-                  amount: "₦5,000",
-                  type: "electricity",
-                  date: "10/01/2024",
-                  status: "pending",
-                  metadata: {
-                    itemPhoto:
-                      "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
-                  },
-                },
-              ]}
-            />
+                ]}
+                rows={rows}
+              />
+            )}
           </Stack>
           <Stack
             sx={{ backgroundColor: "#fff", borderRadius: 5 }}

@@ -7,6 +7,7 @@ interface ITransactionOverview {
         type: string;
         amount: string;
         status: string;
+        category?: string;
         created_at: string;
     }[];
     page?: number;
@@ -17,10 +18,13 @@ export interface ITransactionSliceState {
     allTransactionsData: IResponseState<any[]>;
     transactionKPIData: IResponseState<{
         totalTranxCount: number;
+        failedTranxCount: number;
         totalTransactions: number;
         pendingTranxCount: number;
-        failedTranxCount: number;
+        failedTransactions: number;
+        pendingTransactions: number;
         successfulTranxCount: number;
+        successfullTransactions: number;
     }>;
     transactionOverviewData: IResponseState<any[]> & ITransactionOverview;
 }
