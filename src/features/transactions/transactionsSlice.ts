@@ -26,10 +26,13 @@ const transactionsSlice = createSlice({
         transactionKPIData: {
             data: {
                 totalTranxCount: 0,
+                failedTranxCount: 0,
                 totalTransactions: 0,
                 pendingTranxCount: 0,
-                failedTranxCount: 0,
+                failedTransactions: 0,
+                pendingTransactions: 0,
                 successfulTranxCount: 0,
+                successfullTransactions: 0,
             },
             error: null,
             isLoading: true,
