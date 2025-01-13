@@ -1,40 +1,38 @@
 import BillsAPI from './BillsAPI';
-import { ILoanSliceState } from '../../contracts';
+import { IBillSliceState } from '../../contracts';
 import { ActionReducerMapBuilder, createSlice, } from '@reduxjs/toolkit';
 import { handleFulfilledState, handlePendingState, handleRejectedState } from '../../utils';
 
 const billsAPI = new BillsAPI();
-const getLoansKPIData = billsAPI.getLoansKPIData;
-const getMutipleLoans = billsAPI.getMultipleLoans;
-const getLoanOverviewData = billsAPI.getLoanOverviewData;
+const getBillsKPIData = billsAPI.getBillsKPIData;
+const getMutipleBills = billsAPI.getMultipleBills;
+const getBillOverviewData = billsAPI.getBillOverviewData;
 
 const billsSlice = createSlice({
     name: 'bills',
     initialState: {
-        allLoansData: {
+        allBillsData: {
             data: [],
             error: null,
             isLoading: true,
             success: false,
         },
-        loanOverviewData: {
+        billOverviewData: {
             data: [],
             error: null,
             isLoading: true,
             success: false,
         },
-        loanKPIData: {
+        billKPIData: {
             data: {
-                dueLoans: 0,
-                totalLoans: 0,
-                activeLoans: 0,
-                repaidLoans: 0,
-                overdueLoans: 0,
-                dueLoansRevenue: 0,
-                totalLoansRevenue: 0,
-                activeLoansRevenue: 0,
-                repaidLoansRevenue: 0,
-                overdueLoansRevenue: 0,
+                totalBills: 0,
+                totalBillsCount: 0,
+                failedBillsCount: 0,
+                pendingBillsCount: 0,
+                airtimeBillsCount: 0,
+                giftCardBillsCount: 0,
+                electricityBillsCount: 0,
+                tvSubscriptionBillsCount: 0,
             },
             error: null,
             isLoading: true,
@@ -44,21 +42,21 @@ const billsSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(getMutipleLoans.pending, handlePendingState('allLoansData'))
-            .addCase(getMutipleLoans.fulfilled, handleFulfilledState('allLoansData'))
-            .addCase(getMutipleLoans.rejected, handleRejectedState('allLoansData'))
-            .addCase(getLoanOverviewData.pending, handlePendingState('loanOverviewData'))
-            .addCase(getLoanOverviewData.fulfilled, handleFulfilledState('loanOverviewData'))
-            .addCase(getLoanOverviewData.rejected, handleRejectedState('loanOverviewData'))
-            .addCase(getLoansKPIData.pending, handlePendingState('loanKPIData'))
-            .addCase(getLoansKPIData.fulfilled, handleFulfilledState('loanKPIData'))
-            .addCase(getLoansKPIData.rejected, handleRejectedState('loanKPIData'));
+            .addCase(getMutipleBills.pending, handlePendingState('allBillsData'))
+            .addCase(getMutipleBills.fulfilled, handleFulfilledState('allBillsData'))
+            .addCase(getMutipleBills.rejected, handleRejectedState('allBillsData'))
+            .addCase(getBillOverviewData.pending, handlePendingState('billOverviewData'))
+            .addCase(getBillOverviewData.fulfilled, handleFulfilledState('billOverviewData'))
+            .addCase(getBillOverviewData.rejected, handleRejectedState('billOverviewData'))
+            .addCase(getBillsKPIData.pending, handlePendingState('billKPIData'))
+            .addCase(getBillsKPIData.fulfilled, handleFulfilledState('billKPIData'))
+            .addCase(getBillsKPIData.rejected, handleRejectedState('billKPIData'));
     },
 } as {
     name: string;
-    initialState: ILoanSliceState;
+    initialState: IBillSliceState;
     reducers: any;
-    extraReducers: (builder: ActionReducerMapBuilder<ILoanSliceState>) => void;
+    extraReducers: (builder: ActionReducerMapBuilder<IBillSliceState>) => void;
 });
 
 export const { reducer: bills, } = billsSlice;
