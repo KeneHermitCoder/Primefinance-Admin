@@ -4,7 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import React from "react";
 import store from "./store";
 import { Provider } from "react-redux";
-import { ErrorPage } from "./components";
+import { ErrorPage, NotFoundPage } from "./components";
 import { ToastContainer } from "react-toastify";
 import ProtectedRoute from "./routes/protectedRoute";
 import { ResponsiveProvider } from "./context/responsiveContext";
@@ -14,7 +14,7 @@ import {
   Login,
   Users,
   Layout,
-  Escrow,
+  // Escrow,
   Settings,
   Register,
   Dashboard,
@@ -57,11 +57,11 @@ const router = createBrowserRouter([
             element: <Transactions />,
             errorElement: <ErrorPage />,
           },
-          {
-            path: "/escrow",
-            element: <Escrow />,
-            errorElement: <ErrorPage />,
-          },
+          // {
+          //   path: "/escrow",
+          //   element: <Escrow />,
+          //   errorElement: <ErrorPage />,
+          // },
           {
             path: "/bills",
             element: <Bills />,
@@ -82,6 +82,11 @@ const router = createBrowserRouter([
             element: <Settings />,
             errorElement: <ErrorPage />,
           },
+          {
+            path: "*",
+            element: <ErrorPage />,
+            errorElement: <NotFoundPage />,
+          }
         ],
       },
     ],
