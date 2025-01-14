@@ -203,12 +203,16 @@ export default function Loans() {
               title="Loan Transactions"
               data={[
                 {
-                  label: "Deposit",
-                  value: loanKPIData.isLoading ? 0 : loanKPIData.data.totalLoansRevenue || 2000,
+                  label: "Active Loans",
+                  value: loanKPIData.isLoading ? 0 : loanKPIData.data.activeLoansRevenue || 2000,
                 },
                 {
-                  label: "Loan Repayment",
+                  label: "Repaid Loans",
                   value: loanKPIData.isLoading ? 0 : loanKPIData.data.repaidLoansRevenue || 3000,
+                },
+                {
+                  label: "Overdue Loans",
+                  value: loanKPIData.isLoading ? 0 : loanKPIData.data.overdueLoansRevenue || 2000,
                 },
               ]}
               metadata={{
