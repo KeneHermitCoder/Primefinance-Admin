@@ -2,15 +2,55 @@ import { Stack } from "@mui/material";
 import images from "../../constants/images";
 import { tableFilterAction } from "../../utils";
 import { ArrowCircleDown, ArrowCircleUp } from "@mui/icons-material";
-import { DashboardAmountDisplay, LoanStatus } from "../../components/";
+import {
+  DashboardAmountDisplay,
+  LoanStatus,
+  PrimaryTableSkeleton,
+  TableErrorComponent,
+} from "../../components/";
 import {
   PrimaryLineChart,
   PrimaryPieChart,
   Reveal,
   SearchFilterSortPaginateTable,
 } from "../../components";
+import LoansAPI from "../../features/loans/LoansAPI";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../features";
 
 export function Dashboard() {
+  const dispatch = useDispatch();
+  const [rows, setRows] = useState<{ [key: string]: any }[]>([]);
+
+  const { loanKPIData, loanOverviewData } = useSelector(
+    (state: RootState) => state.loans
+  );
+
+  useEffect(() => {
+    // Fetch loans when the component mounts
+    // @ts-ignore
+    dispatch(new LoansAPI().getLoanOverviewData({ page: 0, limit: 10 }));
+    // @ts-ignore
+    dispatch(new LoansAPI().getLoansKPIData());
+  }, [dispatch]);
+  useEffect(() => {
+    if (loanOverviewData.data.length > 0) {
+      const modifiedLoansData = loanOverviewData.data.map((loan: any) => ({
+        customerName: `${loan.first_name} ${loan.last_name}`,
+        loanId: loan.id,
+        amount: `₦${loan.amount}`,
+        interest: `₦${((loan.percentage / 100) * loan.amount).toFixed(2)}`,
+        date: loan.repayment_date,
+        status: loan.status,
+        metadata: {
+          itemPhoto:
+            "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+        },
+      }));
+      setRows(modifiedLoansData);
+    }
+  }, [loanOverviewData.data, setRows]);
   return (
     <>
       <Reveal>
@@ -55,61 +95,62 @@ export function Dashboard() {
           <div className="flex flex-col lg:flex-row gap-6">
             <Stack
               spacing={2.5}
-              justifyContent="space-between"
-              className="w-full lg:w-2/5 bg-white p-4 rounded-[12px]"
+              // justifyContent="space-between"
+              className="w-full lg:w-2/5 bg-white p-4 rounded-[12px] self-start"
             >
               <PrimaryPieChart
-                title="Loan Status"
+                title="Loan Transactions"
                 data={[
                   {
                     label: "Active Loans",
-                    value: 7272,
+                    value: loanKPIData.isLoading ? 0 : loanKPIData.data.activeLoansRevenue || 2000,
                   },
                   {
                     label: "Repaid Loans",
-                    value: 1638,
+                    value: loanKPIData.isLoading ? 0 : loanKPIData.data.repaidLoansRevenue || 3000,
                   },
                   {
-                    label: "Overdue",
-                    value: 3638,
+                    label: "Overdue Loans",
+                    value: loanKPIData.isLoading ? 0 : loanKPIData.data.overdueLoansRevenue || 2000,
                   },
                 ]}
-                metadata={{}}
+                metadata={{
+                  currency: "₦",
+                }}
               />
               <Stack spacing={1.5}>
-                <LoanStatus
+                {rows.length > 0 &&
+                  rows.map((row: any) => (
+                    <LoanStatus
+                      key={row.loanId}
+                      name={row.customerName}
+                      status={row.status}
+                      timestamp={row.date}
+                      details={
+                        row.status === "success"
+                          ? "Loan successful"
+                          : row.date < new Date()
+                          ? "Loan due"
+                          : "Loan overdue"
+                      }
+                      photo={
+                        row.metadata.itemPhoto ||
+                        "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80"
+                      }
+                    />
+                  ))}
+                {/* <LoanStatus
                   name="John Doe"
                   status="failed"
                   timestamp="12:37"
                   details="Loan failed"
                   photo="https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80"
-                />
-                <LoanStatus
-                  name="Kene Nnakwue"
-                  status="success"
-                  timestamp="17:37"
-                  details="Loan successful"
-                  photo="https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80"
-                />
-                <LoanStatus
-                  name="Code Hermit"
-                  status="overdue"
-                  timestamp="19:00"
-                  details="Loan overdue since 12/12/2024"
-                  photo="https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80"
-                />
-                <LoanStatus
-                  name="Lord Cypher"
-                  status="success"
-                  timestamp="04:50"
-                  details="Loan successful"
-                  photo="https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80"
-                />
+                /> */}
               </Stack>
             </Stack>
             <Stack
               spacing={2.5}
-              justifyContent="space-between"
+              // justifyContent="space-between"
               className="w-full lg:w-3/5"
             >
               <Stack
@@ -125,87 +166,78 @@ export function Dashboard() {
                 justifyContent="space-between"
                 className="bg-white p-4 rounded-[12px]"
               >
-                <SearchFilterSortPaginateTable
-                  title="Loan Overview"
-                  // searchParams={[]}
-                  filterParams={{
-                    data: [
+                {loanOverviewData.isLoading ? (
+                  <PrimaryTableSkeleton />
+                ) : loanOverviewData.error ? (
+                  <TableErrorComponent
+                    message={loanOverviewData.error}
+                    onRetry={() => {
+                      // @ts-ignore
+                      dispatch(new LoansAPI().getLoanOverviewData({ page: 0, limit: 10, }));
+                    }}
+                  />
+                ) : (
+                  <SearchFilterSortPaginateTable
+                    title="Loan Overview"
+                    searchParams={["customerName", "loanId", "status"]}
+                    filterParams={{
+                      data: [
+                        {
+                          label: "Date",
+                          options: [
+                            "Today",
+                            "This Week",
+                            "This Month",
+                            "This Year",
+                          ],
+                        },
+                        {
+                          label: "Status",
+                          options: ["pending", "active", "repaid"],
+                        },
+                      ],
+                      action: tableFilterAction,
+                    }}
+                    headCells={[
                       {
-                        label: "Date",
-                        options: [
-                          "Today",
-                          "This Week",
-                          "This Month",
-                          "This Year",
-                        ],
+                        id: "customerName",
+                        numeric: false,
+                        label: "Name",
                       },
                       {
-                        label: "type",
-                        options: ["completed", "pending"],
+                        id: "loanId",
+                        numeric: true,
+                        label: "Loan Id",
                       },
-                    ],
-                    action: tableFilterAction,
-                  }}
-                  headCells={[
-                    {
-                      id: "customerName",
-                      numeric: false,
-                      label: "Name",
-                    },
-                    {
-                      id: "amount",
-                      numeric: true,
-                      label: "Amount",
-                    },
-                    {
-                      id: "type",
-                      numeric: true,
-                      label: "Type",
-                    },
-                    {
-                      id: "status",
-                      numeric: true,
-                      label: "Status",
-                    },
-                    {
-                      id: "actions",
-                      numeric: false,
-                      label: "Actions",
-                    },
-                  ]}
-                  rows={[
-                    {
-                      customerName: "Kene Nnakwue",
-                      amount: "₦2,000",
-                      type: "₦200",
-                      status: "active",
-                      metadata: {
-                        itemPhoto:
-                          "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+                      {
+                        id: "amount",
+                        numeric: true,
+                        label: "Amount",
                       },
-                    },
-                    {
-                      customerName: "Chris Obi",
-                      amount: "₦10,000",
-                      type: "₦100",
-                      status: "overdue",
-                      metadata: {
-                        itemPhoto:
-                          "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+                      {
+                        id: "interest",
+                        numeric: true,
+                        label: "Interest",
                       },
-                    },
-                    {
-                      customerName: "Chinwe Okafor",
-                      amount: "₦5,000",
-                      type: "₦500",
-                      status: "active",
-                      metadata: {
-                        itemPhoto:
-                          "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+                      {
+                        id: "date",
+                        numeric: false,
+                        label: "Due Date",
                       },
-                    },
-                  ]}
-                />
+                      {
+                        id: "status",
+                        numeric: false,
+                        label: "Status",
+                      },
+                      {
+                        id: "actions",
+                        numeric: false,
+                        label: "Actions",
+                      },
+                    ]}
+                    rows={rows}
+                  />
+                )}
               </Stack>
             </Stack>
           </div>
