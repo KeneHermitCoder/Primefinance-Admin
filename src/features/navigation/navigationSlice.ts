@@ -41,12 +41,12 @@ const initialState: {
       bool: false,
       children: [],
     },
-    {
-      id: "escrow",
-      name: "Escrow Management",
-      bool: false,
-      children: [],
-    },
+    // {
+    //   id: "escrow",
+    //   name: "Escrow Management",
+    //   bool: false,
+    //   children: [],
+    // },
     {
       id: "bills",
       name: "Bills Management",

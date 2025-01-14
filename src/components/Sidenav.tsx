@@ -17,7 +17,7 @@ import {
   Logout,
   Settings,
   Notifications,
-  CatchingPokemon,
+  // CatchingPokemon,
   CurrencyBitcoin,
   Person3Outlined,
   CurrencyExchange,
@@ -43,12 +43,12 @@ const navData = [
       title: "Transactions",
       icon: <CurrencyExchange />,
     },
-    {
-      link: "/escrow",
-      tab: "escrow",
-      title: "Escrow",
-      icon: <CatchingPokemon />,
-    },
+    // {
+    //   link: "/escrow",
+    //   tab: "escrow",
+    //   title: "Escrow",
+    //   icon: <CatchingPokemon />,
+    // },
     {
       link: "/bills",
       tab: "bills",
