@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 .codegpt
+# Local Netlify folder
+.netlify
+tsconfig.tsbuildinfo
