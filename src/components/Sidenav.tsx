@@ -148,6 +148,11 @@ export default function SideNav({
     };
   }, [visible, toggleSideNav]);
 
+  useEffect(() => {
+    let currentMainTab = navData.flat().find((item) => item.tab === location?.pathname?.split("/")[1]);
+    if (currentMainTab) handleNavigation(currentMainTab.link, currentMainTab.tab);
+  }, [location.pathname, navData]);
+
   return (
     <>
       <SlideInAlertDialog
@@ -182,7 +187,7 @@ export default function SideNav({
             <Clear />
           </button>
         </div>
-        <div className="flex flex-col h-full justify-between">
+        <div className="flex flex-col h-full overflow-y-hidden w-full justify-between">
           {navData.map((items, index) => (
             <div key={`side-nav-${index}`} className="flex flex-col">
               {items.map((item, currentIndex) => (
