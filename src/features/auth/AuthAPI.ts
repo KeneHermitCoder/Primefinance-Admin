@@ -1,18 +1,51 @@
 import { createAsyncThunk, } from '@reduxjs/toolkit';
-import { handleError, supabaseClient, } from '../../utils';
-import { AdminUserAttributes, SignInWithPasswordCredentials, SignOut, } from '@supabase/supabase-js';
+import { handleError, supabaseClient, Primebase, } from '../../utils';
+import {
+    SignOut,
+    // AdminUserAttributes,
+    SignInWithPasswordCredentials,
+} from '@supabase/supabase-js';
 
 class AuthAPI {
-    register = createAsyncThunk('admin/register', async (registrationDetails: AdminUserAttributes, thunkAPI) => {
-        console.log({ registrationDetails, })
-        // const { data, error, } = await supabaseClient.auth.signUp(registrationDetails);
-        const { data, error, } = await supabaseClient.auth.admin.createUser(registrationDetails);
-        if (error) {
-            console.log({ error });
-            const errorResponse = handleError(error);
-            return thunkAPI.rejectWithValue(errorResponse);
-        } else return data;
-    });
+
+    private primebaseClient = new Primebase(import.meta.env.VITE_PUBLIC_API_BASE_URL);
+
+    register = createAsyncThunk(
+        'admin/register',
+        async (registrationDetails: {
+            email: string;
+            firstname: string;
+            lastname: string;
+            password: string;
+            phone: string;
+            bvn: string;
+            nin: string;
+            dob: string;
+        }, thunkAPI) => {
+            console.log({ registrationDetails, })
+            // const { data, error, } = await supabaseClient.auth.signUp(registrationDetails);
+            // const { data, error, } = await supabaseClient.auth.admin.createUser(registrationDetails);
+            // if (error) {
+            //     console.log({ error });
+            //     const errorResponse = handleError(error);
+            //     return thunkAPI.rejectWithValue(errorResponse);
+            // } else return data;
+            try {
+                const response = await this.primebaseClient.auth.createAdmin({
+                    dob: registrationDetails.dob as string,
+                    email: registrationDetails.email as string,
+                    phone: registrationDetails.phone as string,
+                    name: registrationDetails.firstname as string,
+                    surname: registrationDetails.lastname as string,
+                    password: registrationDetails.password as string,
+                });
+                console.log({ response, })
+                return response;
+            } catch (error: any) {
+                // console.log({ error, });
+                thunkAPI.rejectWithValue(handleError(error));
+            }
+        });
 
     login = createAsyncThunk('admin/login', async (loginDetails: SignInWithPasswordCredentials, thunkAPI) => {
         const { data, error, } = await supabaseClient.auth.signInWithPassword(loginDetails);
