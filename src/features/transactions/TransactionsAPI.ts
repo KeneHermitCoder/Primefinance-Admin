@@ -1,5 +1,6 @@
 import { createAsyncThunk, } from '@reduxjs/toolkit';
 import { handleError, supabaseClient, } from '../../utils';
+import { primebase } from '../../lib/primebase';
 
 export default class TransactionsAPI {
 
@@ -10,7 +11,7 @@ export default class TransactionsAPI {
         page?: number;
         limit?: number;
     }, thunkAPI) => {
-        const { data, error, } = await supabaseClient.from('transactions').select('*')//.range((page - 1) * limit, page * limit - 1);
+        const { data, error, } = await primebase.data.transactions();//.range((page - 1) * limit, page * limit - 1);
         if (error) return thunkAPI.rejectWithValue(handleError(error));
         else return data;
     });
@@ -30,17 +31,30 @@ export default class TransactionsAPI {
     });
 
     public getTransactionsKPIData = createAsyncThunk('transactions/getTransactionsKPIData', async (_, thunkAPI) => {
-        const { data, error, } = await supabaseClient.from('transactions').select('*')
-        if (error) return thunkAPI.rejectWithValue(handleError(error));
-        else return {
-            totalTranxCount: data.length || 0,
-            failedTranxCount: (data.filter((transaction: any) => transaction.status === 'failed')).length,
-            pendingTranxCount: (data.filter((transaction: any) => transaction.status === 'active')).length,
-            totalTransactions: data.reduce((acc: number, transaction: any) => acc + transaction.amount, 0),
-            successfulTranxCount: (data.filter((transaction: any) => transaction.status === 'success')).length,
-            failedTransactions: data.reduce((acc: number, transaction: any) => acc + (transaction.status === 'failed' ? transaction.amount : 0), 0),
-            pendingTransactions: data.reduce((acc: number, transaction: any) => acc + (transaction.status === 'active' ? transaction.amount : 0), 0),
-            successfullTransactions: data.reduce((acc: number, transaction: any) => acc + (transaction.status === 'success' ? transaction.amount : 0), 0),
+        try {
+            const { data, error } = await primebase.data.transactions();
+
+            if (!data || !data.transaction) {
+                return thunkAPI.rejectWithValue('No transaction data available');
+            }
+            if (error) {
+                return thunkAPI.rejectWithValue(handleError(error));
+            }
+
+            const transactions = Array.isArray(data.transaction) ? data.transaction : [data.transaction];
+
+            return {
+                totalTranxCount: transactions.length || 0,
+                failedTranxCount: transactions.filter((transaction: any) => transaction.status === 'failed').length,
+                pendingTranxCount: transactions.filter((transaction: any) => transaction.status === 'active').length,
+                totalTransactions: transactions.reduce((acc: number, transaction: any) => acc + (transaction.amount || 0), 0),
+                successfulTranxCount: transactions.filter((transaction: any) => transaction.status === 'success').length,
+                failedTransactions: transactions.reduce((acc: number, transaction: any) => acc + (transaction.status === 'failed' ? transaction.amount : 0), 0),
+                pendingTransactions: transactions.reduce((acc: number, transaction: any) => acc + (transaction.status === 'active' ? transaction.amount : 0), 0),
+                successfullTransactions: transactions.reduce((acc: number, transaction: any) => acc + (transaction.status === 'success' ? transaction.amount : 0), 0),
+            };
+        } catch (error) {
+            return thunkAPI.rejectWithValue(handleError(error));
         }
     });
 

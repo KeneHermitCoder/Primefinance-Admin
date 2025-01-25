@@ -1,6 +1,20 @@
 import { IResponseState } from "./common.interfaces";
 
-interface ILoanOverview {
+// Loan KPI response structure
+export interface ILoanKPIData {
+    dueLoans: number;
+    totalLoans: number;
+    activeLoans: number;
+    repaidLoans: number;
+    overdueLoans: number;
+    dueLoansRevenue: number;
+    totalLoansRevenue: number;
+    activeLoansRevenue: number;
+    repaidLoansRevenue: number;
+    overdueLoansRevenue: number;
+}
+export type LoanKPIResponse = IResponseState<ILoanKPIData>;
+export interface ILoanOverview {
     data: {
         id: string;
         first_name: string;

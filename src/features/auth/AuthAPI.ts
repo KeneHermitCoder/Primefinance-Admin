@@ -1,48 +1,35 @@
 import { createAsyncThunk, } from '@reduxjs/toolkit';
-import { handleError, supabaseClient, httpClient, } from '../../utils';
-import {
-    SignOut,
-    // AdminUserAttributes,
-    SignInWithPasswordCredentials,
-} from '@supabase/supabase-js';
-
+import { handleError,  } from '../../utils';
+import { primebase } from '../../lib/primebase';
 class AuthAPI {
 
     register = createAsyncThunk(
         'admin/register',
         async (registrationDetails: {
             email: string;
-            firstname: string;
-            lastname: string;
+            name: string;
+            surname: string;
             password: string;
             phone: string;
-            bvn: string;
-            nin: string;
             dob: string;
         }, thunkAPI) => {
             console.log({ registrationDetails, })
-            // const { data, error, } = await supabaseClient.auth.signUp(registrationDetails);
-            // const { data, error, } = await supabaseClient.auth.admin.createUser(registrationDetails);
-            // if (error) {
-            //     console.log({ error });
-            //     const errorResponse = handleError(error);
-            //     return thunkAPI.rejectWithValue(errorResponse);
-            // } else return data;
+            
             try {
-                const response = await httpClient({
-                    url: 'users/create-admin',
-                    method: 'POST',
-                    data: {
-                        dob: registrationDetails.dob as string,
-                        email: registrationDetails.email as string,
-                        phone: registrationDetails.phone as string,
-                        name: registrationDetails.firstname as string,
-                        surname: registrationDetails.lastname as string,
-                        password: registrationDetails.password as string,
+                const { data, error, } = await primebase.auth.createAdmin(
+                    {
+                        email: registrationDetails.email,
+                        name: registrationDetails.name,
+                        surname: registrationDetails.surname,
+                        password: registrationDetails.password,
+                        phone: registrationDetails.phone,
+                        dob: registrationDetails.dob
                     }
-                });
-                console.log({ response, })
-                return response;
+                );
+                if(error){
+                    thunkAPI.rejectWithValue(handleError(error));
+                }
+                return data;
             } catch (error: any) {
                 console.log({ error, });
                 const errorResponse = handleError(error);
@@ -50,8 +37,8 @@ class AuthAPI {
             }
         });
 
-    login = createAsyncThunk('admin/login', async (loginDetails: SignInWithPasswordCredentials, thunkAPI) => {
-        const { data, error, } = await supabaseClient.auth.signInWithPassword(loginDetails);
+    login = createAsyncThunk('admin/login', async (loginDetails: {email: string, password: string}, thunkAPI) => {
+        const { data, error, } = await primebase.auth.login(loginDetails.email, loginDetails.password );
         console.log({ loginDetails, data, })
         if (error) {
             console.log({ error1: error, });
@@ -61,16 +48,16 @@ class AuthAPI {
         } else return data;
     });
 
-    logout = createAsyncThunk('admin/logout', async (logoutDetails: SignOut, thunkAPI) => {
-        const { error, } = await supabaseClient.auth.signOut();
+    logout = createAsyncThunk('admin/logout', async (_, thunkAPI) => {
+        const { error, } = await primebase.auth.logout();
         if (error) {
-            console.log({ error1: error, logoutDetails, });
+           
             const errorResponse = handleError(error);
-            console.log({ error2: error, errorResponse, });
+       
             return thunkAPI.rejectWithValue(errorResponse);
         } else {
-            console.log({ logoutDetails, });
-            return;
+        
+            return true;
         };
     });
 }
