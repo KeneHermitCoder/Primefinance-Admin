@@ -1,6 +1,6 @@
 import { Stack } from "@mui/material";
 import images from "../../constants/images";
-import { tableFilterAction } from "../../utils";
+import { formatNumberToMultipleCommas, tableFilterAction } from "../../utils";
 import { ArrowCircleDown, ArrowCircleUp } from "@mui/icons-material";
 import {
   DashboardAmountDisplay,
@@ -35,7 +35,7 @@ export function Dashboard() {
     dispatch(new LoansAPI().getLoansKPIData());
   }, [dispatch]);
   useEffect(() => {
-    if (loanOverviewData.data.length > 0) {
+    if (loanOverviewData?.data?.length > 0) {
       const modifiedLoansData = loanOverviewData.data.map((loan: any) => ({
         customerName: `${loan.first_name} ${loan.last_name}`,
         loanId: loan.id,
@@ -58,7 +58,7 @@ export function Dashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             <DashboardAmountDisplay
               title="Total revenue"
-              amount="$100,000"
+              amount={formatNumberToMultipleCommas(loanKPIData.data.totalLoans)}
               trIcon={<ArrowCircleUp style={{ color: "#15792b" }} />}
               backgroundColour="#CCEFDD"
               bottomItem={
@@ -69,7 +69,7 @@ export function Dashboard() {
             />
             <DashboardAmountDisplay
               title="Total users"
-              amount="4500"
+              amount="0"
               trIcon={<ArrowCircleDown style={{ color: "#151e79" }} />}
               backgroundColour="#FFFFFF"
               bottomItem={
@@ -87,8 +87,8 @@ export function Dashboard() {
               }
             />
             <DashboardAmountDisplay
-              title="Total Revenue"
-              amount="$100,826"
+              title="Total Loans Revenue"
+              amount={formatNumberToMultipleCommas(loanKPIData.data.totalLoansRevenue)}
               backgroundColour="#f5eac9"
             />
           </div>
@@ -103,15 +103,15 @@ export function Dashboard() {
                 data={[
                   {
                     label: "Active Loans",
-                    value: loanKPIData.isLoading ? 0 : loanKPIData.data.activeLoansRevenue || 2000,
+                    value: loanKPIData.isLoading ? 0 : loanKPIData.data.activeLoansRevenue || 0 ,
                   },
                   {
                     label: "Repaid Loans",
-                    value: loanKPIData.isLoading ? 0 : loanKPIData.data.repaidLoansRevenue || 3000,
+                    value: loanKPIData.isLoading ? 0 : loanKPIData.data.repaidLoansRevenue || 0,
                   },
                   {
                     label: "Overdue Loans",
-                    value: loanKPIData.isLoading ? 0 : loanKPIData.data.overdueLoansRevenue || 2000,
+                    value: loanKPIData.isLoading ? 0 : loanKPIData.data.overdueLoansRevenue || 0,
                   },
                 ]}
                 metadata={{
@@ -168,14 +168,16 @@ export function Dashboard() {
               >
                 {loanOverviewData.isLoading ? (
                   <PrimaryTableSkeleton />
-                ) : loanOverviewData.error ? (
-                  <TableErrorComponent
-                    message={loanOverviewData.error}
-                    onRetry={() => {
-                      // @ts-ignore
-                      dispatch(new LoansAPI().getLoanOverviewData({ page: 0, limit: 10, }));
-                    }}
-                  />
+                  // THIS SHOULD UODATUPDATED WHEN 404 IN NO LONGER BEING TRHOWN FROM THE BACKEND
+                // ) : loanOverviewData.error ? (
+                //   <TableErrorComponent
+                //     message={loanOverviewData.error}
+                //     onRetry={() => {
+                //       // @ts-ignore
+                //       dispatch(new LoansAPI().getLoanOverviewData({ page: 0, limit: 10, }));
+                //     }}
+                //   />
+                // ) : (
                 ) : (
                   <SearchFilterSortPaginateTable
                     title="Loan Overview"

@@ -1,6 +1,6 @@
 import { httpClient } from "./utils/httpClient";
-import { Transfer, User } from "./interfaces";
-import { UserHttpResponse, UserResponse, DataHttpResponse, DataResponse, PayBillResponse, PayBillHttpResponse } from "./utils/httpResponse";
+import { Transfer,  } from "./interfaces";
+import { UserHttpResponse, UserResponse, DataHttpResponse, DataResponse } from "./utils/httpResponse";
 
 export class Auth {
     private URL: string; // Declare the URL property

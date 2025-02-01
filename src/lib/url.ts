@@ -1,5 +1,5 @@
 
-export const APP_BASE_URL = String(process.env.EXPO_PUBLIC_API_BASE_URL);
+export const APP_BASE_URL =(import.meta.env.VITE_PUBLIC_API_BASE_URL);
 
 console.log({ APP_BASE_URL });
 

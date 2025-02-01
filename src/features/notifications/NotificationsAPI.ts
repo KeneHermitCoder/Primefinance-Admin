@@ -1,51 +1,92 @@
-import { createAsyncThunk, } from '@reduxjs/toolkit';
-import { handleError, supabaseClient, } from '../../utils';
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { handleError, httpClient } from '../../utils';
+
+export type NotificationType = "loan";
+export type NotificationStatus = "unread" | "read";
+interface Notification {
+   _id: string; // Unique identifier (UUID)
+   created_at: string; // Timestamp in ISO format
+   updated_at: string; // Timestamp of when the transaction was updated
+   name: string; // Name of the notification
+   user: string; // User ID (UUID)
+   message: string; // Notification message
+   type: NotificationType; // Restricted to "loan"
+   status: NotificationStatus; // Restricted to "unread" or "read"
+}
 
 export default class NotificationsAPI {
 
-    public getMultipleLoans = createAsyncThunk('loans/getallLoans', async ({
-        // page = 1,
-        // limit = 10,
-    }: {
-        page?: number;
-        limit?: number;
-    }, thunkAPI) => {
-        const { data, error, } = await supabaseClient.from('loans').select('*')//.range((page - 1) * limit, page * limit - 1);
-        if (error) return thunkAPI.rejectWithValue(handleError(error));
-        else return data;
-    });
 
-    public getLoanOverviewData = createAsyncThunk('loans/getLoanOverviewData', async ({
-        // page = 1,
-        // limit = 10,
-    }: {
-        page?: number;
-        limit?: number;
-    }, thunkAPI) => {
-        const { data, error, } = await supabaseClient.from('loans').select(
-            'id, first_name, last_name, amount, status, repayment_date, percentage, base64Image'
-        )//.range((page - 1) * limit, page * limit - 1);
-        if (error) return thunkAPI.rejectWithValue(handleError(error));
-        // if (error) return thunkAPI.abort('An error occurred!');
-        else return data;
-    });
+  public getMultipleNotifications = createAsyncThunk(
+    'notifications/getMultipleNotifications',
+     async ({ page = 1, limit = 10 }: { page?: number; limit?: number }, thunkAPI) => {
+                try {
+                    const response = await httpClient({
+                        method: 'GET',
+                        url: '/api/data/messages',
+                    });
+    
+                    const { data }: { data: Notification[] } = response;
+                    return { data: data.slice((page - 1) * limit, page * limit), total: data.length };
+                } catch (error: any) {
+                    return thunkAPI.rejectWithValue(handleError(error));
+                }
+     }
+  );
 
-    public getLoansKPIData = createAsyncThunk('loans/getLoansKPIData', async (_, thunkAPI) => {
-        const { data, error, } = await supabaseClient.from('loans').select('*')
-        if (error) return thunkAPI.rejectWithValue(handleError(error));
-        // if (error) return thunkAPI.abort('An error occurred!');
-        else return {
-            totalLoans: data.length || 0,
-            dueLoans: (data.filter((loan: any) => loan.status === 'due')).length,
-            activeLoans: (data.filter((loan: any) => loan.status === 'active')).length,
-            repaidLoans: (data.filter((loan: any) => loan.status === 'repaid')).length,
-            overdueLoans: (data.filter((loan: any) => loan.status === 'overdue')).length,
-            totalLoansRevenue: (data.reduce((acc: number, loan: any) => acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount)), 0)),
-            dueLoansRevenue: (data.filter((loan: any) => loan.status === 'due')).reduce((acc: number, loan: any) => acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount)), 0),
-            activeLoansRevenue: (data.filter((loan: any) => loan.status === 'active')).reduce((acc: number, loan: any) => acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount)), 0),
-            repaidLoansRevenue: (data.filter((loan: any) => loan.status === 'repaid')).reduce((acc: number, loan: any) => acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount)), 0),
-            overdueLoansRevenue: (data.filter((loan: any) => loan.status === 'overdue')).reduce((acc: number, loan: any) => acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount)), 0),
+  public getNotificationOverviewData = createAsyncThunk(
+    'notifications/getNotificationOverviewData',
+    async (_, thunkAPI) => {
+  
+        try {
+            const response = await httpClient({
+                method: 'GET',
+                url: '/api/data/messages',
+                isAuth: true,
+            });
+
+            const { data }: { data: Notification[] } = response;
+            return {
+
+                notificationId: data.filter((notification: Notification)=> notification._id),
+                notificationName: data.filter((notification: Notification) => notification.name),
+                notificationCategory: data.filter((notification: Notification) => notification.type),
+                user: data.filter((notification: Notification) => notification.user),
+                notificationStatus: data.filter((notification: Notification) => notification.status),
+                notificationMessage: data.filter((notification: Notification) => notification.message),
+                notificationDate: data.filter((notification: Notification) => notification.created_at),
+            }
+        } catch (error: any) {
+            return thunkAPI.rejectWithValue(handleError(error));
         }
-    });
+            }
+    );
 
+  public getNotificationsKPIData = createAsyncThunk(
+    'notifications/getNotificationsKPIData',
+    async (_, thunkAPI) => {
+        try{
+            const response = await httpClient({
+                method: 'GET',
+                url: '/api/data/messages',
+                isAuth: true,
+            });
+            const { data }: { data: Notification[] } = response;
+            return{
+                totalNotifications: data.length || 0,
+                unreadNotifications: data.filter(n => n.status === 'unread').length,
+                mostFrequentType: data.reduce((acc: Record<string, number>, n) => {
+                  acc[n.type] = (acc[n.type] || 0) + 1;
+                  return acc;
+                }, {}),
+               successRate: (data.filter(n => n.status === 'read').length / data.length) * 100 || 0,
+          
+
+            }
+
+        }catch(error: any){
+            return thunkAPI.rejectWithValue(handleError(error));
+        }
+    }
+  );
 }

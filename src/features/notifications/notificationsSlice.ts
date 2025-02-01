@@ -1,40 +1,33 @@
 import NotificationsAPI from './NotificationsAPI';
-import { ILoanSliceState } from '../../contracts';
-import { ActionReducerMapBuilder, createSlice, } from '@reduxjs/toolkit';
+import { ActionReducerMapBuilder, createSlice } from '@reduxjs/toolkit';
 import { handleFulfilledState, handlePendingState, handleRejectedState } from '../../utils';
 
 const notificationsAPI = new NotificationsAPI();
-const getLoansKPIData = notificationsAPI.getLoansKPIData;
-const getMutipleLoans = notificationsAPI.getMultipleLoans;
-const getLoanOverviewData = notificationsAPI.getLoanOverviewData;
+const getNotificationsKPIData = notificationsAPI.getNotificationsKPIData;
+const getMultipleNotifications = notificationsAPI.getMultipleNotifications;
+const getNotificationOverviewData = notificationsAPI.getNotificationOverviewData;
 
 const notificationsSlice = createSlice({
     name: 'notifications',
     initialState: {
-        allLoansData: {
+        allNotificationsData: {
             data: [],
             error: null,
             isLoading: true,
             success: false,
         },
-        loanOverviewData: {
+        notificationOverviewData: {
             data: [],
             error: null,
             isLoading: true,
             success: false,
         },
-        loanKPIData: {
+        notificationKPIData: {
             data: {
-                dueLoans: 0,
-                totalLoans: 0,
-                activeLoans: 0,
-                repaidLoans: 0,
-                overdueLoans: 0,
-                dueLoansRevenue: 0,
-                totalLoansRevenue: 0,
-                activeLoansRevenue: 0,
-                repaidLoansRevenue: 0,
-                overdueLoansRevenue: 0,
+                totalNotification: 0,
+                totalPendingNotification: 0,
+                totalMostFrequent: 0,
+                totalSuccessRate: 0,
             },
             error: null,
             isLoading: true,
@@ -42,23 +35,18 @@ const notificationsSlice = createSlice({
         }
     },
     reducers: {},
-    extraReducers: (builder) => {
+    extraReducers: (builder: ActionReducerMapBuilder<any>) => {
         builder
-            .addCase(getMutipleLoans.pending, handlePendingState('allLoansData'))
-            .addCase(getMutipleLoans.fulfilled, handleFulfilledState('allLoansData'))
-            .addCase(getMutipleLoans.rejected, handleRejectedState('allLoansData'))
-            .addCase(getLoanOverviewData.pending, handlePendingState('loanOverviewData'))
-            .addCase(getLoanOverviewData.fulfilled, handleFulfilledState('loanOverviewData'))
-            .addCase(getLoanOverviewData.rejected, handleRejectedState('loanOverviewData'))
-            .addCase(getLoansKPIData.pending, handlePendingState('loanKPIData'))
-            .addCase(getLoansKPIData.fulfilled, handleFulfilledState('loanKPIData'))
-            .addCase(getLoansKPIData.rejected, handleRejectedState('loanKPIData'));
+            .addCase(getMultipleNotifications.pending, handlePendingState('allNotificationsData'))
+            .addCase(getMultipleNotifications.fulfilled, handleFulfilledState('allNotificationsData'))
+            .addCase(getMultipleNotifications.rejected, handleRejectedState('allNotificationsData'))
+            .addCase(getNotificationOverviewData.pending, handlePendingState('notificationOverviewData'))
+            .addCase(getNotificationOverviewData.fulfilled, handleFulfilledState('notificationOverviewData'))
+            .addCase(getNotificationOverviewData.rejected, handleRejectedState('notificationOverviewData'))
+            .addCase(getNotificationsKPIData.pending, handlePendingState('notificationKPIData'))
+            .addCase(getNotificationsKPIData.fulfilled, handleFulfilledState('notificationKPIData'))
+            .addCase(getNotificationsKPIData.rejected, handleRejectedState('notificationKPIData'));
     },
-} as {
-    name: string;
-    initialState: ILoanSliceState;
-    reducers: any;
-    extraReducers: (builder: ActionReducerMapBuilder<ILoanSliceState>) => void;
 });
 
-export const { reducer: notifications, } = notificationsSlice;
+export const { reducer: notifications } = notificationsSlice;

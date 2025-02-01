@@ -39,7 +39,7 @@ export default function Users() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (userOverviewData.data.length >= 0) {
+    if (userOverviewData?.data?.length >= 0) {
       const modifiedTransactionData = userOverviewData.data.map(
         (user: any) => ({
           name: `${user.first_name} ${user.last_name}`,
@@ -84,7 +84,7 @@ export default function Users() {
                 subtitle="Total Users"
                 kpiIcon={<AttachMoney sx={{ color: "success.main" }} />}
                 total={`${formatNumberToMultipleCommas(
-                  userKPIData.data.totalUsersCount
+                  userKPIData.data?.totalUsersCount
                 )}`}
               />
 

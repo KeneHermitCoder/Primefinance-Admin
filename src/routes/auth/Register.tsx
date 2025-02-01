@@ -15,14 +15,16 @@ export function Register() {
   const { isLoading, success, } = useSelector((state: RootState) => state.auth);
 
   const [adminDetails, setAdminDetails] = useState({
-    name: "",
     email: "",
+    name: "",
+    surname: "",
     password: "",
+    phone: "",
   });
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const updateAdminDetails = (
-    propToChange: "name" | "email" | "password",
+    propToChange: "name" | "email" | "password" | "phone" | "surname",
     value: string
   ) => {
     setAdminDetails((prevDetails) => ({
@@ -74,6 +76,21 @@ export function Register() {
             />
           </div>
           <div>
+            <label htmlFor="surname" className="hidden">
+              Surname
+            </label>
+            <input
+              onChange={(e) => updateAdminDetails("surname", e.target.value)}
+              value={adminDetails.surname}
+              type="text"
+              id="surname"
+              placeholder="Surname"
+              required
+              autoComplete="false"
+              className="w-full max-w-[517px] h-[55px] px-[18px] py-[18px] border rounded-md bg-gray-100 focus:outline-[#089C48] focus:outline-1 font-inter text-gray-600 text-base font-normal leading-[19.36px] text-left underline-offset-0"
+            />
+          </div>
+          <div>
             <label htmlFor="email" className="hidden">
               Email
             </label>
@@ -88,6 +105,7 @@ export function Register() {
               className="w-full max-w-[517px] h-[55px] px-[18px] py-[18px] border rounded-md bg-gray-100 focus:outline-[#089C48] focus:outline-1 font-inter text-gray-600 text-base font-normal leading-[19.36px] text-left underline-offset-0"
             />
           </div>
+        
           <div>
             <label htmlFor="password" className="hidden">
               Password
@@ -118,6 +136,22 @@ export function Register() {
               className="w-full max-w-[517px] h-[55px] px-[18px] py-[18px] border rounded-md bg-gray-100 focus:outline-[#089C48] focus:outline-1 font-inter text-gray-600 text-base font-normal leading-[19.36px] text-left underline-offset-0"
             />
           </div>
+          <div>
+            <label htmlFor="phone" className="hidden">
+              Phone
+            </label>
+            <input
+              onChange={(e) => updateAdminDetails("phone",e.target.value)}
+              value={adminDetails.phone}
+              type="tel"
+              id="phone"
+              placeholder="Phone"
+              required
+              autoComplete="false"
+              className="w-full max-w-[517px] h-[55px] px-[18px] py-[18px] border rounded-md bg-gray-100 focus:outline-[#089C48] focus:outline-1 font-inter text-gray-600 text-base font-normal leading-[19.36px] text-left underline-offset-0"
+            />
+          </div>
+
           <div className="mt-4">
             <button
               // type="button"

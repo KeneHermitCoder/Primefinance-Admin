@@ -9,7 +9,6 @@ import {
 import BillPaymentKPIDisplay from "../../components/billPaymentKPITop";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import FlagIcon from "@mui/icons-material/Flag";
 import BillsKPIDisplay from "../../components/billsKPI";
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import {
@@ -89,14 +88,14 @@ export default function Bills() {
                 backgroundColour="#fff"
               />
 
-              <BillPaymentKPIDisplay
+              {/* <BillPaymentKPIDisplay
                 title="Flagged Accounts"
                 kpiIcon={
                   <FlagIcon style={{ fontSize: 32, color: "#f44336" }} />
                 }
                 total="150"
                 backgroundColour="lightblue"
-              />
+              /> */}
 
               <BillPaymentKPIDisplay
                 title="Pending Transactions"

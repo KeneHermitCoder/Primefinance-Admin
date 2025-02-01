@@ -1,11 +1,10 @@
 // kyc.ts
 import { httpClient } from "./utils/httpClient";
 import { TransactionHttpResponse, TransactionResponse, MessageHttpResponse, MessageResponse } from "./utils/httpResponse";
-import { Transaction, Message } from "./interfaces";
 
 export class Data {
-    private URL: string; // Declare the URL property
-
+    URL: string;
+   
     constructor(URL: string) {
         this.URL = URL;
     }

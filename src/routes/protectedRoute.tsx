@@ -1,46 +1,45 @@
-// import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-// import useAccessToken from "../features/hooks/useAccessToken";
-// import useTokenRefresh from '../features/hooks/useRefreshToken';
+import useAccessToken from "../features/hooks/useAccessToken";
 
 const ProtectedRoute = () => {
   const location = useLocation();
-  // const dispatch = useDispatch();
-  // const { refreshToken } = useTokenRefresh();
-  // Check for valid accessToken on App load and trigger token refresh if necessary
-  // const accessToken = useAccessToken('get');
-  const accessToken = true;
-  console.log({ accessToken });
+  const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  return (
-    //if refreshToken operation is successful
-    <>
-      {accessToken ? (
-        <Outlet />
-      ) : (
-        // (async() => {
-        // 	const refreshTokenResponse = await refreshToken(accessToken);
-        // 	console.log('yuwebcduib');
-        // 	console.log({refreshTokenResponse});
-        // 	if (refreshTokenResponse.data.status === 'success') {
-        // 		return (
-        // 			//if refreshToken operation is successful
-        // 			<Outlet />
-        // 		);
-        // 	} else {
-        // 		console.error('Token refresh failed:', error);
-        // 		//* navigate to login screen
-        // 		return (
-        // 			<Navigate to='login' state={{from: location}} replace/>		// redirect to the login screen
-        // 		)
-        // 	}
-        // })()
-        // <>{navigate('')}</>
-        <Navigate to="login" state={{ from: location }} replace />
-      )}
-    </>
+  // Get the accessToken from localStorage via the custom hook
+  const accessToken = useAccessToken("get");
+
+  useEffect(() => {
+    const checkAuth = () => {
+      console.log("Checking auth...");
+
+      // If accessToken is not available, redirect to login
+      if (!accessToken) {
+        console.log("No access token found, redirecting to login...");
+        setIsAuthenticated(false);
+      } else {
+        console.log("Access Token:", accessToken);
+        setIsAuthenticated(true);
+      }
+
+      // Ensure loading state is set after the check
+      setLoading(false);
+    };
+
+    checkAuth();
+  }, [accessToken]); // Dependency on accessToken to update when token changes
+
+  // Loading state
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  return isAuthenticated ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/login" state={{ from: location }} replace />
   );
-  // const { user } = useSelector((state) => state.adminState);
-  // returns child route elements
 };
+
 export default ProtectedRoute;

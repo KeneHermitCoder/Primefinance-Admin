@@ -1,6 +1,5 @@
 // loan.ts
-import {ILoanKPIData, ILoanOverview, IResponseState} from '../contracts/interfaces';
-import { httpClient, httpResult } from "./utils/httpClient";
+import { httpClient,  } from "./utils/httpClient";
 import { LoanHttpResponse, LoanResponse } from "./utils/httpResponse";
 
 export class Loan {
@@ -88,162 +87,34 @@ export class Loan {
         return LoanHttpResponse(response);
     }
 
-
-    // Assuming `httpClient` returns a response of type `httpResult`
-async fetchAllLoans(): Promise<IResponseState<ILoanOverview>> {
-    try {
-        // Perform the HTTP request
-        const response: httpResult = await httpClient(`${this.URL}/getallLoan`, "GET", {}, true);
-
-        // Ensure response contains data and structure it into IResponseState
-        if (!response || !response.data) {
-            return {
-                data: { data: [], page: 1, limit: 10 },  // Default fallback values
-                success: false,
-                isLoading: false,
-                error: "Invalid loan overview data received.",
-            };
-        }
-
-        const loanOverview = this.handleLoanOverviewResponse(response as any);
-
-        return {
-            data: loanOverview,  // The loan data processed
-            success: true,
-            isLoading: false,
-            error: null,  // No error
-        };
-    } catch (err) {
-        return {
-            data: { data: [], page: 1, limit: 10 },  // Default fallback values
-            success: false,
-            isLoading: false,
-            error:  "An error occurred while fetching loans.",
-        };
-    }
-}
-
-    
-    async getLoanOverviewData(): Promise<IResponseState<ILoanOverview>> {
-        try {
-            const response = await httpClient(`${this.URL}/getloanOverviewData`, "GET", {}, true);
-    
-            // Ensure the response has the expected data structure
-            if (!response || !response.data) {
-                return {
-                    data: { data: [], page: 1, limit: 10 },  // Default fallback values
-                    success: false,
-                    isLoading: false,
-                    error: "Invalid loan overview data received.",
-                };
-            }
-    
-            // Process and return data with IResponseState
-            return {
-                data: this.handleLoanOverviewResponse(response as any),
-                success: true,
-                isLoading: false,
-                error: null,
-            };
-        } catch (err) {
-            return {
-                data: { data: [], page: 1, limit: 10 },  // Default fallback values
-                success: false,
-                isLoading: false,
-                error:  "An error occurred while fetching loan overview data.",
-            };
-        }
+    async fetchAllLoans(page: number, limit: number): Promise<LoanResponse> {
+        const response = await httpClient(
+            `${this.URL}/getallLoans?page=${page}&limit=${limit}`, 
+            "GET", 
+            {}, 
+            true
+        );
+        return LoanHttpResponse(response);
     }
     
-    async getOverviewKpiData(): Promise<IResponseState<ILoanKPIData>> {
-        try {
-            const response = await httpClient(`${this.URL}/getLoansKPIData`, "GET", {}, true);
-    
-            // Ensure the response has the expected data structure
-            if (!response || !response.data) {
-                return {
-                    data: {
-                        dueLoans: 0,
-                        totalLoans: 0,
-                        activeLoans: 0,
-                        repaidLoans: 0,
-                        overdueLoans: 0,
-                        dueLoansRevenue: 0,
-                        totalLoansRevenue: 0,
-                        activeLoansRevenue: 0,
-                        repaidLoansRevenue: 0,
-                        overdueLoansRevenue: 0,
-                    },
-                    success: false,
-                    isLoading: false,
-                    error: "Invalid loan KPI data received.",
-                };
-            }
-    
-            // Process and return data with IResponseState
-            return {
-                data: this.handleLoanKPIResponse(response),
-                success: true,
-                isLoading: false,
-                error: null,
-            };
-        } catch (err) {
-            return {
-                data: {
-                    dueLoans: 0,
-                    totalLoans: 0,
-                    activeLoans: 0,
-                    repaidLoans: 0,
-                    overdueLoans: 0,
-                    dueLoansRevenue: 0,
-                    totalLoansRevenue: 0,
-                    activeLoansRevenue: 0,
-                    repaidLoansRevenue: 0,
-                    overdueLoansRevenue: 0,
-                },
-                success: false,
-                isLoading: false,
-                error:  "An error occurred while fetching loan KPI data.",
-            };
-        }
+    async getLoanOverviewData(page: number, limit: number): Promise<LoanResponse> {
+        const response = await httpClient(
+            `${this.URL}/getloanOverviewData?page=${page}&limit=${limit}`, 
+            "GET",
+            {}, 
+            true
+        );
+        return LoanHttpResponse(response);
     }
     
-    
-    private handleLoanOverviewResponse(response: IResponseState<ILoanOverview>): ILoanOverview {
-        if (!response || !response.data) {
-            throw new Error("Invalid loan overview data received.");
-        }
-    
-        const { data, page = 1, limit = 10 } = response.data;
-    
-        return {
-            data: data ?? [],  // Ensure it's an array or fallback
-            page,              // Default page to 1 if not present
-            limit              // Default limit to 10 if not present
-        };
-    }
-    
-    
-    // Response handler for Loan KPI
-    private handleLoanKPIResponse(response: any): ILoanKPIData {
-        if (!response || !response.data) {
-            throw new Error("Invalid loan KPI data received.");
-        }
-    
-        const { dueLoans, totalLoans, activeLoans, repaidLoans, overdueLoans, dueLoansRevenue, totalLoansRevenue, activeLoansRevenue, repaidLoansRevenue, overdueLoansRevenue } = response.data;
-    
-        return {
-            dueLoans: dueLoans ?? 0,
-            totalLoans: totalLoans ?? 0,
-            activeLoans: activeLoans ?? 0,
-            repaidLoans: repaidLoans ?? 0,
-            overdueLoans: overdueLoans ?? 0,
-            dueLoansRevenue: dueLoansRevenue ?? 0,
-            totalLoansRevenue: totalLoansRevenue ?? 0,
-            activeLoansRevenue: activeLoansRevenue ?? 0,
-            repaidLoansRevenue: repaidLoansRevenue ?? 0,
-            overdueLoansRevenue: overdueLoansRevenue ?? 0,
-        };
+    async getOverviewKpiData(page: number, limit: number): Promise<LoanResponse> {
+        const response = await httpClient(
+            `${this.URL}/getLoansKPIData?page=${page}&limit=${limit}`, 
+            "GET", 
+            {}, 
+            true
+        );
+        return LoanHttpResponse(response);
     }
     
 }

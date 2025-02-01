@@ -1,84 +1,109 @@
 import { createAsyncThunk, } from '@reduxjs/toolkit';
-import { handleError,  } from '../../utils';
-import { primebase } from '../../lib/primebase';
+import { handleError, httpClient,  } from '../../utils';
 
 export default class LoansAPI {
 
-    public getMultipleLoans = createAsyncThunk('loans/getallLoans', async ({
-        // page = 1,
-        // limit = 10,
-    }: {
-        page?: number;
-        limit?: number;
-    }, thunkAPI) => {
-        try {
-            // Fetch loans data using the fetchAllLoans method
-            const { data, success, error } = await primebase.loan.fetchAllLoans();
-
-            if (!success) {
-                return thunkAPI.rejectWithValue(error || 'Failed to fetch loans');
-            }
-
-            return data; // Return fetched loans data to the Redux store
-        } catch (error) {
-            return thunkAPI.rejectWithValue(handleError(error));
+    public getMultipleLoans = createAsyncThunk(
+        'loans/getallLoans',
+        async (
+          { page = 1, limit = 10 }: { page?: number; limit?: number },
+          thunkAPI
+        ) => {
+          try {
+            const response = await httpClient({
+              method: 'GET',
+              url: '/api/loans/all-loans',
+              data: {}, 
+              params: { page, limit },  
+              isAuth: true
+            });
+      
+            return response; 
+          } catch (error: any) {
+            console.error('Error fetching loans:', error);
+      
+            const errorResponse = handleError(error);
+            return thunkAPI.rejectWithValue(errorResponse);
+          }
         }
+      );
+
+    public getLoanOverviewData = createAsyncThunk('loans/getLoanOverviewData', async (
+        {
+         page = 1,
+         limit = 10,
+        }:{
+            page?: number;
+            limit?: number;
+        }, thunkAPI) => {
+            try {
+                const response = await httpClient({
+                  method: 'GET',
+                  url: '/api/loans/all-loans',
+                  data: {}, 
+                  params: { page, limit },  
+                  isAuth: true
+                });
+          
+
+                return response; 
+              } catch (error: any) {
+                console.error('Error fetching loans:', error);
+          
+                const errorResponse = handleError(error);
+                return thunkAPI.rejectWithValue(errorResponse);
+              }
     });
 
-    public getLoanOverviewData = createAsyncThunk('loans/getLoanOverviewData', async (_, thunkAPI) => {
-        try {
-            const { data, error } = await primebase.loan.getLoanOverviewData();
-
-            if (error) {
+    public getLoansKPIData = createAsyncThunk('loans/getLoansKPIData', async (
+        {
+            page = 1,
+            limit = 10,
+           }:{
+               page?: number;
+               limit?: number;
+           }, thunkAPI) => {
+            try {
+                const response = await httpClient({
+                  method: 'GET',
+                  url: '/api/loans/all-loans',
+                  params: { page, limit },
+                  isAuth: true
+                });
+          
+                // Ensure 'data' is not null before accessing it
+                if (!response || !response.data) {
+                  return thunkAPI.rejectWithValue('No loan data available');
+                }
+          
+                const { loan } = response.data as any;
+          
+                return {
+                  totalLoans: loan.length || 0,
+                  activeLoans: loan.filter((l: any) => l.status === 'active').length,
+                  repaidLoans: loan.filter((l: any) => l.status === 'repaid').length,
+                  overdueLoans: loan.filter((l: any) => l.status === 'overdue').length,
+                  totalLoansRevenue: loan.reduce(
+                    (acc: number, l: any) => acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),
+                    0
+                  ),
+                  dueLoansRevenue: loan
+                    .filter((l: any) => l.status === 'due')
+                    .reduce((acc: number, l: any) => acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)), 0),
+                  activeLoansRevenue: loan
+                    .filter((l: any) => l.status === 'active')
+                    .reduce((acc: number, l: any) => acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)), 0),
+                  repaidLoansRevenue: loan
+                    .filter((l: any) => l.status === 'repaid')
+                    .reduce((acc: number, l: any) => acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)), 0),
+                  overdueLoansRevenue: loan
+                    .filter((l: any) => l.status === 'overdue')
+                    .reduce((acc: number, l: any) => acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)), 0),
+                };
+            } catch (error) {
                 return thunkAPI.rejectWithValue(handleError(error));
             }
-
-            return data;
-        } catch (error) {
-            return thunkAPI.rejectWithValue(handleError(error));
-        }
-    });
-
-    public getLoansKPIData = createAsyncThunk('loans/getLoansKPIData', async (_, thunkAPI) => {
-        try {
-            const response = await primebase.loan.getOverviewKpiData();
-
-            // Ensure 'data' is not null before accessing it
-            if (!response || !response.data) {
-                return thunkAPI.rejectWithValue('No loan data available');
-            }
-
-            const { loan } = response.data as any;
-
-            return {
-                totalLoans: loan.length || 0,
-                activeLoans: loan.filter((loan: any) => loan.status === 'active').length,
-                repaidLoans: loan.filter((loan: any) => loan.status === 'repaid').length,
-                overdueLoans: loan.filter((loan: any) => loan.status === 'overdue').length,
-                totalLoansRevenue: loan.reduce(
-                    (acc: number, loan: any) => acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount)),
-                    0
-                ),
-                dueLoansRevenue: loan.filter((loan: any) => loan.status === 'due').reduce(
-                    (acc: number, loan: any) => acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount)),
-                    0
-                ),
-                activeLoansRevenue: loan.filter((loan: any) => loan.status === 'active').reduce(
-                    (acc: number, loan: any) => acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount)),
-                    0
-                ),
-                repaidLoansRevenue: loan.filter((loan: any) => loan.status === 'repaid').reduce(
-                    (acc: number, loan: any) => acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount)),
-                    0
-                ),
-                overdueLoansRevenue: loan.filter((loan: any) => loan.status === 'overdue').reduce(
-                    (acc: number, loan: any) => acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount)),
-                    0
-                ),
-            };
-        } catch (error) {
-            return thunkAPI.rejectWithValue(handleError(error));
-        }
+          
     });
 
 }

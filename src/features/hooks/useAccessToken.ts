@@ -1,21 +1,33 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-import useLocalStorage from './useLocalStorage';
-
-export function useAccessToken (action: 'get' | 'set', payload?: string | object) {
-    const admin = useLocalStorage('get', 'adminDetails');
+export function useAccessToken(action: 'get' | 'set', payload?: string) {
     if (action === 'get') {
-        const accessToken = admin?.access_token;
-        return accessToken?? null;
-    }
-    if (action === 'set') {
-        if (admin) {
-            const newAdminDetails: unknown = {
-                ...admin,
-                accessToken: payload
-            }
-            return useLocalStorage('set', { name: 'adminDetails', value: newAdminDetails });
+      const adminDetails = localStorage.getItem('adminDetails');
+      if (adminDetails) {
+        try {
+          const parsedAdmin = JSON.parse(adminDetails);
+          return parsedAdmin?.accessToken ?? null;
+        } catch (error) {
+          console.error("Error parsing admin details from localStorage", error);
+          return null;
         }
+      }
+      return null;
     }
-};
-
-export default useAccessToken;
+  
+    if (action === 'set' && payload) {
+      const adminDetails = localStorage.getItem('adminDetails');
+      if (adminDetails) {
+        try {
+          const parsedAdmin = JSON.parse(adminDetails);
+          parsedAdmin.accessToken = payload;
+          localStorage.setItem('adminDetails', JSON.stringify(parsedAdmin));
+        } catch (error) {
+          console.error("Error updating access token in localStorage", error);
+        }
+      } else {
+        console.warn("No existing admin details found in localStorage");
+      }
+    }
+  }
+  
+  export default useAccessToken;
+  
