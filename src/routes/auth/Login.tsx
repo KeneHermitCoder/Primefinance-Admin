@@ -1,18 +1,19 @@
 import { images } from "../../constants";
+import { Reveal } from "../../components";
 import { RootState } from "../../features";
 import { useState, useEffect } from "react";
 import { AuthAPI } from "../../features/auth";
-import { Link, useLocation, } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
-import { Reveal } from "../../components";
-
-// const login = new AuthAPI().login;
+import { useDispatch, useSelector, } from "react-redux";
+import { Link, useLocation, useNavigate, } from "react-router-dom";
+import useLocalStorage from "../../features/hooks/useLocalStorage";
 
 export function Login() {
+
   const dispatch = useDispatch();
   const location = useLocation();
-  const { isLoading, error, success } = useSelector(
+  const navigate = useNavigate();
+  const { isLoading, error, success, admin } = useSelector(
     (state: RootState) => state.auth
   );
 
@@ -30,18 +31,18 @@ export function Login() {
     // @ts-ignore
     dispatch(new AuthAPI().login(adminDetails));
   };
-
   useEffect(() => {
-    const prevPage = location.state?.from?.pathname || "/";
-    console.log({ prevPage, });
-    if (success === true) {
-      // navigate(prevPage);
+
+    const prevPage = location.state?.from?.pathname ?? "/";
+
+    if (success && admin) {
       toast("Login successful");
-      setTimeout(() => window.location.href = prevPage, 2000);
-    }
-    console.log({ error2: error, })
+      // setTimeout(() => window.location.href = prevPage, 2000);
+      setTimeout(() => navigate(prevPage), 2000);
+    } else if (useLocalStorage('get', 'adminDetails')) navigate(prevPage);
+
     if (error) toast.error(error);
-  }, [success, error]);
+  }, [success, error, admin]);
 
   const content = (
     <Reveal>
