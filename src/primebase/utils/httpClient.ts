@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { APP_BASE_URL } from "../../lib/url";
-import localforage from "localforage";
+import useAccessToken from "../../features/hooks/useAccessToken";
 
 export interface httpResult {
     data: any | null;
@@ -9,7 +9,9 @@ export interface httpResult {
 }
 
 export const httpClient = async (url: string, method: string, data: any = {}, auth: boolean): Promise<httpResult> => {
-  const access_token = await localforage.getItem("access_token");
+  // const access_token = await localforage.getItem("access_token");
+  const access_token = await useAccessToken('get')
+  console.log({ access_token, })
 
   const config: AxiosRequestConfig = {
     baseURL: APP_BASE_URL,

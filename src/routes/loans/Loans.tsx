@@ -11,7 +11,6 @@ import {
   PrimaryBarChart,
   PrimaryTableSkeleton,
   KPILoadingSkeleton,
-  TableErrorComponent,
 } from "../../components";
 import {
   PersonAdd,
@@ -42,7 +41,7 @@ export default function Loans() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (loanOverviewData.data.length > 0) {
+    if (loanOverviewData?.data?.length > 0) {
       const modifiedLoansData = loanOverviewData.data.map((loan: any) => ({
         customerName: `${loan.first_name} ${loan.last_name}`,
         loanId: loan.id,
@@ -51,13 +50,90 @@ export default function Loans() {
         date: loan.repayment_date,
         status: loan.status,
         metadata: {
-          itemPhoto:
-            "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+          itemPhoto: "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
         },
       }));
       setRows(modifiedLoansData);
     }
-  }, [loanOverviewData.data, setRows]);
+    // } else {
+    //   // Fallback to sample data if API response is empty or unavailable
+      setRows([
+        {
+          loanId: 1,
+          interest: 2000,
+          status: "overdue",
+          customerName: "John Doe",
+          amount: 50000,
+          date: "active",
+          loanDetails: {
+            loanType: "request",
+            activeStatus: "accepted",
+            balance: 50000,
+            job: "Software Engineer",
+            relativePhone: 2348001234567,
+            accountTier: "Tier 1",
+            homeAddress: "123 Main St, Lagos, Nigeria",
+            highestBalance: 60000,
+            income: 120000,
+            address: "123 Main St, Lagos, Nigeria",
+            phoneNumber: 2348001234567,
+            bvn: "123456789012345",
+            nin: "9876543210",
+          },
+          creditChecks: [{
+            lastReported: "2025-01-15",
+            creditorName: "ABC Bank",
+            totalDebt: "₦10,000",
+            accountype: "savings",
+            outstandingBalance: 2000,
+            activeLoan: 1,
+            loansTaken: 3,
+            income: 120000,
+            repaymentHistory: "Good",
+            openedDate: "2020-01-01",
+            lengthOfCreditHistory: "5 years",
+            remarks: "Creditworthy",
+          }],
+        },
+        {
+          loanId: 2,
+          interest: 2000,
+          status: "overdue",
+          customerName: "DevWizard",
+          amount: 75000,
+          loanDetails: {
+            loanType: "request",
+            activeStatus: "pending",
+            balance: 75000,
+            job: "Teacher",
+            relativePhone: 2349001234567,
+            accountTier: "Tier 2",
+            homeAddress: "456 Park Ave, Lagos, Nigeria",
+            highestBalance: 80000,
+            income: 90000,
+            address: "456 Park Ave, Lagos, Nigeria",
+            phoneNumber: 2349001234567,
+            bvn: "987654321098765",
+            nin: "1234567890",
+          },
+          creditCheck: {
+            lastReported: "2025-01-10",
+            creditorName: "XYZ Bank",
+            totalDebt: "₦15,000",
+            accountype: "current",
+            outstandingBalance: 5000,
+            activeLoan: 1,
+            loansTaken: 2,
+            income: 90000,
+            repaymentHistory: "Fair",
+            openedDate: "2019-06-15",
+            lengthOfCreditHistory: "6 years",
+            remarks: "Needs attention",
+          },
+        },
+      ]);
+    // }
+  }, [loanOverviewData?.data],);
 
   return (
     <Reveal>
@@ -111,15 +187,7 @@ export default function Loans() {
         >
           {loanOverviewData.isLoading ? (
             <PrimaryTableSkeleton />
-          ) : loanOverviewData.error ? (
-              <TableErrorComponent
-                message={loanOverviewData.error}
-                onRetry={() => {
-                  // @ts-ignore
-                  dispatch(new LoansAPI().getLoanOverviewData({ page: 0, limit: 10 }))
-                }}
-              />
-          ): (
+          ) : (
             <SearchFilterSortPaginateTable
               title="Loan Overview"
               searchParams={["customerName", "loanId", "status"]}
@@ -188,9 +256,9 @@ export default function Loans() {
               title="Loan Transactions"
               data={loanKPIData.isLoading ? ([]) : [
                 loanKPIData.data.activeLoansRevenue,
-                loanKPIData.data.repaidLoansRevenue || 6500,
+                loanKPIData.data.repaidLoansRevenue || 10,
                 loanKPIData.data.dueLoansRevenue,
-                loanKPIData.data.overdueLoansRevenue || 3000,
+                loanKPIData.data.overdueLoansRevenue || 10,
               ]}
               xLabels={["Active", "Repaid", "Overdue", "Pending"]}
             />
@@ -204,15 +272,15 @@ export default function Loans() {
               data={[
                 {
                   label: "Active Loans",
-                  value: loanKPIData.isLoading ? 0 : loanKPIData.data.activeLoansRevenue || 2000,
+                  value: loanKPIData.isLoading ? 0 : loanKPIData.data.activeLoansRevenue || 20,
                 },
                 {
                   label: "Repaid Loans",
-                  value: loanKPIData.isLoading ? 0 : loanKPIData.data.repaidLoansRevenue || 3000,
+                  value: loanKPIData.isLoading ? 0 : loanKPIData.data.repaidLoansRevenue || 30,
                 },
                 {
                   label: "Overdue Loans",
-                  value: loanKPIData.isLoading ? 0 : loanKPIData.data.overdueLoansRevenue || 2000,
+                  value: loanKPIData.isLoading ? 0 : loanKPIData.data.overdueLoansRevenue || 40,
                 },
               ]}
               metadata={{

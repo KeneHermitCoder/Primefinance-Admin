@@ -1,5 +1,7 @@
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
+import EditIcon from '@mui/icons-material/Edit'; // Material-UI Edit Icon
+import InfoIcon from '@mui/icons-material/Info'; // Material-UI Info Icon
 import SearchField from "../searchField";
 import { visuallyHidden } from "@mui/utils";
 import DropDownSelect from "../DropDownSelect";
@@ -11,6 +13,7 @@ import React, { useMemo, useState, } from "react";
 import TableContainer from "@mui/material/TableContainer";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import TablePagination from "@mui/material/TablePagination";
+import ExpandableRow from "./ExpandedRow";
 
 interface Data {
   [key: string]: any;
@@ -118,6 +121,16 @@ export default function SearchFilterSortPaginateTable({
   const [orderBy, setOrderBy] = useState<keyof Data>("calories");
   const [filteredRows, setFilteredRows] = useState<Data[]>(rows);
 
+  const [expandedRow, setExpandedRow] = useState<number | null>(null);
+
+  const handleExpandClick = (id: number) => {
+    setExpandedRow((prevRow) => (prevRow === id ? null : id));  // Toggle the expanded row
+  };
+
+  const handleEdit = (id: number) => {
+    console.log(id);
+  }
+
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
     property: keyof Data
@@ -161,7 +174,7 @@ export default function SearchFilterSortPaginateTable({
         if (typeof value === "string")
           return value.toLowerCase().includes(searchTerm) && searchParams?.includes(key);
         return false;
-      })
+      });
     });
     setFilteredRows(filtered);
   }
@@ -181,7 +194,7 @@ export default function SearchFilterSortPaginateTable({
         <div className="text-xl text-gray-700">{title}</div>
         <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
           {/* Search Field */}
-          { searchParams && searchParams.length > 0 && <SearchField onChange={handleSearch} />}
+          {searchParams && searchParams.length > 0 && <SearchField onChange={handleSearch} />}
           {filterParams && filterParams.data?.length > 0 && (
             <div className="flex items-end gap-1">
               {filterParams.data.map((param, index) => (
@@ -208,26 +221,11 @@ export default function SearchFilterSortPaginateTable({
             />
             <TableBody>
               {visibleRows.map((row) => {
-                // const isItemSelected = selected.includes(row.id);
-                // const labelId = `enhanced-table-checkbox-${index}`;
-
                 return (
-                  <TableRow
-                    hover
-                    // onClick={(event) => handleClick(row.id, event)}
-                    role="checkbox"
-                    // aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.id}
-                    // selected={isItemSelected}
-                    sx={{ cursor: "pointer" }}
-                  >
-                    {headCells.map((cell, index) => {
-                      return (
-                        <TableCell
-                          key={cell.id}
-                          align={cell.numeric ? "right" : "left"}
-                        >
+                  <React.Fragment key={row.id}>
+                    <TableRow hover sx={{ cursor: "pointer" }}>
+                      {headCells.map((cell, index) => (
+                        <TableCell key={cell.id} align={cell.numeric ? "right" : "left"}>
                           {index === 0 && row?.metadata?.itemPhoto ? (
                             <div className="flex items-center gap-2">
                               <span className="flex w-8 h-8 bg-gray-400 rounded-full overflow-hidden">
@@ -243,18 +241,43 @@ export default function SearchFilterSortPaginateTable({
                             row[cell.id]
                           )}
                         </TableCell>
-                      );
-                    })}
-                  </TableRow>
+                      ))}
+                      {/* Action buttons */}
+                      <TableCell align="center">
+                        <Stack direction="row" spacing={1}>
+                          <button
+                            onClick={() => handleEdit(row.id)}
+                            className="btn btn-primary"
+                            aria-label="Edit"
+                          >
+                            <EditIcon /> {/* Edit icon */}
+                          </button>
+                          <button
+                            onClick={() => handleExpandClick(row.id)}
+                            className="btn btn-primary"
+                            aria-label="Info"
+                          >
+                            <InfoIcon /> {/* Info icon */}
+                          </button>
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+
+                    {/* Only render the expanded row for the clicked row */}
+                    {expandedRow === row.id && (
+                      <TableRow>
+                        <TableCell colSpan={headCells.length + 1}>
+                          <ExpandableRow loanDetails={row.loanDetails || {}} creditCheck={row.creditCheck || {}} />
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </React.Fragment>
                 );
               })}
+
               {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: 53 * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
+                <TableRow style={{ height: 53 * emptyRows }}>
+                  <TableCell colSpan={headCells.length + 1} />
                 </TableRow>
               )}
             </TableBody>
@@ -273,3 +296,4 @@ export default function SearchFilterSortPaginateTable({
     </Box>
   );
 }
+

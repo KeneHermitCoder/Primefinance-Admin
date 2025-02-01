@@ -31,7 +31,7 @@ export default function Transactions() {
   useEffect(() => {
     // Fetch transactions when the component mounts
     // @ts-ignore
-    dispatch(new TransactionsAPI().getTransactionOverviewData({ page: 0, limit: 10 }));
+    dispatch(new TransactionsAPI().getTransactionOverviewData());
     // @ts-ignore
     dispatch(new TransactionsAPI().getTransactionsKPIData());
   }, [dispatch]);
@@ -54,6 +54,7 @@ export default function Transactions() {
         })
       );
       setRows(modifiedTransactionData);
+      console.log(modifiedTransactionData);
     }
   }, [transactionOverviewData.data, setRows]);
 
