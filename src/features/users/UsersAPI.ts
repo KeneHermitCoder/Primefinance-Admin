@@ -45,9 +45,9 @@ export default class UsersAPI {
             });
             const {data} = response.data;
             return {
-                id: data.filter((user:any)=> user.id),
-                email: data.filter((user: any)=> user.name),
-                last_login: data.filter((user: any)=> user.name),
+                id: data?.filter((user:any)=> user.id),
+                email: data?.filter((user: any)=> user.name),
+                last_login: data?.filter((user: any)=> user.name),
 
             };
         } catch (error: any) {
@@ -69,11 +69,11 @@ export default class UsersAPI {
             });
             const {data} = response.data;
             return {
-                newUsersCount: data.filter((user: any) => user.status === 'active').length || 0,
+                newUsersCount: data?.filter((user: any) => user.status === 'active').length || 0,
                 // totalUsersCount: data.length || 0,
                 totalUsersCount: 0,
-                activeUsersCount: data.filter((user: any) => user.status === 'active').length || 0,
-                flaggedUsersCount: data.filter((user: any) => user.status === 'flagged').length || 0
+                activeUsersCount: data?.filter((user: any) => user.status === 'active').length || 0,
+                flaggedUsersCount: data?.filter((user: any) => user.status === 'flagged').length || 0
 
             };
         } catch (error: any) {
