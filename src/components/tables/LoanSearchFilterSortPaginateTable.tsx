@@ -1,13 +1,13 @@
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import SearchField from "../searchField";
-import ExpandableRow from "./ExpandedRow";
 import { visuallyHidden } from "@mui/utils";
 import DropDownSelect from "../DropDownSelect";
 import { TableRow, Stack } from "@mui/material";
 import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
 import TableCell from "@mui/material/TableCell";
+import LoanExpandableRow from "./LoanExpandedRow";
 import React, { useMemo, useState, } from "react";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import TableContainer from "@mui/material/TableContainer";
@@ -122,7 +122,7 @@ export default function LoanSearchFilterSortPaginateTable({
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
 
   const handleExpandClick = (id: number) => {
-    setExpandedRow((prevRow) => (prevRow === id ? null : id));  // Toggle the expanded row
+    setExpandedRow((prevRow) => (prevRow === id ? null : id));
   };
 
   const handleRequestSort = (
@@ -248,11 +248,11 @@ export default function LoanSearchFilterSortPaginateTable({
                               </button>
                             </Stack>
                           ) : (
-                            // row[cell.id]
-                            String(row[cell.id]).replace(
-                              /(\d)(?=(\d{3})+(?!\d))/g,
-                              "$1,"
-                            )
+                            row[cell.id]
+                        //     String(row[cell.id]).replace(
+                        //       /(\d)(?=(\d{3})+(?!\d))/g,
+                        //       "$1,"
+                        //     )
                           )}
                         </TableCell>
                       ))}
@@ -262,9 +262,8 @@ export default function LoanSearchFilterSortPaginateTable({
                     {expandedRow === row.loanId && (
                     //   <TableRow>
                         <TableCell colSpan={headCells.length + 1}>
-                          <ExpandableRow
-                            loanDetails={row.loanDetails || {}}
-                            creditCheck={row.creditCheck || {}}
+                          <LoanExpandableRow
+                            loanDetails={{...row.loanDetails, loanId: row.loanId}}
                           />
                         </TableCell>
                     //   </TableRow>

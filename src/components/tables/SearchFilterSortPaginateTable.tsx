@@ -1,7 +1,5 @@
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
-import EditIcon from '@mui/icons-material/Edit'; // Material-UI Edit Icon
-import InfoIcon from '@mui/icons-material/Info'; // Material-UI Info Icon
 import SearchField from "../searchField";
 import { visuallyHidden } from "@mui/utils";
 import DropDownSelect from "../DropDownSelect";
@@ -12,8 +10,8 @@ import TableCell from "@mui/material/TableCell";
 import React, { useMemo, useState, } from "react";
 import TableContainer from "@mui/material/TableContainer";
 import TableSortLabel from "@mui/material/TableSortLabel";
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import TablePagination from "@mui/material/TablePagination";
-import ExpandableRow from "./ExpandedRow";
 
 interface Data {
   [key: string]: any;
@@ -121,16 +119,6 @@ export default function SearchFilterSortPaginateTable({
   const [orderBy, setOrderBy] = useState<keyof Data>("calories");
   const [filteredRows, setFilteredRows] = useState<Data[]>(rows);
 
-  const [expandedRow, setExpandedRow] = useState<number | null>(null);
-
-  const handleExpandClick = (id: number) => {
-    setExpandedRow((prevRow) => (prevRow === id ? null : id));  // Toggle the expanded row
-  };
-
-  const handleEdit = (id: number) => {
-    console.log(id);
-  }
-
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
     property: keyof Data
@@ -237,40 +225,24 @@ export default function SearchFilterSortPaginateTable({
                               </span>
                               {row[cell.id]}
                             </div>
+                          ) : // add action buttons if available
+                          cell.id === "actions" ? (
+                            <Stack direction="row">
+                              <button
+                                key={index + 1}
+                                className="btn btn-primary"
+                                aria-label={'loan details'}
+                              >
+                                {/* MUI three-dots menu icon */}
+                                <MoreHorizIcon color="success" />
+                              </button>
+                            </Stack>
                           ) : (
                             row[cell.id]
                           )}
                         </TableCell>
                       ))}
-                      {/* Action buttons */}
-                      <TableCell align="center">
-                        <Stack direction="row" spacing={1}>
-                          <button
-                            onClick={() => handleEdit(row.id)}
-                            className="btn btn-primary"
-                            aria-label="Edit"
-                          >
-                            <EditIcon /> {/* Edit icon */}
-                          </button>
-                          <button
-                            onClick={() => handleExpandClick(row.id)}
-                            className="btn btn-primary"
-                            aria-label="Info"
-                          >
-                            <InfoIcon /> {/* Info icon */}
-                          </button>
-                        </Stack>
-                      </TableCell>
                     </TableRow>
-
-                    {/* Only render the expanded row for the clicked row */}
-                    {expandedRow === row.id && (
-                      <TableRow>
-                        <TableCell colSpan={headCells.length + 1}>
-                          <ExpandableRow loanDetails={row.loanDetails || {}} creditCheck={row.creditCheck || {}} />
-                        </TableCell>
-                      </TableRow>
-                    )}
                   </React.Fragment>
                 );
               })}
