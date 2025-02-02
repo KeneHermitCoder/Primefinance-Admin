@@ -1,16 +1,18 @@
-import { Stack } from "@mui/material";
 import { RootState } from "../../features";
 import { useEffect, useState } from "react";
+import EditIcon from '@mui/icons-material/Edit';
+import InfoIcon from '@mui/icons-material/Info';
+import { Stack, TableCell } from "@mui/material";
 import LoansAPI from "../../features/loans/LoansAPI";
 import { useDispatch, useSelector } from "react-redux";
 import UsersKPIDisplay from "../../components/usersKPI";
 import {
   Reveal,
   PrimaryPieChart,
-  SearchFilterSortPaginateTable,
   PrimaryBarChart,
   PrimaryTableSkeleton,
   KPILoadingSkeleton,
+  LoanSearchFilterSortPaginateTable,
 } from "../../components";
 import {
   PersonAdd,
@@ -49,6 +51,7 @@ export default function Loans() {
         interest: `₦${((loan.percentage / 100) * loan.amount).toFixed(2)}`,
         date: loan.repayment_date,
         status: loan.status,
+        actions: <div>Hello</div>,
         metadata: {
           itemPhoto: "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
         },
@@ -65,6 +68,7 @@ export default function Loans() {
           customerName: "John Doe",
           amount: 50000,
           date: "active",
+          actions: ['creditCheck', 'loanDetails'],
           loanDetails: {
             loanType: "request",
             activeStatus: "accepted",
@@ -101,6 +105,7 @@ export default function Loans() {
           status: "overdue",
           customerName: "DevWizard",
           amount: 75000,
+          actions: ['creditCheck', 'loanDetails'],
           loanDetails: {
             loanType: "request",
             activeStatus: "pending",
@@ -188,7 +193,7 @@ export default function Loans() {
           {loanOverviewData.isLoading ? (
             <PrimaryTableSkeleton />
           ) : (
-            <SearchFilterSortPaginateTable
+            <LoanSearchFilterSortPaginateTable
               title="Loan Overview"
               searchParams={["customerName", "loanId", "status"]}
               filterParams={{
