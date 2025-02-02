@@ -1,5 +1,5 @@
 import EscrowAPI from './EscrowAPI';
-import { ILoanSliceState } from '../../contracts';
+// import { ILoanSliceState } from '../../contracts';
 import { ActionReducerMapBuilder, createSlice, } from '@reduxjs/toolkit';
 import { handleFulfilledState, handlePendingState, handleRejectedState } from '../../utils';
 
@@ -56,9 +56,10 @@ const escrowSlice = createSlice({
     },
 } as {
     name: string;
-    initialState: ILoanSliceState;
+    initialState: any;
     reducers: any;
-    extraReducers: (builder: ActionReducerMapBuilder<ILoanSliceState>) => void;
+    extraReducers: (builder: ActionReducerMapBuilder<any>) => void;
+    // extraReducers: (builder: ActionReducerMapBuilder<ILoanSliceState>) => void;
 });
 
 export const { reducer: escrow, } = escrowSlice;
