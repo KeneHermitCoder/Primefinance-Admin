@@ -1,7 +1,5 @@
 import { RootState } from "../../features";
 import { useEffect, useState } from "react";
-import EditIcon from '@mui/icons-material/Edit';
-import InfoIcon from '@mui/icons-material/Info';
 import { Stack, TableCell } from "@mui/material";
 import LoansAPI from "../../features/loans/LoansAPI";
 import { useDispatch, useSelector } from "react-redux";
@@ -51,7 +49,7 @@ export default function Loans() {
         interest: `₦${((loan.percentage / 100) * loan.amount).toFixed(2)}`,
         date: loan.repayment_date,
         status: loan.status,
-        actions: <div>Hello</div>,
+        actions: [],
         metadata: {
           itemPhoto: "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
         },
@@ -68,7 +66,7 @@ export default function Loans() {
           customerName: "John Doe",
           amount: 50000,
           date: "active",
-          actions: ['creditCheck', 'loanDetails'],
+          actions: [],
           loanDetails: {
             loanType: "request",
             activeStatus: "accepted",

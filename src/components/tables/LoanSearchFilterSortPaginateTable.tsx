@@ -125,10 +125,6 @@ export default function LoanSearchFilterSortPaginateTable({
     setExpandedRow((prevRow) => (prevRow === id ? null : id));  // Toggle the expanded row
   };
 
-  const handleEdit = (id: number) => {
-    console.log(id);
-  }
-
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
     property: keyof Data

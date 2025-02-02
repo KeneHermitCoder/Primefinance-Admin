@@ -49,10 +49,24 @@ export interface LoanRecord {
 
 const ExpandableRow: React.FC<{ loanDetails: LoanOwnerDetails; creditCheck: CreditCheck }> = ({ loanDetails, creditCheck }) => {
   const [activeTab, setActiveTab] = useState(0);
+  const [isRunningCreditCheck, setIsRunningCreditCheck] = useState(false);
+  const runCreditCheck = () => {
+    alert("Running credit check...");
+    // Run credit check on the loan owner
+    setIsRunningCreditCheck(true);
+    setTimeout(() => {
+      setIsRunningCreditCheck(false);
+    }, 3000);
+  };
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Tabs value={activeTab} onChange={(_, newValue) => setActiveTab(newValue)} aria-label="loan details tabs">
+      <Tabs value={activeTab} onChange={(_, newValue) => {
+        if (newValue === 1 && !isRunningCreditCheck) {
+          runCreditCheck();
+        }
+        setActiveTab(newValue);
+      }} aria-label="loan details tabs">
         <Tab label="Loan  Details" />
         <Tab label="Credit Check" />
       </Tabs>
@@ -125,6 +139,11 @@ const ExpandableRow: React.FC<{ loanDetails: LoanOwnerDetails; creditCheck: Cred
       )}
 
       {activeTab === 1 && (
+        isRunningCreditCheck ? (
+          <Box sx={{ padding: 2 }}>
+            <Typography variant="h6" gutterBottom>Running Credit Check...</Typography>
+          </Box>
+        ) :
         <Box sx={{ padding: 2 }}>
           <Typography variant="h6" gutterBottom>Credit Check</Typography>
           <Grid container spacing={2}>
