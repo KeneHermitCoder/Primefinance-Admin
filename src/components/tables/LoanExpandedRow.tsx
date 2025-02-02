@@ -71,10 +71,7 @@ const LoanExpandableRow: React.FC<{
   };
 
   useEffect(() => {
-    if (loanCreditScoreData.data) {
-      alert('loanCreditScoreData')
-      setCreditScore(loanCreditScoreData.data);
-    }
+    if (loanCreditScoreData.data) setCreditScore(loanCreditScoreData.data);
   }, [dispatch]);
 
   return (
@@ -312,7 +309,8 @@ const LoanExpandableRow: React.FC<{
               </Grid>
             </Grid>
             {
-              creditScore.loansTaken > 100000 && (
+            // creditScore.loansTaken < 100000 && (
+            creditScore.loansTaken && (
                 <Button variant="contained" color="primary" onClick={() => console.log('ijn ')} className="self-end md:self-center">
                   Retry
                 </Button>

@@ -82,9 +82,7 @@ export default class LoansAPI {
         console.log({ allLoans: response, });
 
         // Ensure 'data' is not null before accessing it
-        if (!response || !response.data) {
-          return thunkAPI.rejectWithValue("No loan data available");
-        }
+        if (!response || !response.data) return thunkAPI.rejectWithValue("No loan data available");
 
         const { loan } = response.data as any;
 
