@@ -6,7 +6,7 @@ import {
   DashboardAmountDisplay,
   LoanStatus,
   PrimaryTableSkeleton,
-  TableErrorComponent,
+  // TableErrorComponent,
 } from "../../components/";
 import {
   PrimaryLineChart,

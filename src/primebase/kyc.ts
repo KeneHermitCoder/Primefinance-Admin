@@ -10,17 +10,17 @@ export class KYC {
     }
 
     async livenessCheck(base64Image: string): Promise<KYCResponse> {
-        const response = await httpClient(`${URL}/liveness`, "POST", { base64Image }, true);
+        const response = await httpClient(`${this.URL}/liveness`, "POST", { base64Image }, true);
         return KYCHttpResponse(response, "livenessCheck");
     }
 
     async bvnLookup(bvn: string): Promise<KYCResponse> {
-        const response = await httpClient(`${URL}/bvn-lookup?bvn=${bvn}`, "GET", {}, true);
+        const response = await httpClient(`${this.URL}/bvn-lookup?bvn=${bvn}`, "GET", {}, true);
         return KYCHttpResponse(response, "bvnInfo");
     }
 
     async ninVerification(idNumber: string): Promise<KYCResponse> {
-        const response = await httpClient(`${URL}/nin-verification`, "POST", { idNumber }, true);
+        const response = await httpClient(`${this.URL}/nin-verification`, "POST", { idNumber }, true);
         return KYCHttpResponse(response, "ninVerification");
     }
 }
