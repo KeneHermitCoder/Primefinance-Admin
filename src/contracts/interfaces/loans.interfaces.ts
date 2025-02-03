@@ -63,4 +63,6 @@ export interface ILoanSliceState {
   }>;
   loanOverviewData: IResponseState<any[]> & ILoanOverview;
   loanCreditScoreData: IResponseState<ICreditScore>;
+  approveLoanData: IResponseState<any>;
+  declineLoanData: IResponseState<any>;
 }

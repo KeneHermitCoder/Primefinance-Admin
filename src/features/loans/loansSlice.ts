@@ -3,6 +3,8 @@ import { ILoanSliceState } from '../../contracts';
 import { ActionReducerMapBuilder, createSlice, } from '@reduxjs/toolkit';
 
 const loansAPI = new LoansAPI();
+const approveLoan = loansAPI.approveLoan;
+const declineLoan = loansAPI.declineLoan;
 const getLoansKPIData = loansAPI.getLoansKPIData;
 const getMutipleLoans = loansAPI.getMultipleLoans;
 const getLoanOverviewData = loansAPI.getLoanOverviewData;
@@ -81,6 +83,18 @@ const loansSlice = createSlice({
       isLoading: true,
       success: false,
     },
+    approveLoanData: {
+      data: [],
+      error: null,
+      isLoading: true,
+      success: false,
+    },
+    declineLoanData: {
+      data: [],
+      error: null,
+      isLoading: true,
+      success: false,
+    },
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -114,7 +128,31 @@ const loansSlice = createSlice({
       .addCase(
         getLoansCreditScoreData.rejected,
         handleRejectedState("loanCreditScoreData")
-      );
+      )
+      .addCase(
+        approveLoan.pending,
+        handlePendingState("approveLoanData")
+      )
+      .addCase(
+        approveLoan.fulfilled,
+        handleFulfilledState("approveLoanData")
+      )
+      .addCase(
+        approveLoan.rejected,
+        handleRejectedState("approveLoanData")
+      )
+      .addCase(
+        declineLoan.pending,
+        handlePendingState("declineLoanData")
+      )
+      .addCase(
+        declineLoan.fulfilled,
+        handleFulfilledState("declineLoanData")
+      )
+      .addCase(
+        declineLoan.rejected,
+        handleRejectedState("declineLoanData")
+      )
   },
 } as {
   name: string;

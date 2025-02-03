@@ -195,4 +195,64 @@ export default class LoansAPI {
       }
     }
   );
+
+  public approveLoan = createAsyncThunk(
+    "loans/approveLoan",
+    async (
+      {
+        loanId,
+        status,
+      }: {
+        loanId: string;
+        status: string;
+      },
+      thunkAPI
+    ) => {
+      try {
+        const response = await httpClient({
+          method: "POST",
+          url: `/api/loans/create-and-disburse-loan`,
+          isAuth: true,
+          data: { loanId, status },
+        });
+
+        return response.data;
+      } catch (error) {
+        return thunkAPI.rejectWithValue(handleError(error));
+      }
+    }
+  );
+
+  public declineLoan = createAsyncThunk(
+    "loans/declineLoan",
+    async (
+      {
+        loanId,
+        amount,
+        duration,
+      }: {
+        loanId: string;
+        amount: number;
+        duration: number;
+      },
+      thunkAPI
+    ) => {
+      try {
+        const response = await httpClient({
+          method: "POST",
+          url: `/api/loans/reject-loan`,
+          isAuth: true,
+          data: { 
+            transactionId: loanId,
+            amount, 
+            duration 
+          },
+        });
+        return response.data;
+      } catch (error) {
+        return thunkAPI.rejectWithValue(handleError(error));
+      }
+    }
+  );
+
 }
