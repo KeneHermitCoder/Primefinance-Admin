@@ -46,7 +46,7 @@ export function Login() {
 
   const content = (
     <Reveal>
-      <div className="h-screen w-full flex flex-col items-center justify-center gap-3">
+      <div className="h-screen w-full px-8 flex flex-col items-center justify-center gap-3">
         <ToastContainer />
         <div className="py-5 flex flex-col items-center">
           <img src={images.logoPNG} alt="logo" className="w-[100px] hidden" />
@@ -54,7 +54,7 @@ export function Login() {
             Admin Panel - Login
           </h1>
         </div>
-        <form className="w-[517px] flex flex-col gap-[20px]">
+        <form className="w-full max-w-2xl flex flex-col gap-[20px] px-3 md:px-8">
           <div>
             <label htmlFor="email" className="hidden">
               Email
@@ -67,7 +67,7 @@ export function Login() {
               placeholder="Email"
               required
               autoComplete="false"
-              className="w-full max-w-[517px] h-[55px] px-[18px] py-[18px] border rounded-md bg-gray-100 focus:outline-[#089C48] focus:outline-1 font-inter text-gray-600 text-base font-normal leading-[19.36px] text-left underline-offset-0"
+              className="w-full h-[55px] px-[18px] py-[18px] border rounded-md bg-gray-100 focus:outline-[#089C48] focus:outline-1 font-inter text-gray-600 text-base font-normal leading-[19.36px] text-left underline-offset-0"
             />
           </div>
           <div>
@@ -82,14 +82,14 @@ export function Login() {
               placeholder="Password"
               required
               autoComplete="false"
-              className="w-full max-w-[517px] h-[55px] px-[18px] py-[18px] border rounded-md bg-gray-100 focus:outline-[#089C48] focus:outline-1 font-inter text-gray-600 text-base font-normal leading-[19.36px] text-left underline-offset-0"
+              className="w-full h-[55px] px-[18px] py-[18px] border rounded-md bg-gray-100 focus:outline-[#089C48] focus:outline-1 font-inter text-gray-600 text-base font-normal leading-[19.36px] text-left underline-offset-0"
             />
           </div>
           <div className="mt-4">
             <button
               type="button"
               onClick={handleLogin}
-              className={`flex justify-center w-full max-w-[517px] h-[55px] px-[18px] py-[18px] border rounded-md bg-[#089C48] font-inter text-white text-base font-medium leading-[19.36px] text-center underline-offset-0`}
+              className={`flex justify-center w-full h-[55px] px-[18px] py-[18px] border rounded-md bg-[#089C48] font-inter text-white text-base font-medium leading-[19.36px] text-center underline-offset-0`}
             >
               {isLoading ? (
                 <span className="flex h-6 w-6 mb-2 border-2 border-white border-b-transparent rounded-full transition-all animate-spin"></span>
@@ -99,7 +99,7 @@ export function Login() {
             </button>
           </div>
         </form>
-        <div className="w-1/3 flex items-center justify-center gap-2 py-8">
+        <div className="w-full flex items-center justify-center gap-2 py-8">
           <p>Don't have an account?</p>
           <Link to="/register" className="text-[#089C48] underline">
             Register

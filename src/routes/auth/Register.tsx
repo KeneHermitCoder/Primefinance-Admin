@@ -50,7 +50,7 @@ export function Register() {
 
   return (
     <Reveal>
-      <div className="h-screen w-full flex flex-col items-center justify-center gap-3">
+      <div className="h-screen p-8 pt-16 w-full flex flex-col items-center justify-center gap-3">
         <div className="py-5 flex flex-col items-center">
           <img src={images.logoPNG} alt="logo" className="w-[100px] hidden" />
           <h1 className="text-xl font-normal text-gray-600">
@@ -59,7 +59,7 @@ export function Register() {
         </div>
         <form
           onSubmit={handleRegister}
-          className="w-[517px] flex flex-col gap-[20px]"
+          className="w-full max-w-2xl flex flex-col gap-[20px]"
         >
           <div>
             <label htmlFor="name" className="hidden">
@@ -72,7 +72,7 @@ export function Register() {
               id="name"
               placeholder="Name"
               required
-              className="w-full max-w-[517px] h-[55px] px-[18px] py-[18px] border rounded-md bg-gray-100 focus:outline-[#089C48] focus:outline-1 font-inter text-gray-600 text-base font-normal leading-[19.36px] text-left underline-offset-0"
+              className="w-full h-[55px] px-[18px] py-[18px] border rounded-md bg-gray-100 focus:outline-[#089C48] focus:outline-1 font-inter text-gray-600 text-base font-normal leading-[19.36px] text-left underline-offset-0"
             />
           </div>
           <div>
@@ -87,7 +87,7 @@ export function Register() {
               placeholder="Surname"
               required
               autoComplete="false"
-              className="w-full max-w-[517px] h-[55px] px-[18px] py-[18px] border rounded-md bg-gray-100 focus:outline-[#089C48] focus:outline-1 font-inter text-gray-600 text-base font-normal leading-[19.36px] text-left underline-offset-0"
+              className="w-full h-[55px] px-[18px] py-[18px] border rounded-md bg-gray-100 focus:outline-[#089C48] focus:outline-1 font-inter text-gray-600 text-base font-normal leading-[19.36px] text-left underline-offset-0"
             />
           </div>
           <div>
@@ -102,7 +102,7 @@ export function Register() {
               placeholder="Email"
               required
               autoComplete="false"
-              className="w-full max-w-[517px] h-[55px] px-[18px] py-[18px] border rounded-md bg-gray-100 focus:outline-[#089C48] focus:outline-1 font-inter text-gray-600 text-base font-normal leading-[19.36px] text-left underline-offset-0"
+              className="w-full h-[55px] px-[18px] py-[18px] border rounded-md bg-gray-100 focus:outline-[#089C48] focus:outline-1 font-inter text-gray-600 text-base font-normal leading-[19.36px] text-left underline-offset-0"
             />
           </div>
         
@@ -118,7 +118,7 @@ export function Register() {
               placeholder="Password"
               required
               autoComplete="false"
-              className="w-full max-w-[517px] h-[55px] px-[18px] py-[18px] border rounded-md bg-gray-100 focus:outline-[#089C48] focus:outline-1 font-inter text-gray-600 text-base font-normal leading-[19.36px] text-left underline-offset-0"
+              className="w-full h-[55px] px-[18px] py-[18px] border rounded-md bg-gray-100 focus:outline-[#089C48] focus:outline-1 font-inter text-gray-600 text-base font-normal leading-[19.36px] text-left underline-offset-0"
             />
           </div>
           <div>
@@ -133,7 +133,7 @@ export function Register() {
               placeholder="Confirm Password"
               required
               autoComplete="false"
-              className="w-full max-w-[517px] h-[55px] px-[18px] py-[18px] border rounded-md bg-gray-100 focus:outline-[#089C48] focus:outline-1 font-inter text-gray-600 text-base font-normal leading-[19.36px] text-left underline-offset-0"
+              className="w-full h-[55px] px-[18px] py-[18px] border rounded-md bg-gray-100 focus:outline-[#089C48] focus:outline-1 font-inter text-gray-600 text-base font-normal leading-[19.36px] text-left underline-offset-0"
             />
           </div>
           <div>
@@ -148,7 +148,7 @@ export function Register() {
               placeholder="Phone"
               required
               autoComplete="false"
-              className="w-full max-w-[517px] h-[55px] px-[18px] py-[18px] border rounded-md bg-gray-100 focus:outline-[#089C48] focus:outline-1 font-inter text-gray-600 text-base font-normal leading-[19.36px] text-left underline-offset-0"
+              className="w-full h-[55px] px-[18px] py-[18px] border rounded-md bg-gray-100 focus:outline-[#089C48] focus:outline-1 font-inter text-gray-600 text-base font-normal leading-[19.36px] text-left underline-offset-0"
             />
           </div>
 
@@ -156,7 +156,7 @@ export function Register() {
             <button
               // type="button"
               type="submit"
-              className="flex items-center justify-center w-full max-w-[517px] h-[55px] px-[18px] py-[18px] border rounded-md bg-[#089C48] font-inter text-white text-base font-medium leading-[19.36px] text-center underline-offset-0"
+              className="flex items-center justify-center w-full h-[55px] px-[18px] py-[18px] border rounded-md bg-[#089C48] font-inter text-white text-base font-medium leading-[19.36px] text-center underline-offset-0"
             >
               {
                 isLoading
@@ -166,7 +166,7 @@ export function Register() {
             </button>
           </div>
         </form>
-        <div className="w-1/3 flex items-center justify-center gap-2 py-8">
+        <div className="w-full flex items-center justify-center gap-2 py-8">
           <p>Already have an account?</p>
           <Link to="/login" className="text-[#089C48] underline">
             Login
