@@ -2,6 +2,33 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { handleError, httpClient } from "../../utils";
 
 export default class LoansAPI {
+
+  private async fetchLoans(thunkAPI: any, page = 1, limit = 10) {
+    try {
+      const response = await httpClient({
+        method: "GET",
+        url: "/api/loans/all-loans",
+        data: {},
+        params: { page, limit },
+        isAuth: true,
+      });
+
+      // Extract data from the response
+      const loan = response.data;
+
+      // Validate the response structure
+      if (!loan) return thunkAPI.rejectWithValue("No loan data available");
+
+      // Ensure loans are always returned as an array
+      return Array.isArray(loan)
+        ? loan
+        : [loan];
+    } catch (error) {
+      // Handle exceptions properly
+      return thunkAPI.rejectWithValue(handleError(error));
+    }
+  }
+
   public getMultipleLoans = createAsyncThunk(
     "loans/getallLoans",
     async (
@@ -9,22 +36,10 @@ export default class LoansAPI {
       thunkAPI
     ) => {
       try {
-        console.log({ page, limit, });
-        const response = await httpClient({
-          method: "GET",
-          url: "/api/loans/all-loans",
-          data: {},
-          // params: { page, limit },
-          isAuth: true,
-        });
-
-        console.log({ allLoansData: response.data });
+        const response = await this.fetchLoans(thunkAPI, page, limit);
         return response.data; 
       } catch (error: any) {
-        console.error("Error fetching loans:", error);
-
-        const errorResponse = handleError(error);
-        return thunkAPI.rejectWithValue(errorResponse);
+        return thunkAPI.rejectWithValue(handleError(error));
       }
     }
   );
@@ -42,20 +57,10 @@ export default class LoansAPI {
       thunkAPI
     ) => {
       try {
-        const response = await httpClient({
-          method: "GET",
-          url: "/api/loans/all-loans",
-          data: {},
-          params: { page, limit },
-          isAuth: true,
-        });
-
+        const response = await this.fetchLoans(thunkAPI, page, limit);
         return response;
       } catch (error: any) {
-        console.error("Error fetching loans:", error);
-
-        const errorResponse = handleError(error);
-        return thunkAPI.rejectWithValue(errorResponse);
+        return thunkAPI.rejectWithValue(handleError(error));
       }
     }
   );
@@ -73,29 +78,26 @@ export default class LoansAPI {
       thunkAPI
     ) => {
       try {
-        const response = await httpClient({
-          method: "GET",
-          url: "/api/loans/all-loans",
-          params: { page, limit },
-          isAuth: true,
-        });
-        console.log({ allLoans: response, });
+        const response = await this.fetchLoans(thunkAPI, page, limit);
 
         // Ensure 'data' is not null before accessing it
-        if (!response || !response.data) return thunkAPI.rejectWithValue("No loan data available");
+        if (!response || response?.length < 1) return thunkAPI.rejectWithValue("No loan data available");
 
-        const { loan } = response.data as any;
+        const loan = response;
 
+        alert(JSON.stringify(loan));
+        console.log({loan})
         return {
           totalLoans: loan.length || 0,
-          activeLoans: loan.filter((l: any) => l.status === "active").length,
-          repaidLoans: loan.filter((l: any) => l.status === "repaid").length,
+          activeLoans: loan.filter((l: any) => l.status === "pending").length,
+          repaidLoans: loan.filter((l: any) => l.status === "complete").length,
           overdueLoans: loan.filter((l: any) => l.status === "overdue").length,
           totalLoansRevenue: loan.reduce(
             (acc: number, l: any) =>
               acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),
             0
           ),
+          // totalLoansRevenue: 4000,
           dueLoansRevenue: loan
             .filter((l: any) => l.status === "due")
             .reduce(
@@ -105,7 +107,7 @@ export default class LoansAPI {
               0
             ),
           activeLoansRevenue: loan
-            .filter((l: any) => l.status === "active")
+            .filter((l: any) => l.status === "pending")
             .reduce(
               (acc: number, l: any) =>
                 acc +
@@ -113,7 +115,7 @@ export default class LoansAPI {
               0
             ),
           repaidLoansRevenue: loan
-            .filter((l: any) => l.status === "repaid")
+            .filter((l: any) => l.status === "complete")
             .reduce(
               (acc: number, l: any) =>
                 acc +
@@ -121,7 +123,7 @@ export default class LoansAPI {
               0
             ),
           overdueLoansRevenue: loan
-            .filter((l: any) => l.status === "overdue")
+            .filter((l: any) => new Date(l.repayment_date)?.getTime() < new Date().getTime())
             .reduce(
               (acc: number, l: any) =>
                 acc +
@@ -130,6 +132,7 @@ export default class LoansAPI {
             ),
         };
       } catch (error) {
+        alert(JSON.stringify(error));
         return thunkAPI.rejectWithValue(handleError(error));
       }
     }
@@ -173,23 +176,6 @@ export default class LoansAPI {
           lengthOfCreditHistory: response.data.lengthOfCreditHistory,
           remarks: response.data.remarks,
         };
-
-        // return {
-        //   loanId: response.data.loanId || "",
-        //   lastReported: response.data.lastReported || "",
-        //   creditorName: response.data.creditorName || "",
-        //   totalDebt: response.data.totalDebt || "",
-        //   accountype: response.data.accountype || "",
-        //   outstandingBalance: response.data.outstandingBalance || 0,
-        //   activeLoan: response.data.activeLoan || 0,
-        //   loansTaken: response.data.loansTaken || 0,
-        //   income: response.data.income || 0,
-        //   repaymentHistory: response.data.repaymentHistory || "",
-        //   openedDate: response.data.openedDate || "",
-        //   lengthOfCreditHistory: response.data.lengthOfCreditHistory || "",
-        //   remarks: response.data.remarks || "",
-        // };
-
       } catch (error) {
         return thunkAPI.rejectWithValue(handleError(error));
       }

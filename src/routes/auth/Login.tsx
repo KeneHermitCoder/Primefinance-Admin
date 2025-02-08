@@ -31,6 +31,7 @@ export function Login() {
     // @ts-ignore
     dispatch(new AuthAPI().login(adminDetails));
   };
+
   useEffect(() => {
 
     const prevPage = location.state?.from?.pathname ?? "/";
