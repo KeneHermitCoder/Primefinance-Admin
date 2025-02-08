@@ -59,7 +59,7 @@ export function Register() {
         </div>
         <form
           onSubmit={handleRegister}
-          className="w-full max-w-2xl flex flex-col gap-[20px]"
+          className="w-full max-w-2xl flex flex-col gap-[20px] px-3 md:px-8"
         >
           <div>
             <label htmlFor="name" className="hidden">

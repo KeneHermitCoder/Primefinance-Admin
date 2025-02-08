@@ -1,38 +1,49 @@
 import { Stack } from "@mui/material";
 import images from "../../constants/images";
-import { formatNumberToMultipleCommas, tableFilterAction } from "../../utils";
-import { ArrowCircleDown, ArrowCircleUp } from "@mui/icons-material";
+import { ArrowCircleDown, ArrowCircleUp, } from "@mui/icons-material";
+import { formatNumberToMultipleCommas, tableFilterAction, } from "../../utils";
 import {
-  DashboardAmountDisplay,
   LoanStatus,
   PrimaryTableSkeleton,
+  DashboardAmountDisplay,
   // TableErrorComponent,
 } from "../../components/";
 import {
-  PrimaryLineChart,
-  PrimaryPieChart,
   Reveal,
+  PrimaryPieChart,
+  PrimaryLineChart,
   SearchFilterSortPaginateTable,
 } from "../../components";
 import LoansAPI from "../../features/loans/LoansAPI";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../features";
+import { UsersAPI } from "../../features/users";
+import { TransactionsAPI } from "../../features/transactions";
 
 export function Dashboard() {
+
   const dispatch = useDispatch();
   const [rows, setRows] = useState<{ [key: string]: any }[]>([]);
 
   const { loanKPIData, loanOverviewData } = useSelector(
     (state: RootState) => state.loans
   );
+  const { userKPIData, } = useSelector((state: RootState) => state.users);
+  const { transactionKPIData, } = useSelector((state: RootState) => state.transactions);
 
   useEffect(() => {
     // Fetch loans when the component mounts
     // @ts-ignore
     dispatch(new LoansAPI().getLoanOverviewData({ page: 0, limit: 10 }));
     // @ts-ignore
-    dispatch(new LoansAPI().getLoansKPIData());
+    dispatch(new LoansAPI().getLoansKPIData({ page: 0, limit: 10 }));
+
+    // @ts-ignore
+    dispatch(new UsersAPI().getUsersKPIData());
+
+    // @ts-ignore
+    dispatch(new TransactionsAPI().getTransactionsKPIData());
   }, [dispatch]);
   useEffect(() => {
     if (loanOverviewData?.data?.length > 0) {
@@ -44,8 +55,7 @@ export function Dashboard() {
         date: loan.repayment_date,
         status: loan.status,
         metadata: {
-          itemPhoto:
-            "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+          itemPhoto: "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
         },
       }));
       setRows(modifiedLoansData);
@@ -58,7 +68,7 @@ export function Dashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             <DashboardAmountDisplay
               title="Total revenue"
-              amount={formatNumberToMultipleCommas(loanKPIData.data.totalLoans)}
+              amount={`₦${formatNumberToMultipleCommas(transactionKPIData.data.totalTransactions)}`}
               trIcon={<ArrowCircleUp style={{ color: "#15792b" }} />}
               backgroundColour="#CCEFDD"
               bottomItem={
@@ -69,7 +79,7 @@ export function Dashboard() {
             />
             <DashboardAmountDisplay
               title="Total users"
-              amount="0"
+              amount={formatNumberToMultipleCommas(userKPIData.data.totalUsersCount)}
               trIcon={<ArrowCircleDown style={{ color: "#151e79" }} />}
               backgroundColour="#FFFFFF"
               bottomItem={
@@ -80,15 +90,15 @@ export function Dashboard() {
             />
             <DashboardAmountDisplay
               title="Escrow funds"
-              amount="$50,000"
+              amount="₦0"
               backgroundColour="#d1e9fd"
               bottomItem={
-                <div className="w-full flex justify-start items-center px-2 py-3 text-[#2699fb] text-2xl">{`+50 pending`}</div>
+                <div className="w-full flex justify-start items-center px-2 py-3 text-[#2699fb] text-2xl">{`+0 pending`}</div>
               }
             />
             <DashboardAmountDisplay
               title="Total Loans Revenue"
-              amount={formatNumberToMultipleCommas(loanKPIData.data.totalLoansRevenue)}
+              amount={`₦${formatNumberToMultipleCommas(loanKPIData.data.totalLoansRevenue)}`}
               backgroundColour="#f5eac9"
             />
           </div>

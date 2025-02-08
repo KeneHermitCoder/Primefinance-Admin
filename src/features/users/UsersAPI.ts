@@ -67,11 +67,10 @@ export default class UsersAPI {
                 // headers: options.headers,
                 // params: options.params,
             });
-            const {data} = response.data;
+            const data = response.data;
             return {
                 newUsersCount: data?.filter((user: any) => user.status === 'active').length || 0,
-                // totalUsersCount: data.length || 0,
-                totalUsersCount: 0,
+                totalUsersCount: data.length || 0,
                 activeUsersCount: data?.filter((user: any) => user.status === 'active').length || 0,
                 flaggedUsersCount: data?.filter((user: any) => user.status === 'flagged').length || 0
 

@@ -12,23 +12,23 @@ const getLoansCreditScoreData = loansAPI.getLoansCreditScoreData;
 
 
 const handleRejectedState = (target: string) => (state: any, action: any) => {
-    state[target].isLoading = false;
-    state[target].success = false;
-    // state.loanOverviewData.error = action.error.message || null;
-    state[target].error = (action.payload as any)?.statusText || null;
+  state[target].isLoading = false;
+  state[target].success = false;
+  // state.loanOverviewData.error = action.error.message || null;
+  state[target].error = (action.payload as any)?.statusText || null;
 }
 
 const handleFulfilledState = <T>(target: string) => (state: any, action: any) => {
-    state[target].isLoading = false;
-    state[target].success = true;
-    state[target].error = null;
-    state[target].data = <T>action.payload;
+  state[target].isLoading = false;
+  state[target].success = true;
+  state[target].error = null;
+  state[target].data = <T>action.payload;
 }
 
 const handlePendingState = (target: string) => (state: any) => {
-    state[target].isLoading = true;
-    state[target].success = false;
-    state[target].error = null;
+  state[target].isLoading = true;
+  state[target].success = false;
+  state[target].error = null;
 }
 
 const loansSlice = createSlice({
@@ -102,57 +102,21 @@ const loansSlice = createSlice({
       .addCase(getMutipleLoans.pending, handlePendingState("allLoansData"))
       .addCase(getMutipleLoans.fulfilled, handleFulfilledState("allLoansData"))
       .addCase(getMutipleLoans.rejected, handleRejectedState("allLoansData"))
-      .addCase(
-        getLoanOverviewData.pending,
-        handlePendingState("loanOverviewData")
-      )
-      .addCase(
-        getLoanOverviewData.fulfilled,
-        handleFulfilledState("loanOverviewData")
-      )
-      .addCase(
-        getLoanOverviewData.rejected,
-        handleRejectedState("loanOverviewData")
-      )
+      .addCase(getLoanOverviewData.pending, handlePendingState("loanOverviewData"))
+      .addCase( getLoanOverviewData.fulfilled, handleFulfilledState("loanOverviewData"))
+      .addCase(getLoanOverviewData.rejected, handleRejectedState("loanOverviewData"))
       .addCase(getLoansKPIData.pending, handlePendingState("loanKPIData"))
       .addCase(getLoansKPIData.fulfilled, handleFulfilledState("loanKPIData"))
       .addCase(getLoansKPIData.rejected, handleRejectedState("loanKPIData"))
-      .addCase(
-        getLoansCreditScoreData.pending,
-        handlePendingState("loanCreditScoreData")
-      )
-      .addCase(
-        getLoansCreditScoreData.fulfilled,
-        handleFulfilledState("loanCreditScoreData")
-      )
-      .addCase(
-        getLoansCreditScoreData.rejected,
-        handleRejectedState("loanCreditScoreData")
-      )
-      .addCase(
-        approveLoan.pending,
-        handlePendingState("approveLoanData")
-      )
-      .addCase(
-        approveLoan.fulfilled,
-        handleFulfilledState("approveLoanData")
-      )
-      .addCase(
-        approveLoan.rejected,
-        handleRejectedState("approveLoanData")
-      )
-      .addCase(
-        declineLoan.pending,
-        handlePendingState("declineLoanData")
-      )
-      .addCase(
-        declineLoan.fulfilled,
-        handleFulfilledState("declineLoanData")
-      )
-      .addCase(
-        declineLoan.rejected,
-        handleRejectedState("declineLoanData")
-      )
+      .addCase(getLoansCreditScoreData.pending, handlePendingState("loanCreditScoreData"))
+      .addCase(getLoansCreditScoreData.fulfilled, handleFulfilledState("loanCreditScoreData"))
+      .addCase(getLoansCreditScoreData.rejected, handleRejectedState("loanCreditScoreData"))
+      .addCase(approveLoan.pending, handlePendingState("approveLoanData"))
+      .addCase(approveLoan.fulfilled, handleFulfilledState("approveLoanData"))
+      .addCase(approveLoan.rejected, handleRejectedState("approveLoanData"))
+      .addCase(declineLoan.pending, handlePendingState("declineLoanData"))
+      .addCase(declineLoan.fulfilled, handleFulfilledState("declineLoanData"))
+      .addCase(declineLoan.rejected, handleRejectedState("declineLoanData"))
   },
 } as {
   name: string;
