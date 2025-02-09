@@ -73,7 +73,7 @@ export default class UsersAPI {
                 newUsersCount: data?.filter((user: any) => {
                     const createdAt = new Date(user?.createdAt);
                     const sevenDaysAgo = new Date();
-                    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 17);
+                    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
                     return createdAt.getTime() > sevenDaysAgo.getTime();
                 }).length || 0,
                 totalUsersCount: data.length || 0,

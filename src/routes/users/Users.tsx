@@ -41,7 +41,7 @@ export default function Users() {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log({ allUsersData, userKPIData, userOverviewData });
+    console.log({ allUsersData, });
     if (allUsersData?.data?.length >= 0) {
       const modifiedTransactionData = allUsersData.data.map(
         (user: any) => ({
