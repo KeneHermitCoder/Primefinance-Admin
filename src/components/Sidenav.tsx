@@ -16,11 +16,12 @@ import {
   Clear,
   Logout,
   Settings,
-  Notifications,
+  // Notifications,
   // CatchingPokemon,
   CurrencyBitcoin,
   Person3Outlined,
   CurrencyExchange,
+  AdminPanelSettingsOutlined,
 } from "@mui/icons-material";
 
 const navData = [
@@ -62,11 +63,17 @@ const navData = [
       icon: <Person3Outlined />,
     },
     {
-      link: "/notifications",
-      tab: "notifications",
-      title: "Notifications",
-      icon: <Notifications />,
+      link: "/admins",
+      tab: "admins",
+      title: "Admins",
+      icon: <AdminPanelSettingsOutlined />,
     },
+    // {
+    //   link: "/notifications",
+    //   tab: "notifications",
+    //   title: "Notifications",
+    //   icon: <Notifications />,
+    // },
   ],
   [
     {

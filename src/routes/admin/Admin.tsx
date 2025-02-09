@@ -88,10 +88,10 @@ export default function Admins() {
               />
 
               <UsersKPIDisplay
-                subtitle="Flagged Admins"
+                subtitle="Inactive Admins"
                 kpiIcon={<FlagCircleRounded sx={{ color: "error.main" }} />}
                 total={`${formatNumberToMultipleCommas(
-                  userKPIData.data.flaggedAdminsCount
+                  adminKPIData.data.inactiveAdminsCount
                 )}`}
               />
 
@@ -114,7 +114,7 @@ export default function Admins() {
               <PrimaryTableSkeleton />
             ) : (
               <SearchFilterSortPaginateTable
-                title="s Overview"
+                title="Admins Overview"
                 searchParams={["name", "adminId", "adminEmail", "status"]}
                 filterParams={{
                   data: [

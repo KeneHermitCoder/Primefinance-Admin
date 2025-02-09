@@ -60,11 +60,17 @@ const initialState: {
       children: [],
     },
     {
-      id: "notifications",
-      name: "Notifications Management",
+      id: "admins",
+      name: "Admins Management",
       bool: false,
       children: [],
     },
+    // {
+    //   id: "notifications",
+    //   name: "Notifications Management",
+    //   bool: false,
+    //   children: [],
+    // },
     {
       id: "settings",
       name: "Settings",
