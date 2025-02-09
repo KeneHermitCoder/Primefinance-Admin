@@ -26,12 +26,14 @@ export default function Users() {
   const dispatch = useDispatch();
   const [rows, setRows] = useState<{ [key: string]: any }[]>([]);
 
-  const { userKPIData, userOverviewData } = useSelector(
+  const { userKPIData, userOverviewData, allUsersData, } = useSelector(
     (state: RootState) => state.users
   );
 
   useEffect(() => {
     // Fetch users when the component mounts
+    // @ts-ignore
+    dispatch(new UsersAPI().getMultipleUsers({ page: 0, limit: 10 }));
     // @ts-ignore
     dispatch(new UsersAPI().getUserOverviewData({ page: 0, limit: 10 }));
     // @ts-ignore
@@ -39,15 +41,16 @@ export default function Users() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (userOverviewData?.data?.length >= 0) {
-      const modifiedTransactionData = userOverviewData.data.map(
+    console.log({ allUsersData, });
+    if (allUsersData?.data?.length >= 0) {
+      const modifiedTransactionData = allUsersData.data.map(
         (user: any) => ({
-          name: `${user.first_name} ${user.last_name}`,
-          userId: user.id,
+          name: `${user?.user_metadata?.first_name} ${user?.user_metadata?.surname}`,
+          userId: user._id,
           lastLogin: user.last_login,
           userEmail: user.email,
-          status: user.status,
-          date: user.created_at,
+          status: user?.confirmed_at? "active" : "flagged",
+          date: user.createdAt,
           metadata: {
             itemPhoto:
               "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",

@@ -1,11 +1,23 @@
 import { Stack } from "@mui/material";
 import { LineChart } from "@mui/x-charts/LineChart";
 
-const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
-const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
-const xLabels = ["Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"];
+// const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
+// const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
+// const xLabels = ["Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"];
 
-export default function ({ title = "Transaction" }: { title?: string }) {
+export default function ({
+  title = "Transaction",
+  data,
+}: {
+  title?: string;
+  data?: {
+    labels: string[];
+    series: {
+      data: number[];
+      label: string
+    }[]
+  }
+}) {
   return (
     <Stack width={"100%"}>
       <Stack direction="row" justifyContent={"space-between"}>
@@ -20,11 +32,14 @@ export default function ({ title = "Transaction" }: { title?: string }) {
       <LineChart
         // width={650}
         height={400}
-        series={[
-          { data: pData, label: "Deposit" },
-          { data: uData, label: "Withdrawal" },
-        ]}
-        xAxis={[{ scaleType: "point", data: xLabels }]}
+        // series={[
+        //   { data: pData, label: "Deposit" },
+        //   { data: uData, label: "Withdrawal" },
+        // ]}
+        // xAxis={[{ scaleType: "point", data: xLabels }]}
+        series={data?.series || []}
+        xAxis={[{ scaleType: "point", data: data?.labels || [] }]}
+        yAxis={[{ scaleType: "linear" }]}
       />
     </Stack>
   );

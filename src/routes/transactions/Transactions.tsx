@@ -41,11 +41,11 @@ export default function Transactions() {
       const modifiedTransactionData = transactionOverviewData.data.map(
         (transaction: any) => ({
           name: `${transaction.name}`,
-          transactionId: transaction.id,
+          transactionId: transaction._id,
           // type: transaction.type,
           type: transaction.category,
           amount: `₦${transaction.amount}`,
-          date: transaction.created_at,
+          date: transaction.createdAt,
           status: transaction.status,
           metadata: {
             itemPhoto:
