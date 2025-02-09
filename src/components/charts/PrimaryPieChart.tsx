@@ -1,6 +1,7 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import { PieChart } from "@mui/x-charts/PieChart";
+import { formatNumberToMultipleCommas } from "../../utils";
 
 export default function PrimaryPieChart({
   data,
@@ -42,7 +43,7 @@ export default function PrimaryPieChart({
           <div className="flex flex-col items-center">
             <span className="text-lg font-semibold">
               {metadata?.currency}
-              {v.value}
+              {formatNumberToMultipleCommas(v.value)}
             </span>
             <span className="text-xs">{v.label}</span>
           </div>

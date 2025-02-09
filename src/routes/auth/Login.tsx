@@ -50,7 +50,7 @@ export function Login() {
       <div className="h-screen w-full px-8 flex flex-col items-center justify-center gap-3">
         <ToastContainer />
         <div className="py-5 flex flex-col items-center">
-          <img src={images.logoPNG} alt="logo" className="w-[100px] hidden" />
+          <img src={images.logo1} alt="logo" className="w-[70px] md:w-[90px] mb-4" />
           <h1 className="text-xl font-normal text-gray-600">
             Admin Panel - Login
           </h1>

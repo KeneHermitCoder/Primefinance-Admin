@@ -50,9 +50,9 @@ export function Register() {
 
   return (
     <Reveal>
-      <div className="h-screen p-8 pt-16 w-full flex flex-col items-center justify-center gap-3">
-        <div className="py-5 flex flex-col items-center">
-          <img src={images.logoPNG} alt="logo" className="w-[100px] hidden" />
+      <div className="h-screen overflow-y-scroll p-8 pt-16 w-full flex flex-col items-center justify-center gap-3">
+        <div className="py-5 mt-16 flex flex-col items-center">
+          <img src={images.logo1} alt="logo" className="w-[70px] md:w-[90px] mb-4" />
           <h1 className="text-xl font-normal text-gray-600">
             Admin Panel - Register
           </h1>
