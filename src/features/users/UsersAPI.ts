@@ -19,8 +19,8 @@ export default class UsersAPI {
                 // headers: options.headers,
                 // params: options.params,
             });
-            console.log({ response, })
-            return response.data;
+            // return response.data?.filter((user: any) => user.is_super_admin);
+            return response.data?.filter((user: any) => user.role == 'admin');
         } catch (error: any) {
             console.log({ error, });
             const errorResponse = handleError(error);
@@ -44,7 +44,7 @@ export default class UsersAPI {
                 // headers: options.headers,
                 // params: options.params,
             });
-            const {data} = response.data;
+            const data = response.data;
             return {
                 id: data?.filter((user:any)=> user.id),
                 email: data?.filter((user: any)=> user.name),
@@ -68,13 +68,13 @@ export default class UsersAPI {
                 // headers: options.headers,
                 // params: options.params,
             });
-            const data = response.data;
+            const data = response.data?.filter((user: any) => user.role == 'user');
             return {
                 newUsersCount: data?.filter((user: any) => {
                     const createdAt = new Date(user?.createdAt);
                     const sevenDaysAgo = new Date();
                     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-                    return createdAt.getTime() > sevenDaysAgo.getTime();
+                    return createdAt.getTime() > sevenDaysAgo.getTime() && user.role === 'admin';
                 }).length || 0,
                 totalUsersCount: data.length || 0,
                 activeUsersCount: data?.filter((user: any) => user.confirmed_at).length || 0,

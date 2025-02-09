@@ -21,36 +21,36 @@ import {
   FlagCircleRounded,
 } from "@mui/icons-material";
 
-export default function Users() {
+export default function Admins() {
 
   const dispatch = useDispatch();
   const [rows, setRows] = useState<{ [key: string]: any }[]>([]);
 
-  const { userKPIData, userOverviewData, allUsersData, } = useSelector(
+  const { adminKPIData, adminOverviewData, allAdminsData, } = useSelector(
     (state: RootState) => state.users
   );
 
   useEffect(() => {
     // Fetch users when the component mounts
     // @ts-ignore
-    dispatch(new UsersAPI().getMultipleUsers({ page: 0, limit: 10 }));
+    dispatch(new UsersAPI().getMultipleAdmins({ page: 0, limit: 10 }));
     // @ts-ignore
-    dispatch(new UsersAPI().getUserOverviewData({ page: 0, limit: 10 }));
+    dispatch(new UsersAPI().getAdminOverviewData({ page: 0, limit: 10 }));
     // @ts-ignore
-    dispatch(new UsersAPI().getUsersKPIData());
+    dispatch(new UsersAPI().getAdminsKPIData());
   }, [dispatch]);
 
   useEffect(() => {
-    console.log({ allUsersData, });
-    if (allUsersData?.data?.length >= 0) {
-      const modifiedTransactionData = allUsersData.data.map(
-        (user: any) => ({
-          name: `${user?.user_metadata?.first_name} ${user?.user_metadata?.surname}`,
-          userId: user._id,
-          lastLogin: user.last_login,
-          userEmail: user.email,
-          status: user?.confirmed_at? "active" : "inactive",
-          date: user.createdAt,
+    console.log({ allAdminsData, });
+    if (allAdminsData?.data?.length >= 0) {
+      const modifiedTransactionData = allAdminsData.data.map(
+        (admin: any) => ({
+          name: `${admin?.user_metadata?.first_name} ${admin?.user_metadata?.surname}`,
+          adminId: admin._id,
+          lastLogin: admin.last_login,
+          adminEmail: admin.email,
+          status: admin?.confirmed_at? "active" : "inactive",
+          date: admin.createdAt,
           metadata: {
             itemPhoto:
               "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
@@ -59,59 +59,47 @@ export default function Users() {
       );
       setRows([
         ...modifiedTransactionData,
-        // {
-        //   name: "Chinwe Okafor",
-        //   userId: "LN12347",
-        //   lastLogin: "4:56pm",
-        //   userEmail: "chinwe.okafor@me.com",
-        //   status: "flagged",
-        //   date: "10/01/2025",
-        //   metadata: {
-        //     itemPhoto:
-        //       "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
-        //   },
-        // },
       ]);
     }
-  }, [userOverviewData.data, setRows]);
+  }, [adminOverviewData.data, setRows]);
 
   return (
     <>
       <Reveal>
         <Stack direction="column" spacing={3} paddingX={1} paddingY={1}>
-          {userKPIData.isLoading ? (
+          {adminKPIData.isLoading ? (
             <KPILoadingSkeleton />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 md:divide-x-2 divide-y-2 lg:divide-y-0">
               <UsersKPIDisplay
-                subtitle="Total Users"
+                subtitle="Total Admins"
                 kpiIcon={<AttachMoney sx={{ color: "success.main" }} />}
                 total={`${formatNumberToMultipleCommas(
-                  userKPIData.data?.totalUsersCount
+                  adminKPIData.data?.totalAdminsCount
                 )}`}
               />
 
               <UsersKPIDisplay
-                subtitle="Active Users"
+                subtitle="Active Admins"
                 kpiIcon={<HandshakeRounded sx={{ color: "primary.main" }} />}
                 total={`${formatNumberToMultipleCommas(
-                  userKPIData.data.activeUsersCount
+                  adminKPIData.data.activeAdminsCount
                 )}`}
               />
 
               <UsersKPIDisplay
-                subtitle="Flagged Users"
+                subtitle="Flagged Admins"
                 kpiIcon={<FlagCircleRounded sx={{ color: "error.main" }} />}
                 total={`${formatNumberToMultipleCommas(
-                  userKPIData.data.flaggedUsersCount
+                  userKPIData.data.flaggedAdminsCount
                 )}`}
               />
 
               <UsersKPIDisplay
-                subtitle="New Users"
+                subtitle="New Admins"
                 kpiIcon={<PersonAdd sx={{ color: "primary.main" }} />}
                 total={`${formatNumberToMultipleCommas(
-                  userKPIData.data.newUsersCount
+                  adminKPIData.data.newAdminsCount
                 )}`}
               />
             </div>
@@ -122,12 +110,12 @@ export default function Users() {
             justifyContent="space-between"
             className="bg-white p-4 rounded-[12px]"
           >
-            {userOverviewData.isLoading ? (
+            {adminOverviewData.isLoading ? (
               <PrimaryTableSkeleton />
             ) : (
               <SearchFilterSortPaginateTable
-                title="Users Overview"
-                searchParams={["name", "userId", "userEmail", "status"]}
+                title="s Overview"
+                searchParams={["name", "adminId", "adminEmail", "status"]}
                 filterParams={{
                   data: [
                     {
@@ -153,9 +141,9 @@ export default function Users() {
                     label: "Name",
                   },
                   {
-                    id: "userId",
+                    id: "adminId",
                     numeric: true,
-                    label: "User Id",
+                    label: "Admin Id",
                   },
                   {
                     id: "lastLogin",
@@ -163,7 +151,7 @@ export default function Users() {
                     label: "Last Login",
                   },
                   {
-                    id: "userEmail",
+                    id: "adminEmail",
                     numeric: true,
                     label: "Email",
                   },
