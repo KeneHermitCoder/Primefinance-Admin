@@ -60,18 +60,17 @@ const LoanExpandableRow: React.FC<{
     openedDate: "",
     lengthOfCreditHistory: "",
     remarks: "",
+    userId: "",
   });
 
   const [modalData, setModalData] = useState<{
     type: 'approve' | 'decline';
+    loanDetails: any;
     message: string;
-    continueAction: () => void;
-    cancelAction: () => void;
   }>({
     type: 'approve',
+    loanDetails,
     message: 'Are you sure you want to continue with the loan approval?',
-    continueAction: () => {},
-    cancelAction: () => {},
   });
 
   const handleToggleModal = () => {
@@ -81,31 +80,18 @@ const LoanExpandableRow: React.FC<{
   const setLogModalData = (type: 'approve' | 'decline') => {
     setModalData({
       type,
+      loanDetails,
       message: `Are you sure you want to continue with the loan ${type === 'approve'? 'approval': 'decline'}?`,
-      continueAction: type === 'approve'? handleApproveLoan: handleDeclineLoan,
-      cancelAction: handleToggleModal,
     });
     handleToggleModal();
-  };
-
-  const handleApproveLoan = async () => {
-    // @ts-ignore
-    dispatch(new LoansAPI().approveLoan({ loanId: loanDetails.loanId }));
   }
 
-  const handleDeclineLoan = async () => {
-    // @ts-ignore
-    dispatch(new LoansAPI().declineLoan({ loanId: loanDetails.loanId }));
-  }
-
-  const { loanCreditScoreData } = useSelector(
-    (state: RootState) => state.loans
-  );
+  const { loanCreditScoreData, } = useSelector((state: RootState) => state.loans);
 
   const runCreditScore = () => {
     // Fetch loans when the component mounts
     // @ts-ignore
-    dispatch(new LoansAPI().getLoansCreditScoreData({ loanId: loanDetails.loanId }));
+    dispatch(new LoansAPI().getLoansCreditScoreData({ loanId: loanDetails.loanId, }));
   };
 
   useEffect(() => {
@@ -120,18 +106,17 @@ const LoanExpandableRow: React.FC<{
         message={`Are you sure you want to continue with the loan ${
           modalData.type === "approve" ? "approval" : "decline"
         }?`}
+        type={modalData.type}
         acceptText="Continue"
         rejectText="Cancel"
         handleOpen={handleToggleModal}
-        acceptAction={handleApproveLoan}
-        rejectAction={handleDeclineLoan}
-        acceptActionInProgress={loanCreditScoreData?.isLoading}
+        loanDetails={modalData.loanDetails}
       />
       <Box sx={{ width: "100%" }}>
         <Tabs
           value={activeTab}
           onChange={(_, newValue) => {
-            if (newValue === 1) runCreditScore();
+            if (newValue === 2) runCreditScore();
             setActiveTab(newValue);
           }}
           aria-label="loan details tabs"

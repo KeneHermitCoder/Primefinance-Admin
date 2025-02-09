@@ -45,6 +45,7 @@ export interface ICreditScore {
     openedDate: string;
     lengthOfCreditHistory: string;
     remarks: string;
+    userId: string;
   };
 
 export interface ILoanSliceState {

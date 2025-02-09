@@ -263,7 +263,7 @@ export default function LoanSearchFilterSortPaginateTable({
                     //   <TableRow>
                         <TableCell colSpan={headCells.length + 1}>
                           <LoanExpandableRow
-                            loanDetails={{...row.loanDetails, loanId: row.loanId}}
+                            loanDetails={{...row.loanDetails, loanId: row.loanId, userId: row.userId, }}
                           />
                         </TableCell>
                     //   </TableRow>
