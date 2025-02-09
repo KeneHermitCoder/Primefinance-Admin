@@ -15,6 +15,14 @@ interface IUserOverview {
 }
 
 export interface IUserSliceState {
+    allAdminsData: IResponseState<any[]>;
+    adminKPIData: IResponseState<{
+        newAdminsCount: number;
+        totalAdminsCount: number;
+        activeAdminsCount: number;
+        inactiveAdminsCount: number;
+    }>;
+    adminOverviewData: IResponseState<any[]> & IUserOverview;
     allUsersData: IResponseState<any[]>;
     userKPIData: IResponseState<{
         newUsersCount: number;

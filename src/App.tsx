@@ -20,8 +20,9 @@ import {
   Dashboard,
   LoansHome,
   Transactions,
-  Notifications,
+  // Notifications,
 } from "./routes";
+import { Admins } from "./routes/admin";
 
 const router = createBrowserRouter([
   {
@@ -73,10 +74,15 @@ const router = createBrowserRouter([
             errorElement: <ErrorPage />,
           },
           {
-            path: "/notifications",
-            element: <Notifications />,
+            path: "/admins",
+            element: <Admins />,
             errorElement: <ErrorPage />,
           },
+          // {
+          //   path: "/notifications",
+          //   element: <Notifications />,
+          //   errorElement: <ErrorPage />,
+          // },
           {
             path: "/settings",
             element: <Settings />,
