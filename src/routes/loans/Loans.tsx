@@ -203,11 +203,11 @@ export default function Loans() {
           )}
         </Stack>
 
-        <div className="flex flex-col md:flex-row gap-6">
+        <div className="flex flex-col xl:flex-row gap-6">
           <Stack
             spacing={1}
             justifyContent="space-between"
-            className="w-full md:w-3/5 bg-white p-4 rounded-[12px] self-start"
+            className="w-full xl:w-3/5 bg-white p-4 rounded-[12px] self-start"
           >
             <PrimaryBarChart
               title="Loan Transactions"
@@ -222,7 +222,7 @@ export default function Loans() {
           </Stack>
           <Stack
             spacing={1}
-            className="w-full md:w-2/5 bg-white p-4 rounded-[12px]"
+            className="w-full xl:w-2/5 bg-white p-4 rounded-[12px]"
           >
             <PrimaryPieChart
               title="Loan Transactions"
