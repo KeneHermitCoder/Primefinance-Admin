@@ -3,7 +3,7 @@ import { handleError, httpClient } from "../../utils";
 
 export default class LoansAPI {
 
-  private async fetchLoans(thunkAPI: any, page = 1, limit = 10) {
+  private async fetchLoans(_thunkAPI: any, page = 1, limit = 10) {
     try {
       const response = await httpClient({
         method: "GET",
@@ -17,7 +17,7 @@ export default class LoansAPI {
       const loan = response.data;
 
       // Validate the response structure
-      if (!loan) return thunkAPI.rejectWithValue("No loan data available");
+      if (!loan) throw new Error("No loan data available");
 
       // Ensure loans are always returned as an array
       return Array.isArray(loan)
@@ -25,7 +25,7 @@ export default class LoansAPI {
         : [loan];
     } catch (error) {
       // Handle exceptions properly
-      return thunkAPI.rejectWithValue(handleError(error));
+      throw error;
     }
   }
 
@@ -37,7 +37,7 @@ export default class LoansAPI {
     ) => {
       try {
         const response = await this.fetchLoans(thunkAPI, page, limit);
-        return response.data; 
+        return response;
       } catch (error: any) {
         return thunkAPI.rejectWithValue(handleError(error));
       }
@@ -81,58 +81,52 @@ export default class LoansAPI {
         const response = await this.fetchLoans(thunkAPI, page, limit);
 
         // Ensure 'data' is not null before accessing it
-        if (!response || response?.length < 1) return thunkAPI.rejectWithValue("No loan data available");
+        // if (!response || response?.length < 1) return thunkAPI.rejectWithValue("No loan data available");
+        if(!response) throw new Error("No loan data available")
 
         const loan = response;
 
-        alert(JSON.stringify(loan));
-        console.log({loan})
+        const dueLoans = loan.filter((l: any) => l.status === "due");
+        const pendingLoans = loan.filter((l: any) => l.status === "pending");
+        const repaidLoans = loan.filter((l: any) => l.status === "complete");
+        const overdueLoans = loan.filter((l: any) => new Date(l?.repayment_date || new Date()).getTime() < new Date().getTime());
+        const totalLoansRevenue = repaidLoans.reduce(
+          (acc: number, l: any) =>
+            acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),
+          0
+        );
+        const dueLoansRevenue = dueLoans.reduce(
+          (acc: number, l: any) =>
+            acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),
+          0
+        );
+        const activeLoansRevenue = pendingLoans.reduce(
+          (acc: number, l: any) =>
+            acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),
+          0
+        );
+        const repaidLoansRevenue = repaidLoans.reduce(
+          (acc: number, l: any) =>
+            acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),
+          0
+        );
+        const overdueLoansRevenue = overdueLoans.reduce(
+          (acc: number, l: any) =>
+            acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),
+          0
+        );
         return {
           totalLoans: loan.length || 0,
-          activeLoans: loan.filter((l: any) => l.status === "pending").length,
-          repaidLoans: loan.filter((l: any) => l.status === "complete").length,
-          overdueLoans: loan.filter((l: any) => l.status === "overdue").length,
-          totalLoansRevenue: loan.reduce(
-            (acc: number, l: any) =>
-              acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),
-            0
-          ),
-          // totalLoansRevenue: 4000,
-          dueLoansRevenue: loan
-            .filter((l: any) => l.status === "due")
-            .reduce(
-              (acc: number, l: any) =>
-                acc +
-                (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),
-              0
-            ),
-          activeLoansRevenue: loan
-            .filter((l: any) => l.status === "pending")
-            .reduce(
-              (acc: number, l: any) =>
-                acc +
-                (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),
-              0
-            ),
-          repaidLoansRevenue: loan
-            .filter((l: any) => l.status === "complete")
-            .reduce(
-              (acc: number, l: any) =>
-                acc +
-                (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),
-              0
-            ),
-          overdueLoansRevenue: loan
-            .filter((l: any) => new Date(l.repayment_date)?.getTime() < new Date().getTime())
-            .reduce(
-              (acc: number, l: any) =>
-                acc +
-                (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),
-              0
-            ),
+          activeLoans: pendingLoans.length,
+          repaidLoans: repaidLoans.length,
+          overdueLoans: overdueLoans.length,
+          totalLoansRevenue,
+          dueLoansRevenue,
+          activeLoansRevenue,
+          repaidLoansRevenue,
+          overdueLoansRevenue,
         };
       } catch (error) {
-        alert(JSON.stringify(error));
         return thunkAPI.rejectWithValue(handleError(error));
       }
     }
