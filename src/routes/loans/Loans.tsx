@@ -38,7 +38,7 @@ export default function Loans() {
     // @ts-ignore
     dispatch(new LoansAPI().getLoanOverviewData({ page: 0, limit: 10 }));
     // @ts-ignore
-    dispatch(new LoansAPI().getLoansKPIData());
+    dispatch(new LoansAPI().getLoansKPIData({ page: 0, limit: 10 }));
     // @ts-ignore
     dispatch(new LoansAPI().getMultipleLoans({ page: 0, limit: 10 }));
   }, [dispatch]);
@@ -50,7 +50,8 @@ export default function Loans() {
         customerName: `${loan.first_name} ${loan.last_name}`,
         loanId: loan._id,
         amount: `₦${loan.amount}`,
-        interest: `₦${((loan.percentage / 100) * loan.amount).toFixed(2)}`,
+        // interest: `₦${(((loan.percentage || 0) / 100) * loan.amount).toFixed(2)}`,
+        interest: `${loan.percentage?.toString()?.includes("%") ? loan.percentage : `${loan.percentage}%`}`,
         date: loan.repayment_date,
         status: loan.status,
         actions: [],

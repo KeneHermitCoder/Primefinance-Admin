@@ -116,7 +116,8 @@ export default class LoansAPI {
           0
         );
         return {
-          totalLoans: loan.length || 0,
+          dueLoans: dueLoans.length,
+          totalLoans: loan.length,
           activeLoans: pendingLoans.length,
           repaidLoans: repaidLoans.length,
           overdueLoans: overdueLoans.length,

@@ -12,7 +12,7 @@ export default class UsersAPI {
     }, thunkAPI) => {
         try {
             const response = await httpClient({
-                method: 'POST',
+                method: 'get',
                 url: '/api/users/get-users',
                 data: {},
                 isAuth: true,
@@ -20,6 +20,7 @@ export default class UsersAPI {
                 // params: options.params,
             });
             console.log({ response, })
+            return response.data;
         } catch (error: any) {
             console.log({ error, });
             const errorResponse = handleError(error);
@@ -69,14 +70,18 @@ export default class UsersAPI {
             });
             const data = response.data;
             return {
-                newUsersCount: data?.filter((user: any) => user.status === 'active').length || 0,
+                newUsersCount: data?.filter((user: any) => {
+                    const createdAt = new Date(user?.createdAt);
+                    const sevenDaysAgo = new Date();
+                    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 17);
+                    return createdAt.getTime() > sevenDaysAgo.getTime();
+                }).length || 0,
                 totalUsersCount: data.length || 0,
-                activeUsersCount: data?.filter((user: any) => user.status === 'active').length || 0,
-                flaggedUsersCount: data?.filter((user: any) => user.status === 'flagged').length || 0
+                activeUsersCount: data?.filter((user: any) => user.confirmed_at).length || 0,
+                flaggedUsersCount: data?.filter((user: any) => !user.confirmed_at).length || 0
 
             };
         } catch (error: any) {
-            console.log({ error, });
             const errorResponse = handleError(error);
             thunkAPI.rejectWithValue(errorResponse);
         }

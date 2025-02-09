@@ -1,18 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { handleError, httpClient } from "../../utils";
 
-interface Transaction {
-  _id: string;
-  name: string;
-  amount: number;
-  type: string;
-  category: string;
-  status: string;
-  created_at: string;
-}
-
 export default class TransactionsAPI {
-  private async fetchTransactions(thunkAPI: any) {
+  private async fetchTransactions(_thunkAPI: any) {
     try {
       const response = await httpClient({
         method: "GET",
@@ -25,53 +15,34 @@ export default class TransactionsAPI {
       const transaction = response.data;
 
       // Validate the response structure
-      if (!transaction) return thunkAPI.rejectWithValue("No transaction data available");
+      if (!transaction) throw new Error("No transaction data available");
 
       // Ensure transactions are always returned as an array
       return Array.isArray(transaction)
         ? transaction
         : [transaction];
     } catch (error) {
-      // Handle exceptions properly
-      return thunkAPI.rejectWithValue(handleError(error));
+      throw error;
     }
   }
 
   public getMultipleTransactions = createAsyncThunk(
     "transactions/getallTransactions",
-    async (thunkAPI) => {
-      return await this.fetchTransactions(thunkAPI);
+    async (thunkAPI: any) => {
+      try {
+        const response = await this.fetchTransactions(thunkAPI);
+        return response;
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(handleError(error));
+      }
     }
   );
 
   public getTransactionOverviewData = createAsyncThunk(
     "transactions/getTransactionOverviewData",
     async (_, thunkAPI) => {
-      const transactions: Transaction[] = await this.fetchTransactions(
-        thunkAPI
-      );
-
-      const overviewData = {
-        id: [] as string[],
-        name: [] as string[],
-        amount: [] as number[],
-        type: [] as string[],
-        category: [] as string[],
-        status: [] as string[],
-        created_at: [] as string[],
-      };
-
-      transactions.forEach((tranx) => {
-        overviewData.id.push(tranx._id);
-        overviewData.name.push(tranx.name);
-        overviewData.amount.push(tranx.amount);
-        overviewData.type.push(tranx.type);
-        overviewData.category.push(tranx.category);
-        overviewData.status.push(tranx.status);
-        overviewData.created_at.push(tranx.created_at);
-      });
-
-      return overviewData;
+      const transactions: any[] = await this.fetchTransactions(thunkAPI);
+      return transactions;
     }
   );
 
@@ -79,7 +50,7 @@ export default class TransactionsAPI {
     "transactions/getTransactionsKPIData",
     async (_, thunkAPI) => {
       try {
-        const transactions: Transaction[] = await this.fetchTransactions(
+        const transactions: any[] = await this.fetchTransactions(
           thunkAPI
         );
   

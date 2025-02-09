@@ -102,11 +102,11 @@ export function Dashboard() {
               backgroundColour="#f5eac9"
             />
           </div>
-          <div className="flex flex-col lg:flex-row gap-6">
+          <div className="flex flex-col xl:flex-row gap-6">
             <Stack
               spacing={2.5}
               // justifyContent="space-between"
-              className="w-full lg:w-2/5 bg-white p-4 rounded-[12px] self-start"
+              className="w-full xl:w-2/5 bg-white p-4 rounded-[12px] self-start"
             >
               <PrimaryPieChart
                 title="Loan Transactions"
@@ -161,7 +161,7 @@ export function Dashboard() {
             <Stack
               spacing={2.5}
               // justifyContent="space-between"
-              className="w-full lg:w-3/5"
+              className="w-full xl:w-3/5"
             >
               <Stack
                 direction="row"
