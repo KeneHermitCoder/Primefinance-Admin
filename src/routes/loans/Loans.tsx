@@ -34,7 +34,6 @@ export default function Loans() {
   } = useSelector((state: RootState) => state.loans);
 
   useEffect(() => {
-    // Fetch loans when the component mounts
     // @ts-ignore
     dispatch(new LoansAPI().getLoanOverviewData({ page: 0, limit: 10 }));
     // @ts-ignore
@@ -49,7 +48,7 @@ export default function Loans() {
       const modifiedLoansData = allLoansData.data.map((loan: any) => ({
         customerName: `${loan.first_name} ${loan.last_name}`,
         loanId: loan._id,
-        amount: `₦${loan.amount}`,
+        amount: `₦ ${formatNumberToMultipleCommas(loan.amount)}`,
         // interest: `₦${(((loan.percentage || 0) / 100) * loan.amount).toFixed(2)}`,
         interest: `${loan.percentage?.toString()?.includes("%") ? loan.percentage : `${loan.percentage}%`}`,
         date: loan.repayment_date,
@@ -229,15 +228,15 @@ export default function Loans() {
               data={[
                 {
                   label: "Active Loans",
-                  value: loanKPIData.isLoading ? 0 : loanKPIData.data.activeLoansRevenue || 20,
+                  value: loanKPIData.isLoading ? 0 : loanKPIData.data.activeLoansRevenue || 0, 
                 },
                 {
                   label: "Repaid Loans",
-                  value: loanKPIData.isLoading ? 0 : loanKPIData.data.repaidLoansRevenue || 30,
+                  value: loanKPIData.isLoading ? 0 : loanKPIData.data.repaidLoansRevenue || 0,
                 },
                 {
                   label: "Overdue Loans",
-                  value: loanKPIData.isLoading ? 0 : loanKPIData.data.overdueLoansRevenue || 40,
+                  value: loanKPIData.isLoading ? 0 : loanKPIData.data.overdueLoansRevenue || 0,
                 },
               ]}
               metadata={{

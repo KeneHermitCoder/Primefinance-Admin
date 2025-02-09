@@ -5,9 +5,9 @@ import {
   Reveal,
   PrimaryPieChart,
   PrimaryLineChart,
-  SearchFilterSortPaginateTable,
-  PrimaryTableSkeleton,
   KPILoadingSkeleton,
+  PrimaryTableSkeleton,
+  SearchFilterSortPaginateTable,
 } from "../../components";
 import {
   PersonAdd,
@@ -96,7 +96,7 @@ export default function Transactions() {
           justifyContent="space-between"
           className="bg-white p-4 rounded-[12px]"
         >
-          {transactionOverviewData.isLoading ? (
+          {transactionOverviewData.isLoading || transactionOverviewData.data?.length < 1 ? (
             <PrimaryTableSkeleton />
           ) : (
             <SearchFilterSortPaginateTable
