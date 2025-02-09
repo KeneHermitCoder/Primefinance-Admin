@@ -48,6 +48,7 @@ export default function Loans() {
       const modifiedLoansData = allLoansData.data.map((loan: any) => ({
         customerName: `${loan.first_name} ${loan.last_name}`,
         loanId: loan._id,
+        userId: loan.userId,
         amount: `₦ ${formatNumberToMultipleCommas(loan.amount)}`,
         // interest: `₦${(((loan.percentage || 0) / 100) * loan.amount).toFixed(2)}`,
         interest: `${loan.percentage?.toString()?.includes("%") ? loan.percentage : `${loan.percentage}%`}`,
@@ -71,6 +72,7 @@ export default function Loans() {
           phoneNumber: loan.phone,
           bvn: loan.bvn,
           nin: loan.nin,
+          userId: loan.userId,
         },
         // creditCheck: {
         //   lastReported: "2025-01-10",

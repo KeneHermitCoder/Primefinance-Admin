@@ -16,6 +16,7 @@ export default class LoansAPI {
       // Extract data from the response
       const loan = response.data;
 
+      console.log({loan})
       // Validate the response structure
       if (!loan) throw new Error("No loan data available");
 
@@ -37,6 +38,7 @@ export default class LoansAPI {
     ) => {
       try {
         const response = await this.fetchLoans(thunkAPI, page, limit);
+        console.log({response})
         return response;
       } catch (error: any) {
         return thunkAPI.rejectWithValue(handleError(error));
@@ -151,8 +153,6 @@ export default class LoansAPI {
           data: { transactionId: loanId.toString() },
         });
 
-        console.log({response})
-
         // Ensure 'data' is not null before accessing it
         if (!response || !response.data) return thunkAPI.rejectWithValue("No loan data available");
 
@@ -170,6 +170,7 @@ export default class LoansAPI {
           openedDate: response.data.openedDate,
           lengthOfCreditHistory: response.data.lengthOfCreditHistory,
           remarks: response.data.remarks,
+          userId: response.data.userId,
         };
       } catch (error) {
         return thunkAPI.rejectWithValue(handleError(error));
@@ -177,15 +178,19 @@ export default class LoansAPI {
     }
   );
 
-  public approveLoan = createAsyncThunk(
+  public approveLoan = createAsyncThunk( 
     "loans/approveLoan",
     async (
       {
         loanId,
-        status,
+        userId,
+        amount,
+        duration,
       }: {
+        amount: number;
         loanId: string;
-        status: string;
+        userId: string;
+        duration: number;
       },
       thunkAPI
     ) => {
@@ -194,11 +199,16 @@ export default class LoansAPI {
           method: "POST",
           url: `/api/loans/create-and-disburse-loan`,
           isAuth: true,
-          data: { loanId, status },
+          data: {
+            userId,
+            duration: duration || '30',
+            transactionId: loanId,
+            amount: amount.toString() },
         });
 
         return response.data;
       } catch (error) {
+        console.log(JSON.stringify(error, null, 2));
         return thunkAPI.rejectWithValue(handleError(error));
       }
     }
@@ -219,6 +229,7 @@ export default class LoansAPI {
       thunkAPI
     ) => {
       try {
+        console.log({ loanId, amount, duration });
         const response = await httpClient({
           method: "POST",
           url: `/api/loans/reject-loan`,
@@ -226,7 +237,7 @@ export default class LoansAPI {
           data: { 
             transactionId: loanId,
             amount, 
-            duration 
+            duration: 30 
           },
         });
         return response.data;

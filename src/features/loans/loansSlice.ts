@@ -66,6 +66,7 @@ const loansSlice = createSlice({
     loanCreditScoreData: {
       data: {
         loanId: "",
+        userId: "",
         lastReported: "",
         creditorName: "",
         totalDebt: "",
@@ -84,13 +85,13 @@ const loansSlice = createSlice({
       success: false,
     },
     approveLoanData: {
-      data: [],
+      data: {},
       error: null,
       isLoading: true,
       success: false,
     },
     declineLoanData: {
-      data: [],
+      data: {},
       error: null,
       isLoading: true,
       success: false,

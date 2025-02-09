@@ -76,7 +76,10 @@ const httpClient = async (options: RequestOptions) => {
       method: options.method,
       url: options.url,
       data: options.data,
-      headers: options.headers,
+      headers: {
+        ...options.headers,
+        // 'Access-Control-Allow-Origin': '*',
+      },
       params: options.params,
     });
 
