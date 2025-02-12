@@ -60,27 +60,37 @@ export default class TransactionsAPI {
         ).length;
         const pendingTranxCount = transactions.filter(
           (t) => t.status === "active"
-        ).length;
+        ).length || 0;
         const totalTransactions = transactions.reduce(
           (acc, t) => acc + (t.amount || 0),
           0
-        );
+        ) || 0;
         const successfulTranxCount = transactions.filter(
           (t) => t.status === "success"
         ).length;
         const failedTransactions = transactions.reduce(
           (acc, t) => acc + (t.status === "failed" ? t.amount : 0),
           0
-        );
+        ) || 0;
         const pendingTransactions = transactions.reduce(
           (acc, t) => acc + (t.status === "active" ? t.amount : 0),
           0
-        );
+        ) || 0;
         const successfulTransactions = transactions.reduce(
           (acc, t) => acc + (t.status === "success" ? t.amount : 0),
           0
-        );
+        ) || 0;
 
+        console.log({
+          totalTranxCount,
+          failedTranxCount,
+          pendingTranxCount,
+          totalTransactions,
+          successfulTranxCount,
+          failedTransactions,
+          pendingTransactions,
+          successfulTransactions,
+        })
         return {
           totalTranxCount,
           failedTranxCount,

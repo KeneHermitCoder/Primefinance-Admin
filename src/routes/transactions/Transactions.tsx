@@ -188,7 +188,7 @@ export default function Transactions() {
                 },
                 {
                   label: "Successfull",
-                  value: transactionKPIData.isLoading ? 0 : transactionKPIData.data.successfullTransactions,
+                  value: transactionKPIData.isLoading ? 0 : transactionKPIData.data.successfulTransactions,
                 },
               ]}
               metadata={{
