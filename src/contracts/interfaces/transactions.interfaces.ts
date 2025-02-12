@@ -24,7 +24,7 @@ export interface ITransactionSliceState {
         failedTransactions: number;
         pendingTransactions: number;
         successfulTranxCount: number;
-        successfullTransactions: number;
+        successfulTransactions: number;
     }>;
     transactionOverviewData: IResponseState<any[]> & ITransactionOverview;
 }
