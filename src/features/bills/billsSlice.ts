@@ -27,6 +27,7 @@ const billsSlice = createSlice({
             data: {
                 totalBills: 0,
                 totalBillsCount: 0,
+                otherBillsCount: 0,
                 failedBillsCount: 0,
                 pendingBillsCount: 0,
                 airtimeBillsCount: 0,

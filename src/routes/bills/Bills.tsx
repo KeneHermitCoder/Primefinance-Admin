@@ -6,14 +6,17 @@ import {
   Reveal,
   SearchFilterSortPaginateTable,
 } from "../../components";
+import CloseIcon from '@mui/icons-material/Close';
 import BillPaymentKPIDisplay from "../../components/billPaymentKPITop";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import BillsKPIDisplay from "../../components/billsKPI";
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
+import MiscellaneousServicesIcon from "@mui/icons-material/MiscellaneousServices";
+
 import {
   AttachMoney,
-  CardGiftcard,
+  // CardGiftcard,
   ElectricalServices,
   Subscriptions,
 } from "@mui/icons-material";
@@ -27,7 +30,7 @@ export default function Bills() {
   const dispatch = useDispatch();
   const [rows, setRows] = useState<{ [key: string]: any }[]>([]);
 
-  const { billKPIData, billOverviewData } = useSelector(
+  const { billKPIData, allBillsData, billOverviewData } = useSelector(
     (state: RootState) => state.bills
   );
 
@@ -37,25 +40,26 @@ export default function Bills() {
     dispatch(new BillsAPI().getBillOverviewData({ page: 0, limit: 10 }));
     // @ts-ignore
     dispatch(new BillsAPI().getBillsKPIData());
+    // @ts-ignore
+    dispatch(new BillsAPI().getMultipleBills({ page: 0, limit: 10 }));
   }, [dispatch]);
 
   useEffect(() => {
-    if (billOverviewData.data.length > 0) {
-      const modifiedBillData = billOverviewData.data.map(
-        (bill: any) => ({
-          name: `${bill.name}`,
-          transactionId: bill.id,
-          // type: bill.type,
-          type: bill.category,
-          amount: `₦${bill.amount}`,
-          date: bill.created_at,
-          status: bill.status,
-          metadata: {
-            itemPhoto:
-              "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
-          },
-        })
-      );
+    console.log({ allBillsData });
+    if (allBillsData.data.length > 0) {
+      const modifiedBillData = allBillsData.data.map((bill: any) => ({
+        name: `${bill.name}`,
+        transactionId: bill._id,
+        // type: bill.type,
+        type: bill.category,
+        amount: `₦${bill.amount}`,
+        date: bill.created_at,
+        status: bill.status,
+        metadata: {
+          itemPhoto:
+            "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+        },
+      }));
       setRows(modifiedBillData);
     }
   }, [billOverviewData.data, setRows]);
@@ -73,7 +77,9 @@ export default function Bills() {
                 kpiIcon={
                   <PaymentsIcon style={{ fontSize: 32, color: "#4caf50" }} />
                 }
-                total={`${formatNumberToMultipleCommas(billKPIData.data.totalBillsCount)}`}
+                total={`${formatNumberToMultipleCommas(
+                  billKPIData.data.totalBillsCount
+                )}`}
                 backgroundColour="lightgreen"
               />
 
@@ -84,18 +90,20 @@ export default function Bills() {
                     style={{ fontSize: 32, color: "#1976d2" }}
                   />
                 }
-                total={`₦${formatNumberToMultipleCommas(billKPIData.data.totalBills)}`}
+                total={`₦${formatNumberToMultipleCommas(
+                  billKPIData.data.totalBills
+                )}`}
                 backgroundColour="#fff"
               />
 
-              {/* <BillPaymentKPIDisplay
-                title="Flagged Accounts"
+              <BillPaymentKPIDisplay
+                title="Failed Transactions"
                 kpiIcon={
-                  <FlagIcon style={{ fontSize: 32, color: "#f44336" }} />
+                  <CloseIcon style={{ fontSize: 32, color: "#f44336" }} />
                 }
-                total="150"
+                total={`${formatNumberToMultipleCommas(billKPIData.data.failedBillsCount)}`}
                 backgroundColour="lightblue"
-              /> */}
+              />
 
               <BillPaymentKPIDisplay
                 title="Pending Transactions"
@@ -104,7 +112,9 @@ export default function Bills() {
                     style={{ fontSize: 32, color: "#ff9800" }}
                   />
                 }
-                total={`${formatNumberToMultipleCommas(billKPIData.data.pendingBillsCount)}`}
+                total={`${formatNumberToMultipleCommas(
+                  billKPIData.data.pendingBillsCount
+                )}`}
                 backgroundColour="#fff8e1"
               />
             </div>
@@ -116,26 +126,41 @@ export default function Bills() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 md:divide-x-2 divide-y-2 lg:divide-y-0">
               <BillsKPIDisplay
                 subtitle="Airtime & Internet"
-                total={`${formatNumberToMultipleCommas(billKPIData.data.airtimeBillsCount)}`}
+                total={`${formatNumberToMultipleCommas(
+                  billKPIData.data.airtimeBillsCount
+                )}`}
                 kpiIcon={<AttachMoney sx={{ color: "success.main" }} />}
               />
 
               <BillsKPIDisplay
                 subtitle="Tv subscription"
-                total={`${formatNumberToMultipleCommas(billKPIData.data.tvSubscriptionBillsCount)}`}
+                total={`${formatNumberToMultipleCommas(
+                  billKPIData.data.tvSubscriptionBillsCount
+                )}`}
                 kpiIcon={<Subscriptions sx={{ color: "primary.main" }} />}
               />
-
+              {/* 
               <BillsKPIDisplay
                 subtitle="Gift Cards"
                 total={`${formatNumberToMultipleCommas(billKPIData.data.giftCardBillsCount)}`}
                 kpiIcon={<CardGiftcard sx={{ color: "error.main" }} />}
-              />
+              /> */}
 
               <BillsKPIDisplay
                 subtitle="Electricity"
-                total={`${formatNumberToMultipleCommas(billKPIData.data.electricityBillsCount)}`}
+                total={`${formatNumberToMultipleCommas(
+                  billKPIData.data.electricityBillsCount
+                )}`}
                 kpiIcon={<ElectricalServices sx={{ color: "warning.main" }} />}
+              />
+              <BillsKPIDisplay
+                subtitle="Others"
+                total={`${formatNumberToMultipleCommas(
+                  billKPIData.data.otherBillsCount
+                )}`}
+                kpiIcon={
+                  <MiscellaneousServicesIcon sx={{ color: "info.main" }} />
+                }
               />
             </div>
           )}
@@ -209,15 +234,6 @@ export default function Bills() {
                 rows={rows}
               />
             )}
-          </Stack>
-          <Stack
-            sx={{ backgroundColor: "#fff", borderRadius: 5 }}
-            spacing={1}
-            justifyContent="space-between"
-            className=" p-4 "
-          >
-            {/* <TransactionOverview header="Bill Table" />
-            <EnhancedTable data={billsKPIData} columns={columns} /> */}
           </Stack>
         </Stack>
       </Reveal>

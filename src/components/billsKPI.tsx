@@ -25,7 +25,7 @@ export default function BillsKPIDisplay({
 
         {/* Title and Subtitle */}
         <div className="flex flex-col ml-3">
-          <span className="text-lg font-semibold text-gray-800">{total}</span>
+          <span className="text-4xl font-semibold text-gray-800">{total}</span>
           {subtitle && (
             <span className="text-sm text-gray-500 mt-1">{subtitle}</span>
           )}
