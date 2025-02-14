@@ -55,17 +55,9 @@ const authSlice = createSlice({
       (state, action: PayloadAction<any>) => {
         state.isLoading = false;
         state.success = true;
-
-        if (action.payload) {
-          const { accessToken, ...adminDetails } = action.payload;
-          state.admin = adminDetails; // Store admin details
-
-          // Save token to local storage
-          // useLocalStorage('set', { name: 'accessToken', value: accessToken });
-          useLocalStorage('set', { name: 'adminDetails', value: action.payload });
-        }
-
         state.error = null;
+        state.admin = action.payload;
+        useLocalStorage('set', { name: 'adminDetails', value: action.payload });
       }
     )
     .addCase(login.rejected, (state, action: PayloadAction<any>) => {
