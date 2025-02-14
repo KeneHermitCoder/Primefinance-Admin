@@ -87,47 +87,78 @@ export default class LoansAPI {
         if(!response) throw new Error("No loan data available")
 
         const loan = response;
+
+        // alert(JSON.stringify(loan));
+        const totalLoans = loan.filter((l: any) => l.status !== 'rejected');
+        const totalLoansAmount = totalLoans.reduce(
+          (acc: number, l: any) =>
+            acc + (isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)),
+          0
+        );
+        const totalLoansCount = totalLoans.length;
+
         const dueLoans = loan.filter((l: any) => l.status === "due");
+        const dueLoansAmount = dueLoans.reduce(
+          (acc: number, l: any) =>
+            acc + (isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)),
+          0
+        );
+        const dueLoansCount = dueLoans.length;
+
         const pendingLoans = loan.filter((l: any) => l.status === "pending");
+        const pendingLoansAmount = pendingLoans.reduce(
+          (acc: number, l: any) =>
+            acc + (isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)),
+          0
+        );
+        const pendingLoansCount = pendingLoans.length;
+
+        const activeLoans = loan.filter((l: any) => l.status === "accepted" && l.loan_payment_status !== 'complete');
+        const activeLoansAmount = activeLoans.reduce(
+          (acc: number, l: any) =>
+            acc + (isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)),
+          0
+        );
+        const activeLoansCount = activeLoans.length;
+
         const repaidLoans = loan.filter((l: any) => l.loan_payment_status === "complete");
-        const overdueLoans = loan.filter((l: any) => new Date(l?.repayment_date || new Date()).getTime() < new Date().getTime() && l.status === "pending");
-        const totalLoansRevenue = repaidLoans.reduce(
+        const repaidLoansAmount = repaidLoans.reduce(
           (acc: number, l: any) =>
             acc + ((isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)) - (isNaN(Number.parseFloat(l.requested_amount)) ? 0 : Number(l.requested_amount))) + 500,
           0
         );
-        const dueLoansRevenue = dueLoans.reduce(
+        const repaidLoansCount = repaidLoans.length;
+
+
+        const overdueLoans = loan.filter((l: any) => new Date(l?.repayment_date || new Date()).getTime() < new Date().getTime() && l.status === "pending");
+        const overdueLoansAmount = overdueLoans.reduce(
           (acc: number, l: any) =>
-            acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),
+            acc + (isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)),
           0
         );
-        const activeLoansRevenue = pendingLoans.reduce(
-          (acc: number, l: any) =>
-            acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),
-          0
-        );
-        const repaidLoansRevenue = repaidLoans.reduce(
-          (acc: number, l: any) =>
-            acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),
-          0
-        );
-        const overdueLoansRevenue = overdueLoans.reduce(
-          (acc: number, l: any) =>
-            acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),
-          0
-        );
+        const overdueLoansCount = overdueLoans.length;
+
+
         return {
-          dueLoans: dueLoans.length,
-          totalLoans: loan.length,
-          activeLoans: pendingLoans.length,
-          repaidLoans: repaidLoans.length,
-          overdueLoans: overdueLoans.length,
-          totalLoansRevenue,
-          dueLoansRevenue,
-          activeLoansRevenue,
-          repaidLoansRevenue,
-          overdueLoansRevenue,
-        };
+          totalLoansCount,
+          totalLoansAmount,
+
+          dueLoansCount,
+          dueLoansAmount,
+
+          pendingLoansCount,
+          pendingLoansAmount,
+
+          activeLoansCount,
+          activeLoansAmount,
+
+          repaidLoansCount,
+          repaidLoansAmount,
+
+          overdueLoansCount,
+          overdueLoansAmount,
+
+        }
       } catch (error) {
         return thunkAPI.rejectWithValue(handleError(error));
       }
@@ -157,22 +188,6 @@ export default class LoansAPI {
 
         console.log({responseufbbrubrubiure: response.data});
         const creditScoredata = response?.data?.credit_score || {};
-        // return {
-        //   loanId: response.data.loanId,
-        //   lastReported: response.data.lastReported,
-        //   creditorName: response.data.creditorName,
-        //   totalDebt: response.data.totalDebt,
-        //   accountype: response.data.accountype,
-        //   outstandingBalance: response.data.outstandingBalance,
-        //   activeLoan: response.data.activeLoan,
-        //   loansTaken: response.data.loansTaken,
-        //   income: response.data.income,
-        //   repaymentHistory: response.data.repaymentHistory,
-        //   openedDate: response.data.openedDate,
-        //   lengthOfCreditHistory: response.data.lengthOfCreditHistory,
-        //   remarks: response.data.remarks,
-        //   userId: response.data.userId,
-        // };
         return {
           loanId: creditScoredata?.loanId || "",
           lastReported: creditScoredata?.lastReported || "",
@@ -263,5 +278,4 @@ export default class LoansAPI {
       }
     }
   );
-
 }

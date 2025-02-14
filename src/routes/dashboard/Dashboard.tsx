@@ -98,7 +98,7 @@ export function Dashboard() {
             />
             <DashboardAmountDisplay
               title="Total Loans Revenue"
-              amount={`₦${formatNumberToMultipleCommas(loanKPIData.data.totalLoansRevenue)}`}
+              amount={`₦${formatNumberToMultipleCommas(loanKPIData.data.repaidLoansAmount)}`}
               backgroundColour="#f5eac9"
             />
           </div>
@@ -113,15 +113,15 @@ export function Dashboard() {
                 data={[
                   {
                     label: "Active Loans",
-                    value: loanKPIData.isLoading ? 0 : loanKPIData.data.activeLoansRevenue || 0 ,
+                    value: loanKPIData.isLoading ? 0 : loanKPIData.data.activeLoansAmount || 0 ,
                   },
                   {
                     label: "Repaid Loans",
-                    value: loanKPIData.isLoading ? 0 : loanKPIData.data.repaidLoansRevenue || 0,
+                    value: loanKPIData.isLoading ? 0 : loanKPIData.data.repaidLoansAmount || 0,
                   },
                   {
                     label: "Overdue Loans",
-                    value: loanKPIData.isLoading ? 0 : loanKPIData.data.overdueLoansRevenue || 0,
+                    value: loanKPIData.isLoading ? 0 : loanKPIData.data.overdueLoansAmount || 0,
                   },
                 ]}
                 metadata={{
