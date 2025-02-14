@@ -19,6 +19,7 @@ export interface IBillSliceState {
     billKPIData: IResponseState<{
         totalBills: number;
         totalBillsCount: number;
+        otherBillsCount: number;
         failedBillsCount: number;
         pendingBillsCount: number;
         airtimeBillsCount: number;

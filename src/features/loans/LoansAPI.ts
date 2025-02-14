@@ -91,7 +91,7 @@ export default class LoansAPI {
         const dueLoans = loan.filter((l: any) => l.status === "due");
         const pendingLoans = loan.filter((l: any) => l.status === "pending");
         const repaidLoans = loan.filter((l: any) => l.status === "complete");
-        const overdueLoans = loan.filter((l: any) => new Date(l?.repayment_date || new Date()).getTime() < new Date().getTime());
+        const overdueLoans = loan.filter((l: any) => new Date(l?.repayment_date || new Date()).getTime() < new Date().getTime() && l.status === "pending");
         const totalLoansRevenue = repaidLoans.reduce(
           (acc: number, l: any) =>
             acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),

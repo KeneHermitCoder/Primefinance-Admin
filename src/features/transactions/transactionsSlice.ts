@@ -30,7 +30,7 @@ const initialState: ITransactionSliceState = {
       failedTransactions: 0,
       pendingTransactions: 0,
       successfulTranxCount: 0,
-      successfullTransactions: 0,
+      successfulTransactions: 0,
     },
     error: null,
     isLoading: true,
