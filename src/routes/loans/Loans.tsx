@@ -51,7 +51,7 @@ export default function Loans() {
         userId: loan.userId,
         amount: `₦ ${formatNumberToMultipleCommas(loan.amount)}`,
         // interest: `₦${(((loan.percentage || 0) / 100) * loan.amount).toFixed(2)}`,
-        interest: `${loan.percentage?.toString()?.includes("%") ? loan.percentage : `${loan.percentage}%`}`,
+        interest: `${`${loan.percentage}`?.includes("%") ? loan.percentage : `${loan.percentage}%`}`,
         date: loan.repayment_date,
         status: loan.status,
         actions: [],
@@ -73,21 +73,7 @@ export default function Loans() {
           bvn: loan.bvn,
           nin: loan.nin,
           userId: loan.userId,
-        },
-        // creditCheck: {
-        //   lastReported: "2025-01-10",
-        //   creditorName: "XYZ Bank",
-        //   totalDebt: "₦15,000",
-        //   accountype: "current",
-        //   outstandingBalance: 5000,
-        //   activeLoan: 1,
-        //   loansTaken: 2,
-        //   income: 90000,
-        //   repaymentHistory: "Fair",
-        //   openedDate: "2019-06-15",
-        //   lengthOfCreditHistory: "6 years",
-        //   remarks: "Needs attention",
-        // },
+        }
       }));
       setRows(modifiedLoansData);
     }
@@ -147,7 +133,73 @@ export default function Loans() {
             <PrimaryTableSkeleton />
           ) : (
             <LoanSearchFilterSortPaginateTable
-              title="Loan Overview"
+              title="Personal Loans"
+              searchParams={["customerName", "loanId", "status"]}
+              filterParams={{
+                data: [
+                  {
+                    label: "Date",
+                    options: ["Today", "This Week", "This Month", "This Year"],
+                  },
+                  {
+                    label: "Status",
+                    options: ["pending", "active", "repaid"],
+                  },
+                ],
+                action: tableFilterAction,
+              }}
+              headCells={[
+                {
+                  id: "customerName",
+                  numeric: false,
+                  label: "Name",
+                },
+                {
+                  id: "loanId",
+                  numeric: true,
+                  label: "Loan Id",
+                },
+                {
+                  id: "amount",
+                  numeric: true,
+                  label: "Amount",
+                },
+                {
+                  id: "interest",
+                  numeric: true,
+                  label: "Interest",
+                },
+                {
+                  id: "date",
+                  numeric: false,
+                  label: "Due Date",
+                },
+                {
+                  id: "status",
+                  numeric: false,
+                  label: "Status",
+                },
+                {
+                  id: "actions",
+                  numeric: false,
+                  label: "Actions",
+                },
+              ]}
+              rows={rows}
+            />
+          )}
+        </Stack>
+
+        <Stack
+          spacing={1}
+          justifyContent="space-between"
+          className="bg-white p-4 rounded-[12px]"
+        >
+          {allLoansData.isLoading ? (
+            <PrimaryTableSkeleton />
+          ) : (
+            <LoanSearchFilterSortPaginateTable
+              title="Working Loans"
               searchParams={["customerName", "loanId", "status"]}
               filterParams={{
                 data: [

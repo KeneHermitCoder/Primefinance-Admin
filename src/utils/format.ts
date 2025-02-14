@@ -22,7 +22,7 @@ export function formatDateToDDMMYYYY(isoDateString: string) {
 }
 
 export function formatNumberToMultipleCommas(number: number) {
-  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return number?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")?? number;
 }
 
 export function formatNumberToMultiplesOfTenString(number: number) {
