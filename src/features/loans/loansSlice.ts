@@ -48,6 +48,8 @@ const loansSlice = createSlice({
     },
     loanKPIData: {
       data: {
+        loansRevenue: 0,
+
         totalLoansCount: 0,
         totalLoansAmount: 0,
 

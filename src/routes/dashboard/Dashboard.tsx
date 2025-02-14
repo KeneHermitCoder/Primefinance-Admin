@@ -46,6 +46,7 @@ export function Dashboard() {
     dispatch(new TransactionsAPI().getTransactionsKPIData());
   }, [dispatch]);
   useEffect(() => {
+    console.log({loanOverviewData})
     if (loanOverviewData?.data?.length > 0) {
       const modifiedLoansData = loanOverviewData.data.map((loan: any) => ({
         customerName: `${loan.first_name} ${loan.last_name}`,
@@ -79,7 +80,7 @@ export function Dashboard() {
             />
             <DashboardAmountDisplay
               title="Total users"
-              amount={formatNumberToMultipleCommas(userKPIData.data.totalUsersCount)}
+              amount={formatNumberToMultipleCommas(userKPIData.data.totalUsersCount ?? 0)}
               trIcon={<ArrowCircleDown style={{ color: "#151e79" }} />}
               backgroundColour="#FFFFFF"
               bottomItem={
@@ -98,7 +99,7 @@ export function Dashboard() {
             />
             <DashboardAmountDisplay
               title="Total Loans Revenue"
-              amount={`₦${formatNumberToMultipleCommas(loanKPIData.data.repaidLoansAmount)}`}
+              amount={`₦${formatNumberToMultipleCommas(loanKPIData.data.loansRevenue)}`}
               backgroundColour="#f5eac9"
             />
           </div>

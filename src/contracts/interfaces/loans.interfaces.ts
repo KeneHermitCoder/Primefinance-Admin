@@ -51,6 +51,8 @@ export interface ICreditScore {
 export interface ILoanSliceState {
   allLoansData: IResponseState<any[]>;
   loanKPIData: IResponseState<{
+    loansRevenue: number;
+
     totalLoansCount: number;
     totalLoansAmount: number;
 

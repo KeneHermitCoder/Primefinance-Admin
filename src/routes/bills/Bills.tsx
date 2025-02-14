@@ -73,7 +73,7 @@ export default function Bills() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
               <BillPaymentKPIDisplay
-                title="Total Payments"
+                title="Total Bills Payments"
                 kpiIcon={
                   <PaymentsIcon style={{ fontSize: 32, color: "#4caf50" }} />
                 }
@@ -84,7 +84,7 @@ export default function Bills() {
               />
 
               <BillPaymentKPIDisplay
-                title="Total Bill Revenue"
+                title="Total Bills Amount"
                 kpiIcon={
                   <MonetizationOnIcon
                     style={{ fontSize: 32, color: "#1976d2" }}
