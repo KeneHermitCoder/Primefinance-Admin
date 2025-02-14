@@ -40,20 +40,8 @@ class AuthAPI {
           url: '/api/users/login',
           data: { ...loginDetails },
           isAuth: false
-        });
-        console.log({ response });
-
-        // Extract access token from the response
-        const { accessToken } = response.data; // Assuming the response has access_token
-        console.log('Access Token:', accessToken);
-
-        // Cache token in localStorage
-        // const adminDetails = {  accessToken };
-        // localStorage.setItem("adminDetails", JSON.stringify(adminDet ails));
-        localStorage.setItem("adminDetails", JSON.stringify(response.data));
-
-        // Return access token or full response if needed
-        return { accessToken }; // Or return full response if needed
+        })
+        return response.data || {};
       } catch (error: any) {
         console.log({ error });
         const errorResponse = handleError(error);
