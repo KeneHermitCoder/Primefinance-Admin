@@ -1,6 +1,20 @@
-import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Tab,
+  Grid,
+  Tabs,
+  Stack,
+  Table,
+  Button,
+  TableRow,
+  TableHead,
+  TableCell,
+  TableBody,
+  Typography,
+  TableContainer,
+} from "@mui/material";
 import LoanExpandedRowSkeleton from "./LoanExpandedRowSkeleton";
-import { Box, Grid, Typography, Tabs, Tab, Button, Stack } from "@mui/material";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../features";
 import LoansAPI from "../../features/loans/LoansAPI";
@@ -29,6 +43,8 @@ export interface LoanOwnerDetails {
   phoneNumber: number;
   bvn: string;
   nin: string;
+  repayment_history: any[];
+  loan_repayment_status: LOANPAYMENTSTATUS;
 }
 
 export interface LoanRecord {
@@ -46,22 +62,6 @@ const LoanExpandableRow: React.FC<{
   const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
-  const [creditScore, setCreditScore] = useState<ICreditScore>({
-    loanId: "",
-    lastReported: "",
-    creditorName: "",
-    totalDebt: "",
-    accountype: "",
-    outstandingBalance: 0,
-    activeLoan: 0,
-    loansTaken: 0,
-    income: 0,
-    repaymentHistory: "",
-    openedDate: "",
-    lengthOfCreditHistory: "",
-    remarks: "",
-    userId: "",
-  });
 
   const [modalData, setModalData] = useState<{
     type: 'approve' | 'decline';
@@ -78,6 +78,7 @@ const LoanExpandableRow: React.FC<{
   }
 
   const setLogModalData = (type: 'approve' | 'decline') => {
+    console.log({ type, loanDetails });
     setModalData({
       type,
       loanDetails,
@@ -92,11 +93,7 @@ const LoanExpandableRow: React.FC<{
     // Fetch loans when the component mounts
     // @ts-ignore
     dispatch(new LoansAPI().getLoansCreditScoreData({ loanId: loanDetails.loanId, }));
-  };
-
-  useEffect(() => {
-    if (loanCreditScoreData.data) setCreditScore(loanCreditScoreData.data);
-  }, [dispatch]);
+  }
 
   return (
     <>
@@ -230,48 +227,49 @@ const LoanExpandableRow: React.FC<{
             </Grid>
           </Box>
         )}
-
+        
         {activeTab === 1 && (
-          <Box sx={{ padding: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Loan Repayment History
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid container item xs={12} spacing={2}>
-                <Grid item xs={3}>
-                  <Typography variant="caption" sx={{ color: "gray" }}>
-                    <strong>Repayment Date:</strong>
-                  </Typography>
-                  <Typography variant="body2">
-                    {creditScore.lastReported}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="caption" sx={{ color: "gray" }}>
-                    <strong>Amount Paid:</strong>
-                  </Typography>
-                  <Typography variant="body2">
-                    {creditScore.creditorName}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="caption" sx={{ color: "gray" }}>
-                    <strong>Payment Status:</strong>
-                  </Typography>
-                  <Typography variant="body2">
-                    {creditScore.totalDebt}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="caption" sx={{ color: "gray" }}>
-                    <strong>Outstanding Balance:</strong>
-                  </Typography>
-                  <Typography variant="body2">
-                    {creditScore.accountype}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
+          <Box sx={{ paddingX: 2, paddingY: 1, }}>
+            <TableContainer>
+              <Table sx={{ minWidth: 650 }} aria-label="loan repayment history table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>
+                      <Typography variant="caption" sx={{ color: "gray" }}>
+                        <strong>ID</strong>
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="caption" sx={{ color: "gray" }}>
+                        <strong>Amount</strong>
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="caption" sx={{ color: "gray" }}>
+                        <strong>Date</strong>
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="caption" sx={{ color: "gray" }}>
+                        <strong>Oustanding</strong>
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {
+                    loanDetails?.repayment_history?.map((repayment: any, index: number) => (
+                      <TableRow key={index}>
+                        <TableCell>{repayment._id}</TableCell>
+                        <TableCell>{repayment.amount}</TableCell>
+                        <TableCell>{repayment.date}</TableCell>
+                        <TableCell>{repayment.outstanding}</TableCell>
+                      </TableRow>
+                    )) || <TableRow><TableCell colSpan={4}>No repayment history found.</TableCell></TableRow>
+                  }
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Box>
         )}
 
@@ -295,7 +293,7 @@ const LoanExpandableRow: React.FC<{
                       <strong>Last Reported:</strong>
                     </Typography>
                     <Typography variant="body2">
-                      {creditScore.lastReported}
+                      {loanCreditScoreData.data.lastReported}
                     </Typography>
                   </Grid>
                   <Grid item xs={3}>
@@ -303,7 +301,7 @@ const LoanExpandableRow: React.FC<{
                       <strong>Creditor Name:</strong>
                     </Typography>
                     <Typography variant="body2">
-                      {creditScore.creditorName}
+                      {loanCreditScoreData.data.creditorName}
                     </Typography>
                   </Grid>
                   <Grid item xs={3}>
@@ -311,7 +309,7 @@ const LoanExpandableRow: React.FC<{
                       <strong>Total Debt:</strong>
                     </Typography>
                     <Typography variant="body2">
-                      {creditScore.totalDebt}
+                      {loanCreditScoreData.data.totalDebt}
                     </Typography>
                   </Grid>
                   <Grid item xs={3}>
@@ -319,7 +317,7 @@ const LoanExpandableRow: React.FC<{
                       <strong>Account Type:</strong>
                     </Typography>
                     <Typography variant="body2">
-                      {creditScore.accountype}
+                      {loanCreditScoreData.data.accountype}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -330,7 +328,7 @@ const LoanExpandableRow: React.FC<{
                       <strong>Outstanding Balance:</strong>
                     </Typography>
                     <Typography variant="body2">
-                      {creditScore.outstandingBalance}
+                      {loanCreditScoreData.data.outstandingBalance}
                     </Typography>
                   </Grid>
                   <Grid item xs={3}>
@@ -338,7 +336,7 @@ const LoanExpandableRow: React.FC<{
                       <strong>Active Loan:</strong>
                     </Typography>
                     <Typography variant="body2">
-                      {creditScore.activeLoan}
+                      {loanCreditScoreData.data.activeLoan}
                     </Typography>
                   </Grid>
                   <Grid item xs={3}>
@@ -346,7 +344,7 @@ const LoanExpandableRow: React.FC<{
                       <strong>Loans Taken:</strong>
                     </Typography>
                     <Typography variant="body2">
-                      {creditScore.loansTaken}
+                      {loanCreditScoreData.data.loansTaken}
                     </Typography>
                   </Grid>
                   <Grid item xs={3}>
@@ -354,7 +352,7 @@ const LoanExpandableRow: React.FC<{
                       <strong>Income:</strong>
                     </Typography>
                     <Typography variant="body2">
-                      {creditScore.income}
+                      {loanCreditScoreData.data.income}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -365,7 +363,7 @@ const LoanExpandableRow: React.FC<{
                       <strong>Repayment History:</strong>
                     </Typography>
                     <Typography variant="body2">
-                      {creditScore.repaymentHistory}
+                      {loanCreditScoreData.data.repaymentHistory || "N/A"}
                     </Typography>
                   </Grid>
                   <Grid item xs={3}>
@@ -373,7 +371,7 @@ const LoanExpandableRow: React.FC<{
                       <strong>Opened Date:</strong>
                     </Typography>
                     <Typography variant="body2">
-                      {creditScore.openedDate}
+                      {loanCreditScoreData.data.openedDate}
                     </Typography>
                   </Grid>
                   <Grid item xs={3}>
@@ -381,7 +379,7 @@ const LoanExpandableRow: React.FC<{
                       <strong>Credit History Length:</strong>
                     </Typography>
                     <Typography variant="body2">
-                      {creditScore.lengthOfCreditHistory}
+                      {loanCreditScoreData.data.lengthOfCreditHistory}
                     </Typography>
                   </Grid>
                   <Grid item xs={3}>
@@ -389,7 +387,7 @@ const LoanExpandableRow: React.FC<{
                       <strong>Remarks:</strong>
                     </Typography>
                     <Typography variant="body2">
-                      {creditScore.remarks}
+                      {loanCreditScoreData.data.remarks}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -405,6 +403,7 @@ const LoanExpandableRow: React.FC<{
                   variant="contained"
                   color="success"
                   onClick={() => setLogModalData("decline")}
+                  disabled={['pending', 'accepted'].includes(loanDetails.activeStatus)}
                   className="self-end md:self-center"
                 >
                   Decline
@@ -412,6 +411,7 @@ const LoanExpandableRow: React.FC<{
                 <Button
                   variant="contained"
                   color="error"
+                  disabled={['pending', 'accepted'].includes(loanDetails.activeStatus)}
                   onClick={() => setLogModalData("approve")}
                   className="self-end md:self-center"
                 >
