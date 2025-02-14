@@ -65,6 +65,9 @@ const loansSlice = createSlice({
 
         overdueLoansCount: 0,
         overdueLoansAmount: 0,
+
+        disbursedLoansCount: 0,
+        disbursedLoansAmount: 0,
       },
       error: null,
       isLoading: true,

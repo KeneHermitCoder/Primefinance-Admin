@@ -118,13 +118,13 @@ export default function Loans() {
               total={`₦${formatNumberToMultipleCommas(loanKPIData.data.overdueLoansCount)}`}
             />
 
-            {/* <UsersKPIDisplay
+            <UsersKPIDisplay
               subtitle={`Disbursed Loans (${formatNumberToMultipleCommas(
-                loanKPIData.data.repaidLoans
+                loanKPIData.data.disbursedLoansCount
               )})`}
               kpiIcon={<FlagCircleRounded sx={{ color: "error.main" }} />}
-              total={`₦${formatNumberToMultipleCommas(loanKPIData.data.totalLoansRevenue)}`}
-            /> */}
+              total={`₦${formatNumberToMultipleCommas(loanKPIData.data.disbursedLoansAmount)}`}
+            />
 
             <UsersKPIDisplay
               subtitle={`Repaid Loans (${formatNumberToMultipleCommas(

@@ -129,6 +129,14 @@ export default class LoansAPI {
         );
         const repaidLoansCount = repaidLoans.length;
 
+        const disbursedLoans = loan.filter((l: any) => l.status === "accepted");
+        const disbursedLoansAmount = disbursedLoans.reduce(
+          (acc: number, l: any) =>
+            acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),
+          0
+        );
+        const disbursedLoansCount = disbursedLoans.length;
+
 
         const overdueLoans = loan.filter((l: any) => new Date(l?.repayment_date || new Date()).getTime() < new Date().getTime() && l.status === "pending");
         const overdueLoansAmount = overdueLoans.reduce(
@@ -157,6 +165,9 @@ export default class LoansAPI {
 
           overdueLoansCount,
           overdueLoansAmount,
+
+          disbursedLoansAmount,
+          disbursedLoansCount,
 
         }
       } catch (error) {
