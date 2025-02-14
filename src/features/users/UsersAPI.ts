@@ -121,7 +121,7 @@ export default class UsersAPI {
                     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
                     return createdAt.getTime() > sevenDaysAgo.getTime();
                 }).length || 0,
-                totalUsersCount: users.length || 0,
+                totalUsersCount: users?.length?? 0,
                 activeUsersCount: users?.filter((user: any) => user.confirmed_at).length || 0,
                 flaggedUsersCount: users?.filter((user: any) => !user.confirmed_at).length || 0
             }

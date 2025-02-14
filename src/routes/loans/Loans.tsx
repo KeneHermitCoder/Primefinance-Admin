@@ -88,11 +88,9 @@ export default function Loans() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 md:divide-x-2 divide-y-2 lg:divide-0">
             <UsersKPIDisplay
-              subtitle={`Total Loans (${formatNumberToMultipleCommas(
-                loanKPIData.data.totalLoansCount
-              )})`}
+              subtitle={`Total Loans`}
               kpiIcon={<AttachMoney sx={{ color: "success.main" }} />}
-              total={`₦${formatNumberToMultipleCommas(loanKPIData.data.totalLoansAmount)}`}
+              total={`${formatNumberToMultipleCommas(loanKPIData.data.totalLoansCount)}`}
             />
 
             <UsersKPIDisplay

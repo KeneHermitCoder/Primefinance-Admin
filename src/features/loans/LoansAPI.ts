@@ -1,5 +1,5 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { handleError, httpClient } from "../../utils";
+import { createAsyncThunk, } from "@reduxjs/toolkit";
+import { handleError, httpClient, } from "../../utils";
 
 export default class LoansAPI {
 
@@ -124,10 +124,16 @@ export default class LoansAPI {
         const repaidLoans = loan.filter((l: any) => l.loan_payment_status === "complete");
         const repaidLoansAmount = repaidLoans.reduce(
           (acc: number, l: any) =>
-            acc + ((isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)) - (isNaN(Number.parseFloat(l.requested_amount)) ? 0 : Number(l.requested_amount))) + 500,
+            acc + (isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)),
           0
         );
         const repaidLoansCount = repaidLoans.length;
+
+        const loansRevenue = repaidLoans.reduce(
+          (acc: number, l: any) =>
+            acc + ((isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)) - (isNaN(Number.parseFloat(l.requested_amount)) ? 0 : Number(l.requested_amount))) + 500,
+          0
+        );
 
         const disbursedLoans = loan.filter((l: any) => l.status === "accepted");
         const disbursedLoansAmount = disbursedLoans.reduce(
@@ -148,6 +154,8 @@ export default class LoansAPI {
 
 
         return {
+          loansRevenue,
+
           totalLoansCount,
           totalLoansAmount,
 
