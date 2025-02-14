@@ -68,7 +68,7 @@ export function Dashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             <DashboardAmountDisplay
               title="Total revenue"
-              amount={`₦${formatNumberToMultipleCommas(transactionKPIData.data.totalTransactions)}`}
+              amount={`₦${formatNumberToMultipleCommas(transactionKPIData.data.transactionsWithoutLoan)}`}
               trIcon={<ArrowCircleUp style={{ color: "#15792b" }} />}
               backgroundColour="#CCEFDD"
               bottomItem={
@@ -178,7 +178,7 @@ export function Dashboard() {
               >
                 {loanOverviewData.isLoading ? (
                   <PrimaryTableSkeleton />
-                  // THIS SHOULD UODATUPDATED WHEN 404 IN NO LONGER BEING TRHOWN FROM THE BACKEND
+                  // THIS SHOULD BE UPDATED WHEN 404 IS NO LONGER BEING TRHOWN FROM THE BACKEND
                 // ) : loanOverviewData.error ? (
                 //   <TableErrorComponent
                 //     message={loanOverviewData.error}

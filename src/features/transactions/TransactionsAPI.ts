@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { handleError, httpClient } from "../../utils";
 
 export default class TransactionsAPI {
+
   private async fetchTransactions(_thunkAPI: any) {
     try {
       const response = await httpClient({
@@ -65,9 +66,6 @@ export default class TransactionsAPI {
           (acc, t) => acc + (t.amount || 0),
           0
         ) || 0;
-        const successfulTranxCount = transactions.filter(
-          (t) => t.status === "success"
-        ).length;
         const failedTransactions = transactions.reduce(
           (acc, t) => acc + (t.status === "failed" ? t.amount : 0),
           0
@@ -76,30 +74,28 @@ export default class TransactionsAPI {
           (acc, t) => acc + (t.status === "active" ? t.amount : 0),
           0
         ) || 0;
-        const successfulTransactions = transactions.reduce(
+        const successfulTransactions = transactions.filter(
+          (t) => t.status === "success"
+        );
+        const successfulTranxCount = successfulTransactions.reduce(
           (acc, t) => acc + (t.status === "success" ? t.amount : 0),
           0
         ) || 0;
+        const transactionsWithoutLoan = successfulTransactions.reduce(
+          (acc, t) => acc + ((t.status === "success" && t.type !== 'loan') ? t.amount : 0),
+          0
+        ) || 0;
 
-        console.log({
-          totalTranxCount,
-          failedTranxCount,
-          pendingTranxCount,
-          totalTransactions,
-          successfulTranxCount,
-          failedTransactions,
-          pendingTransactions,
-          successfulTransactions,
-        })
         return {
           totalTranxCount,
           failedTranxCount,
           pendingTranxCount,
           totalTransactions,
-          successfulTranxCount,
           failedTransactions,
           pendingTransactions,
-          successfulTransactions,
+          successfulTranxCount,
+          transactionsWithoutLoan,
+          successfulTransactions: successfulTransactions.length,
         };
       } catch (error) {
         console.log('Error: ', error);

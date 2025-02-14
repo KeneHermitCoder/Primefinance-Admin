@@ -87,14 +87,13 @@ export default class LoansAPI {
         if(!response) throw new Error("No loan data available")
 
         const loan = response;
-
         const dueLoans = loan.filter((l: any) => l.status === "due");
         const pendingLoans = loan.filter((l: any) => l.status === "pending");
-        const repaidLoans = loan.filter((l: any) => l.status === "complete");
+        const repaidLoans = loan.filter((l: any) => l.loan_payment_status === "complete");
         const overdueLoans = loan.filter((l: any) => new Date(l?.repayment_date || new Date()).getTime() < new Date().getTime() && l.status === "pending");
         const totalLoansRevenue = repaidLoans.reduce(
           (acc: number, l: any) =>
-            acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),
+            acc + ((isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)) - (isNaN(Number.parseFloat(l.requested_amount)) ? 0 : Number(l.requested_amount))) + 500,
           0
         );
         const dueLoansRevenue = dueLoans.reduce(
