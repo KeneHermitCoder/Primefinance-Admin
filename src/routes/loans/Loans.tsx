@@ -86,41 +86,52 @@ export default function Loans() {
         {loanKPIData.isLoading ? (
           <KPILoadingSkeleton />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 md:divide-x-2 divide-y-2 lg:divide-y-0">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 md:divide-x-2 divide-y-2 lg:divide-0">
             <UsersKPIDisplay
-              subtitle="Total Loans"
+              subtitle={`Total Loans (${formatNumberToMultipleCommas(
+                loanKPIData.data.totalLoansCount
+              )})`}
               kpiIcon={<AttachMoney sx={{ color: "success.main" }} />}
-              total={`${formatNumberToMultipleCommas(loanKPIData.data.totalLoans)}`}
+              total={`₦${formatNumberToMultipleCommas(loanKPIData.data.totalLoansAmount)}`}
             />
 
             <UsersKPIDisplay
-              subtitle="Active Loans"
+              subtitle={`Active Loans (${formatNumberToMultipleCommas(
+                loanKPIData.data.activeLoansCount
+              )})`}
               kpiIcon={<HandshakeRounded sx={{ color: "primary.main" }} />}
-              total={`${formatNumberToMultipleCommas(loanKPIData.data.activeLoans)}`}
+              total={`₦${formatNumberToMultipleCommas(loanKPIData.data.activeLoansAmount)}`}
+            />
+            <UsersKPIDisplay
+              subtitle={`Due loans (${formatNumberToMultipleCommas(
+                loanKPIData.data.dueLoansCount
+              )})`}
+              kpiIcon={<PersonAdd sx={{ color: "primary.main" }} />}
+              total={`₦${formatNumberToMultipleCommas(loanKPIData.data.dueLoansAmount)}`}
             />
 
             <UsersKPIDisplay
-              subtitle="Repaid Loans"
+              subtitle={`Overdue Loans (${formatNumberToMultipleCommas(
+                loanKPIData.data.overdueLoansAmount
+              )})`}
+              kpiIcon={<PersonAdd sx={{ color: "primary.main" }} />}
+              total={`₦${formatNumberToMultipleCommas(loanKPIData.data.overdueLoansCount)}`}
+            />
+
+            <UsersKPIDisplay
+              subtitle={`Disbursed Loans (${formatNumberToMultipleCommas(
+                loanKPIData.data.disbursedLoansCount
+              )})`}
               kpiIcon={<FlagCircleRounded sx={{ color: "error.main" }} />}
-              total={`${formatNumberToMultipleCommas(loanKPIData.data.repaidLoans)}`}
+              total={`₦${formatNumberToMultipleCommas(loanKPIData.data.disbursedLoansAmount)}`}
             />
 
             <UsersKPIDisplay
-              subtitle="Due"
-              kpiIcon={<PersonAdd sx={{ color: "primary.main" }} />}
-              total={`${formatNumberToMultipleCommas(loanKPIData.data.dueLoans)}`}
-            />
-
-            <UsersKPIDisplay
-              subtitle="Overdue"
-              kpiIcon={<PersonAdd sx={{ color: "primary.main" }} />}
-              total={`${formatNumberToMultipleCommas(loanKPIData.data.overdueLoans)}`}
-            />
-
-            <UsersKPIDisplay
-              subtitle="Revenue"
-              kpiIcon={<PersonAdd sx={{ color: "primary.main" }} />}
-              total={`₦${formatNumberToMultipleCommas(loanKPIData.data.totalLoansRevenue)}`}
+              subtitle={`Repaid Loans (${formatNumberToMultipleCommas(
+                loanKPIData.data.repaidLoansCount
+              )})`}
+              kpiIcon={<FlagCircleRounded sx={{ color: "error.main" }} />}
+              total={`₦${formatNumberToMultipleCommas(loanKPIData.data.repaidLoansAmount)}`}
             />
           </div>
         )}
@@ -134,7 +145,7 @@ export default function Loans() {
             <PrimaryTableSkeleton />
           ) : (
             <LoanSearchFilterSortPaginateTable
-              title="Personal Loans"
+              title="Loans"
               searchParams={["customerName", "loanId", "status"]}
               filterParams={{
                 data: [
@@ -144,7 +155,7 @@ export default function Loans() {
                   },
                   {
                     label: "Status",
-                    options: ["pending", "active", "repaid"],
+                    options: ["pending", "accepted", "rejected"],
                   },
                 ],
                 action: tableFilterAction,
@@ -191,7 +202,7 @@ export default function Loans() {
           )}
         </Stack>
 
-        <Stack
+        {/* <Stack
           spacing={1}
           justifyContent="space-between"
           className="bg-white p-4 rounded-[12px]"
@@ -255,7 +266,7 @@ export default function Loans() {
               rows={rows}
             />
           )}
-        </Stack>
+        </Stack> */}
 
         <div className="flex flex-col xl:flex-row gap-6">
           <Stack
@@ -265,12 +276,16 @@ export default function Loans() {
           >
             <PrimaryBarChart
               title="Loan Transactions"
-              data={loanKPIData.isLoading ? ([]) : [
-                loanKPIData.data.activeLoansRevenue,
-                loanKPIData.data.repaidLoansRevenue || 10,
-                loanKPIData.data.dueLoansRevenue,
-                loanKPIData.data.overdueLoansRevenue || 10,
-              ]}
+              data={
+                loanKPIData.isLoading
+                  ? []
+                  : [
+                      loanKPIData.data.activeLoansAmount,
+                      loanKPIData.data.repaidLoansAmount || 10,
+                      loanKPIData.data.dueLoansAmount,
+                      loanKPIData.data.overdueLoansAmount || 10,
+                    ]
+              }
               xLabels={["Active", "Repaid", "Overdue", "Pending"]}
             />
           </Stack>
@@ -283,15 +298,21 @@ export default function Loans() {
               data={[
                 {
                   label: "Active Loans",
-                  value: loanKPIData.isLoading ? 0 : loanKPIData.data.activeLoansRevenue || 0, 
+                  value: loanKPIData.isLoading
+                    ? 0
+                    : loanKPIData.data.activeLoansAmount || 0,
                 },
                 {
                   label: "Repaid Loans",
-                  value: loanKPIData.isLoading ? 0 : loanKPIData.data.repaidLoansRevenue || 0,
+                  value: loanKPIData.isLoading
+                    ? 0
+                    : loanKPIData.data.repaidLoansAmount || 0,
                 },
                 {
                   label: "Overdue Loans",
-                  value: loanKPIData.isLoading ? 0 : loanKPIData.data.overdueLoansRevenue || 0,
+                  value: loanKPIData.isLoading
+                    ? 0
+                    : loanKPIData.data.overdueLoansAmount || 0,
                 },
               ]}
               metadata={{

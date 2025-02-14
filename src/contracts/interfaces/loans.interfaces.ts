@@ -51,16 +51,26 @@ export interface ICreditScore {
 export interface ILoanSliceState {
   allLoansData: IResponseState<any[]>;
   loanKPIData: IResponseState<{
-    dueLoans: number;
-    totalLoans: number;
-    activeLoans: number;
-    repaidLoans: number;
-    overdueLoans: number;
-    dueLoansRevenue: number;
-    totalLoansRevenue: number;
-    activeLoansRevenue: number;
-    repaidLoansRevenue: number;
-    overdueLoansRevenue: number;
+    totalLoansCount: number;
+    totalLoansAmount: number;
+
+    dueLoansCount: number;
+    dueLoansAmount: number;
+
+    pendingLoansCount: number;
+    pendingLoansAmount: number;
+
+    activeLoansCount: number;
+    activeLoansAmount: number;
+
+    repaidLoansCount: number;
+    repaidLoansAmount: number;
+
+    overdueLoansCount: number;
+    overdueLoansAmount: number;
+  
+    disbursedLoansCount: number;
+    disbursedLoansAmount: number;
   }>;
   loanOverviewData: IResponseState<any[]> & ILoanOverview;
   loanCreditScoreData: IResponseState<ICreditScore>;

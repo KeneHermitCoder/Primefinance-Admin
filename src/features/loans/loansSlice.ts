@@ -48,16 +48,26 @@ const loansSlice = createSlice({
     },
     loanKPIData: {
       data: {
-        dueLoans: 0,
-        totalLoans: 0,
-        activeLoans: 0,
-        repaidLoans: 0,
-        overdueLoans: 0,
-        dueLoansRevenue: 0,
-        totalLoansRevenue: 0,
-        activeLoansRevenue: 0,
-        repaidLoansRevenue: 0,
-        overdueLoansRevenue: 0,
+        totalLoansCount: 0,
+        totalLoansAmount: 0,
+
+        dueLoansCount: 0,
+        dueLoansAmount: 0,
+
+        pendingLoansCount: 0,
+        pendingLoansAmount: 0,
+
+        activeLoansCount: 0,
+        activeLoansAmount: 0,
+
+        repaidLoansCount: 0,
+        repaidLoansAmount: 0,
+
+        overdueLoansCount: 0,
+        overdueLoansAmount: 0,
+
+        disbursedLoansCount: 0,
+        disbursedLoansAmount: 0,
       },
       error: null,
       isLoading: true,
