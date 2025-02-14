@@ -73,6 +73,7 @@ export default function Loans() {
           bvn: loan.bvn,
           nin: loan.nin,
           userId: loan.userId,
+          repayment_history: loan.repayment_history,
         }
       }));
       setRows(modifiedLoansData);

@@ -156,21 +156,39 @@ export default class LoansAPI {
         // Ensure 'data' is not null before accessing it
         if (!response || !response.data) return thunkAPI.rejectWithValue("No loan data available");
 
+        console.log({responseufbbrubrubiure: response.data});
+        const creditScoredata = response?.data?.credit_score || {};
+        // return {
+        //   loanId: response.data.loanId,
+        //   lastReported: response.data.lastReported,
+        //   creditorName: response.data.creditorName,
+        //   totalDebt: response.data.totalDebt,
+        //   accountype: response.data.accountype,
+        //   outstandingBalance: response.data.outstandingBalance,
+        //   activeLoan: response.data.activeLoan,
+        //   loansTaken: response.data.loansTaken,
+        //   income: response.data.income,
+        //   repaymentHistory: response.data.repaymentHistory,
+        //   openedDate: response.data.openedDate,
+        //   lengthOfCreditHistory: response.data.lengthOfCreditHistory,
+        //   remarks: response.data.remarks,
+        //   userId: response.data.userId,
+        // };
         return {
-          loanId: response.data.loanId,
-          lastReported: response.data.lastReported,
-          creditorName: response.data.creditorName,
-          totalDebt: response.data.totalDebt,
-          accountype: response.data.accountype,
-          outstandingBalance: response.data.outstandingBalance,
-          activeLoan: response.data.activeLoan,
-          loansTaken: response.data.loansTaken,
-          income: response.data.income,
-          repaymentHistory: response.data.repaymentHistory,
-          openedDate: response.data.openedDate,
-          lengthOfCreditHistory: response.data.lengthOfCreditHistory,
-          remarks: response.data.remarks,
-          userId: response.data.userId,
+          loanId: creditScoredata?.loanId || "",
+          lastReported: creditScoredata?.lastReported || "",
+          creditorName: creditScoredata?.creditorName || "",
+          totalDebt: creditScoredata?.totalDebt || "",
+          accountype: creditScoredata?.accountype || "",
+          outstandingBalance: creditScoredata?.outstandingBalance || "",
+          activeLoan: creditScoredata?.activeLoan || "",
+          loansTaken: creditScoredata?.loansTaken || "",
+          income: creditScoredata?.income || "",
+          repaymentHistory: creditScoredata?.repaymentHistory || "",
+          openedDate: creditScoredata?.openedDate || "",
+          lengthOfCreditHistory: creditScoredata?.lengthOfCreditHistory || "",
+          remarks: creditScoredata?.remarks || "",
+          userId: creditScoredata?.userId || "",
         };
       } catch (error) {
         return thunkAPI.rejectWithValue(handleError(error));
