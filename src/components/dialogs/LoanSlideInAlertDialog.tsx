@@ -3,21 +3,21 @@ import Slide from "@mui/material/Slide";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import {
-  FormControl,
   Input,
-  InputAdornment,
-  InputLabel,
   Stack,
+  InputLabel,
   Typography,
+  FormControl,
+  InputAdornment,
 } from "@mui/material";
+import { RootState } from "../../features";
 import DialogTitle from "@mui/material/DialogTitle";
+import LoansAPI from "../../features/loans/LoansAPI";
+import { useDispatch, useSelector } from "react-redux";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import { TransitionProps } from "@mui/material/transitions";
 import DialogContentText from "@mui/material/DialogContentText";
-import LoansAPI from "../../features/loans/LoansAPI";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../features";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -168,6 +168,7 @@ export default function LoanSlideInAlertDialog({
             <Button
               color="error"
               variant="contained"
+              disabled={!approveLoanData.isLoading? true : false}
               onClick={async () => {
                 await handleAccept();
               }}
@@ -175,7 +176,7 @@ export default function LoanSlideInAlertDialog({
               {approveLoanData.isLoading ? (
                 <div className="flex items-center">
                   <div className="mr-2">Please wait...</div>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  <div className={`animate-spin rounded-full h-4 w-4 border-b-2 border-white`}></div>
                 </div>
               ) : (
                 acceptText

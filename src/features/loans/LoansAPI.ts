@@ -150,7 +150,7 @@ export default class LoansAPI {
           method: "POST",
           url: `/api/loans/loan-transaction-status`,
           isAuth: true,
-          data: { transactionId: loanId.toString() },
+          data: { transactionId: `${loanId}` },
         });
 
         // Ensure 'data' is not null before accessing it
@@ -203,7 +203,7 @@ export default class LoansAPI {
             userId,
             duration: duration || '30',
             transactionId: loanId,
-            amount: amount.toString() },
+            amount: `${amount.toString}` },
         });
 
         return response.data;

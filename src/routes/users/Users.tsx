@@ -87,7 +87,7 @@ export default function Users() {
                 subtitle="Total Users"
                 kpiIcon={<AttachMoney sx={{ color: "success.main" }} />}
                 total={`${formatNumberToMultipleCommas(
-                  userKPIData.data?.totalUsersCount
+                  userKPIData.data?.totalUsersCount || 0
                 )}`}
               />
 
