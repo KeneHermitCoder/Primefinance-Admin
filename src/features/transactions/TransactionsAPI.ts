@@ -6,6 +6,7 @@ interface Transaction {
   amount: number;
   status: 'failed' | 'active' | 'success';
   type: string;
+  category: string;
   createdAt: string;
 }
 
@@ -27,6 +28,8 @@ interface KPIData {
   successfulTranxCount: number;
   transactionsWithoutLoan: number;
   successfulTransactions: number;
+  creditTransactions: number;
+  debitTransactions: number;
 }
 
 type TimeRange = '24hrs' | '7days' | '1month' | '1year';
@@ -192,7 +195,6 @@ export default class TransactionsAPI {
         const transactions = await this.fetchTransactions();
         
         const successfulTransactions = transactions.filter(t => t.status === "success");
-        
         const calculateTotal = (trans: Transaction[], predicate: (t: Transaction) => boolean) => 
           trans.reduce((acc, t) => acc + (predicate(t) ? Number(t.amount) || 0 : 0), 0);
 
@@ -204,7 +206,11 @@ export default class TransactionsAPI {
           failedTransactions: calculateTotal(transactions, t => t.status === "failed"),
           pendingTransactions: calculateTotal(transactions, t => t.status === "active"),
           successfulTranxCount: calculateTotal(successfulTransactions, () => true),
-          transactionsWithoutLoan: calculateTotal(successfulTransactions, t => t.type !== 'loan'),
+          // transactionsWithoutLoan: calculateTotal(successfulTransactions, t => t.category !== 'loan' && !['credit', 'debit'].includes(t.category)),
+          // transactionsWithoutLoan: calculateTotal(successfulTransactions, t => t.type === 'paybills'),
+          transactionsWithoutLoan: calculateTotal(successfulTransactions, t => t.type !== 'loan' || (t.category !== 'credit' && t.category !== 'debit')),
+          creditTransactions: calculateTotal(successfulTransactions, t => t.type !== 'loan' && t.category === 'credit'),
+          debitTransactions: calculateTotal(successfulTransactions, t => t.type !== 'loan' && t.category === 'debit'),
           successfulTransactions: successfulTransactions.length,
         };
 

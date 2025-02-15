@@ -98,7 +98,7 @@ export function Dashboard() {
             />
             <DashboardAmountDisplay
               title="Debit transactions" 
-              amount="₦0"
+              amount={`₦${formatNumberToMultipleCommas(transactionKPIData.data.debitTransactions || 0)}`}
               backgroundColour="#FFE6E6"
               trIcon={<ArrowCircleDown style={{ color: "#D32F2F" }} />}
               bottomItem={
@@ -111,7 +111,6 @@ export function Dashboard() {
             />
             <DashboardAmountDisplay
               title="Credit transactions"
-              // @ts-ignore
               amount={`₦${formatNumberToMultipleCommas(transactionKPIData.data.creditTransactions || 0)}`}
               backgroundColour="#CCEFDD"
               trIcon={<ArrowCircleUp style={{ color: "#15792b" }} />}

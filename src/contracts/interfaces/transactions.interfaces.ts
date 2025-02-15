@@ -29,6 +29,8 @@ export interface ITransactionSliceState {
         failedTranxCount: number;
         totalTransactions: number;
         pendingTranxCount: number;
+        debitTransactions: number;
+        creditTransactions: number;
         failedTransactions: number;
         pendingTransactions: number;
         successfulTranxCount: number;

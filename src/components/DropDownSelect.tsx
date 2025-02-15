@@ -6,18 +6,22 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 const ITEM_HEIGHT = 48;
 
+interface DropDownSelectProps {
+  label: string;
+  options: any[];
+  onSelected?: (item: string, label: string) => void;
+  value?: string;
+}
+
 export default function DropDownSelect({
   label,
   options,
   onSelected,
-}: {
-  label: string;
-  options: any[];
-  onSelected?: (item: string, label: string) => void;
-}) {
+  value,
+}: DropDownSelectProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const [selectedItem, setSelectedItem] = React.useState<string>(options[0]);
+  const [selectedItem, setSelectedItem] = React.useState<string>(value || options[0]);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -35,7 +39,9 @@ export default function DropDownSelect({
         aria-haspopup="true"
         onClick={handleClick}
       >
-        <div className="flex max-w-[70px] truncate text-sm">{selectedItem}</div>
+        <div className="flex max-w-[70px] truncate text-sm">
+          {value || selectedItem}
+        </div>
         <KeyboardArrowDownIcon />
       </IconButton>
       <Menu
