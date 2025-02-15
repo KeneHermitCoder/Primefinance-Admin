@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
-import SearchField from "../searchField";
 import { visuallyHidden } from "@mui/utils";
 import DropDownSelect from "../DropDownSelect";
 import { TableRow, Stack } from "@mui/material";
@@ -8,11 +7,14 @@ import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
 import TableCell from "@mui/material/TableCell";
 import LoanExpandableRow from "./LoanExpandedRow";
-import React, { useMemo, useState, } from "react";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import TableContainer from "@mui/material/TableContainer";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import TablePagination from "@mui/material/TablePagination";
+import { Skeleton } from "@mui/material";
+import { Typography } from "@mui/material";
+import TextField from "@mui/material/TextField";
 
 interface Data {
   [key: string]: any;
@@ -42,6 +44,18 @@ function getComparator<Key extends keyof any>(
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
+function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
+  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) {
+      return order;
+    }
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
+
 interface HeadCell {
   id: keyof Data;
   label: string;
@@ -51,7 +65,7 @@ interface HeadCell {
 interface EnhancedTableProps {
   onRequestSort: (
     event: React.MouseEvent<unknown>,
-    property: keyof Data
+    property: string | number
   ) => void;
   order: Order;
   orderBy: string;
@@ -101,6 +115,7 @@ export default function LoanSearchFilterSortPaginateTable({
   headCells = [],
   title = "Table Title",
   searchParams,
+  isLoading = false,
 }: {
   rows?: Data[];
   title?: string;
@@ -111,186 +126,187 @@ export default function LoanSearchFilterSortPaginateTable({
     }[];
     action: (label: string, selected: any, option: any) => boolean;
   };
-  searchParams?: any[];
+  searchParams?: string[];
   headCells?: HeadCell[];
+  isLoading?: boolean;
 }) {
+  const [order, setOrder] = useState<Order>('asc');
+  const [orderBy, setOrderBy] = useState<string>('');
   const [page, setPage] = useState(0);
-  const [order, setOrder] = useState<Order>("asc");
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [orderBy, setOrderBy] = useState<keyof Data>("calories");
   const [filteredRows, setFilteredRows] = useState<Data[]>(rows);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filters, setFilters] = useState<{[key: string]: string}>({});
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
 
   const handleExpandClick = (id: number) => {
     setExpandedRow((prevRow) => (prevRow === id ? null : id));
   };
 
-  const handleRequestSort = (
-    event: React.MouseEvent<unknown>,
-    property: keyof Data
-  ) => {
-    console.log({ event });
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
+  // Reset pagination when rows change
+  useEffect(() => {
+    setPage(0);
+    setFilteredRows(rows);
+  }, [rows]);
+
+  // Handle search and filter
+  useEffect(() => {
+    let result = [...rows];
+
+    // Apply search
+    if (searchTerm) {
+      result = result.filter((row) =>
+        searchParams?.some((param) => {
+          const value = row[param];
+          return value?.toString().toLowerCase().includes(searchTerm.toLowerCase());
+        })
+      );
+    }
+
+    // Apply filters
+    if (filterParams && Object.keys(filters).length > 0) {
+      result = result.filter((row) => {
+        return Object.entries(filters).every(([label, selected]) => {
+          if (!selected) return true;
+          return filterParams.action(label, selected, row);
+        });
+      });
+    }
+
+    setFilteredRows(result);
+    setPage(0);
+  }, [searchTerm, filters, rows, searchParams, filterParams]);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
   };
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    console.log({ event });
+  const handleFilter = (label: string, value: string) => {
+    setFilters(prev => ({
+      ...prev,
+      [label]: value
+    }));
+  };
+
+  const visibleRows = useMemo(() => {
+    if (isLoading) return [];
+    
+    return stableSort(filteredRows, getComparator(order, orderBy))
+      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  }, [filteredRows, order, orderBy, page, rowsPerPage, isLoading]);
+
+  const handleRequestSort = useCallback((
+    _: React.MouseEvent<unknown>,
+    property: string | number,
+  ) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property.toString());
+  }, [order, orderBy]);
+
+  const handleChangePage = (_: unknown, newPage: number) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredRows.length) : 0;
-
-  const visibleRows = useMemo(
-    () =>
-      [...filteredRows]
-        .sort(getComparator(order, orderBy))
-        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [order, orderBy, page, rowsPerPage, filteredRows]
-  );
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const searchTerm = e.target.value.toLowerCase();
-
-    // Filter out rows based on search params
-    const filtered = rows.filter((row) => {
-      return Object.entries(row).some(([key, value]) => {
-        if (typeof value === "string")
-          return value.toLowerCase().includes(searchTerm) && searchParams?.includes(key);
-        return false;
-      });
-    });
-    setFilteredRows(filtered);
-  }
-
-  const handleSelectFilter = (option: string, label: string) => handleFilter(label, option);
-
-  const handleFilter = (label: string, option: string) => {
-    if (filterParams) {
-      const filtered = rows.filter((row) => filterParams.action(label, option, row));
-      setFilteredRows(filtered);
-    }
-  }
-
   return (
     <Box sx={{ width: "100%" }} className="flex flex-col gap-3">
-      <div className="flex flex-col lg:flex-row lg:items-center md:justify-between gap-2">
-        <div className="text-xl text-gray-700">{title}</div>
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
-          {/* Search Field */}
-          {searchParams && searchParams.length > 0 && <SearchField onChange={handleSearch} />}
-          {filterParams && filterParams.data?.length > 0 && (
-            <div className="flex items-end gap-1">
-              {filterParams.data.map((param, index) => (
-                <DropDownSelect
-                  key={index}
-                  options={param.options}
-                  label={param.label}
-                  onSelected={handleSelectFilter}
-                />
-              ))}
-            </div>
-          )}
+      <div className="flex flex-col md:flex-row justify-between gap-4">
+        <Typography variant="h6" className="font-medium">
+          {title}
+        </Typography>
+        <div className="flex flex-col md:flex-row gap-4">
+          <TextField
+            size="small"
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={handleSearch}
+            disabled={isLoading}
+          />
+          {filterParams?.data.map((filter) => (
+            <DropDownSelect
+              key={filter.label}
+              label={filter.label}
+              options={filter.options}
+              onSelected={(value: string) => handleFilter(filter.label, value)}
+            />
+          ))}
         </div>
       </div>
-      <Stack className="bg-white rounded-[8px] border" spacing={1}>
-        <TableContainer>
-          <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
-            <EnhancedTableHead
-              order={order}
-              orderBy={orderBy as string}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-              headCells={headCells}
-            />
-            <TableBody>
-              {visibleRows.map((row) => {
-                return (
-                  <React.Fragment key={row.id}>
-                    <TableRow hover sx={{ cursor: "pointer" }}>
-                      {headCells.map((cell, index) => (
-                        <TableCell
-                          key={cell.id}
-                          align={cell.numeric ? "right" : "left"}
-                        >
-                          {index === 0 && row?.metadata?.itemPhoto ? (
-                            <div className="flex items-center gap-2">
-                              <span className="flex w-8 h-8 bg-gray-400 rounded-full overflow-hidden">
-                                <img
-                                  alt=""
-                                  className="w-8 h-8 rounded-full"
-                                  src={row?.metadata?.itemPhoto || ""}
-                                />
-                              </span>
-                              {row[cell.id]}
-                            </div>
-                          ) : // add action buttons if available
-                          cell.id === "actions" ? (
-                            <Stack direction="row">
-                              <button
-                                key={index + 1}
-                                onClick={() => handleExpandClick(row.loanId)}
-                                className="btn btn-primary"
-                                aria-label={'loan details'}
-                              >
-                                {/* MUI three-dots menu icon */}
-                                <MoreHorizIcon color="success" />
-                              </button>
-                            </Stack>
-                          ) : (
-                            row[cell.id]
-                        //     String(row[cell.id]).replace(
-                        //       /(\d)(?=(\d{3})+(?!\d))/g,
-                        //       "$1,"
-                        //     )
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
 
-                    {/* Only render the expanded row for the clicked row */}
-                    {expandedRow === row.loanId && (
-                    //   <TableRow>
-                        <TableCell colSpan={headCells.length + 1}>
-                          <LoanExpandableRow
-                            loanDetails={{...row.loanDetails, loanId: row.loanId, userId: row.userId, }}
-                          />
-                        </TableCell>
-                    //   </TableRow>
-                    )}
-                  </React.Fragment>
-                );
-              })}
-
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={headCells.length + 1} />
+      <TableContainer>
+        <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+          <EnhancedTableHead
+            order={order}
+            orderBy={orderBy}
+            onRequestSort={handleRequestSort}
+            rowCount={filteredRows.length}
+            headCells={headCells}
+          />
+          <TableBody>
+            {isLoading ? (
+              [...Array(rowsPerPage)].map((_, index) => (
+                <TableRow key={`skeleton-${index}`}>
+                  {headCells.map((_, cellIndex) => (
+                    <TableCell key={`skeleton-cell-${cellIndex}`}>
+                      <Skeleton animation="wave" />
+                    </TableCell>
+                  ))}
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Stack>
+              ))
+            ) : visibleRows.length > 0 ? (
+              visibleRows.map((row: Data, index: number) => (
+                <React.Fragment key={`row-${index}`}>
+                  <TableRow hover sx={{ cursor: "pointer" }}>
+                    {headCells.map((headCell) => (
+                      <TableCell key={`cell-${headCell.id}`} align={headCell.numeric ? "right" : "left"}>
+                        {headCell.id === "actions" ? (
+                          <Stack direction="row">
+                            <button
+                              onClick={() => handleExpandClick(row.loanId)}
+                              className="btn btn-primary"
+                              aria-label="loan details"
+                            >
+                              <MoreHorizIcon color="success" />
+                            </button>
+                          </Stack>
+                        ) : row[headCell.id]}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                  {expandedRow === row.loanId && (
+                    <TableCell colSpan={headCells.length}>
+                      <LoanExpandableRow
+                        loanDetails={{...row.loanDetails, loanId: row.loanId, userId: row.userId}}
+                      />
+                    </TableCell>
+                  )}
+                </React.Fragment>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={headCells.length} align="center">
+                  No data available
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={filteredRows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </Box>
   );
 }
-

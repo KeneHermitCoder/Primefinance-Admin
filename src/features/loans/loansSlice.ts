@@ -37,7 +37,7 @@ const loansSlice = createSlice({
     allLoansData: {
       data: [],
       error: null,
-      isLoading: true,
+      isLoading: false,
       success: false,
     },
     loanOverviewData: {
