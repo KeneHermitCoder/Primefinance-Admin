@@ -26,7 +26,7 @@ export default function Admins() {
   const dispatch = useDispatch();
   const [rows, setRows] = useState<{ [key: string]: any }[]>([]);
 
-  const { adminKPIData, adminOverviewData, allAdminsData, adminUpdateData } = useSelector(
+  const { adminKPIData, allAdminsData, adminUpdateData } = useSelector(
     (state: RootState) => state.users
   );
 
