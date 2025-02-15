@@ -7,6 +7,7 @@ const transactionsAPI = new TransactionsAPI();
 export const getTransactionsKPIData = transactionsAPI.getTransactionsKPIData;
 const getMultipleTransactions = transactionsAPI.getMultipleTransactions;
 export const getTransactionOverviewData = transactionsAPI.getTransactionOverviewData;
+export const getTransactionChartData = transactionsAPI.getTransactionChartData;
 
 const initialState: ITransactionSliceState = {
   allTransactionsData: {
@@ -37,6 +38,15 @@ const initialState: ITransactionSliceState = {
     isLoading: true,
     success: false,
   },
+  transactionChartData: {
+    data: {
+      labels: [],
+      series: []
+    },
+    error: null,
+    isLoading: true,
+    success: false
+  }
 };
 
 const transactionsSlice = createSlice({
@@ -58,7 +68,12 @@ const transactionsSlice = createSlice({
       // Handling getTransactionsKPIData actions
       .addCase(getTransactionsKPIData.pending, handlePendingState('transactionKPIData'))
       .addCase(getTransactionsKPIData.fulfilled, handleFulfilledState('transactionKPIData'))
-      .addCase(getTransactionsKPIData.rejected, handleRejectedState('transactionKPIData'));
+      .addCase(getTransactionsKPIData.rejected, handleRejectedState('transactionKPIData'))
+
+      // Handling getTransactionChartData actions
+      .addCase(getTransactionChartData.pending, handlePendingState('transactionChartData'))
+      .addCase(getTransactionChartData.fulfilled, handleFulfilledState('transactionChartData'))
+      .addCase(getTransactionChartData.rejected, handleRejectedState('transactionChartData'));
   },
 });
 

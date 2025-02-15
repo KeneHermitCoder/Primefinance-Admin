@@ -14,6 +14,14 @@ interface ITransactionOverview {
     limit?: number;
 }
 
+interface ITransactionChartData {
+    labels: string[];
+    series: {
+        data: number[];
+        label: string;
+    }[];
+}
+
 export interface ITransactionSliceState {
     allTransactionsData: IResponseState<any[]>;
     transactionKPIData: IResponseState<{
@@ -28,4 +36,5 @@ export interface ITransactionSliceState {
         transactionsWithoutLoan: number;
     }>;
     transactionOverviewData: IResponseState<any[]> & ITransactionOverview;
+    transactionChartData: IResponseState<ITransactionChartData>;
 }

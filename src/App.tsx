@@ -15,7 +15,7 @@ import {
   Users,
   Layout,
   // Escrow,
-  Settings,
+  // Settings,
   Register,
   Dashboard,
   LoansHome,
@@ -83,11 +83,11 @@ const router = createBrowserRouter([
           //   element: <Notifications />,
           //   errorElement: <ErrorPage />,
           // },
-          {
-            path: "/settings",
-            element: <Settings />,
-            errorElement: <ErrorPage />,
-          },
+          // {
+          //   path: "/settings",
+          //   element: <Settings />,
+          //   errorElement: <ErrorPage />,
+          // },
           {
             path: "*",
             element: <ErrorPage />,
