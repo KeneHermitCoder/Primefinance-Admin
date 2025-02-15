@@ -150,11 +150,6 @@ export default function Transactions() {
                   numeric: false,
                   label: "Status",
                 },
-                {
-                  id: "actions",
-                  numeric: false,
-                  label: "Actions",
-                },
               ]}
               rows={rows}
             />

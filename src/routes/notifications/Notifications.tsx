@@ -139,11 +139,6 @@ export default function Notifications() {
                   numeric: false,
                   label: "Status",
                 },
-                {
-                  id: "actions",
-                  numeric: false,
-                  label: "Actions",
-                },
               ]}
               rows={rows}
                 
