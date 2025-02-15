@@ -280,7 +280,6 @@ export default class LoansAPI {
       thunkAPI
     ) => {
       try {
-        alert(JSON.stringify({loanId, amount, duration: 30 }))
         const response = await httpClient({
           method: "POST",
           url: `/api/loans/reject-loan`,
