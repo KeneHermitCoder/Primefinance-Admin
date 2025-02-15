@@ -15,7 +15,7 @@ import {
   Money,
   Clear,
   Logout,
-  Settings,
+  // Settings,
   // Notifications,
   // CatchingPokemon,
   CurrencyBitcoin,
@@ -76,12 +76,12 @@ const navData = [
     // },
   ],
   [
-    {
-      link: "/settings",
-      tab: "settings",
-      title: "Settings",
-      icon: <Settings />,
-    },
+    // {
+    //   link: "/settings",
+    //   tab: "settings",
+    //   title: "Settings",
+    //   icon: <Settings />,
+    // },
     {
       link: "/logout",
       tab: "logout",
