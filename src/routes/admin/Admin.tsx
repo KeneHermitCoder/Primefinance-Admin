@@ -20,18 +20,18 @@ import {
   HandshakeRounded,
   FlagCircleRounded,
 } from "@mui/icons-material";
+import { toast } from "react-toastify";
 
 export default function Admins() {
-
   const dispatch = useDispatch();
   const [rows, setRows] = useState<{ [key: string]: any }[]>([]);
 
-  const { adminKPIData, adminOverviewData, allAdminsData, } = useSelector(
+  const { adminKPIData, adminOverviewData, allAdminsData, adminUpdateData } = useSelector(
     (state: RootState) => state.users
   );
 
   useEffect(() => {
-    // Fetch users when the component mounts
+    // Fetch admins when the component mounts
     // @ts-ignore
     dispatch(new UsersAPI().getMultipleAdmins({ page: 0, limit: 10 }));
     // @ts-ignore
@@ -46,9 +46,9 @@ export default function Admins() {
         (admin: any) => ({
           name: `${admin?.user_metadata?.first_name} ${admin?.user_metadata?.surname}`,
           adminId: admin._id,
-          lastLogin: admin.last_login,
+          lastLogin: admin.updatedAt,
           adminEmail: admin.email,
-          status: admin?.confirmed_at? "active" : "inactive",
+          status: admin?.status && admin.status === "active" ? "active" : "suspended",
           date: admin.createdAt,
           metadata: {
             itemPhoto:
@@ -56,11 +56,30 @@ export default function Admins() {
           },
         })
       );
-      setRows([
-        ...modifiedTransactionData,
-      ]);
+      setRows(modifiedTransactionData);
     }
-  }, [adminOverviewData.data, setRows]);
+  }, [allAdminsData.data, setRows]);
+
+  const handleAdminUpdate = async (
+    adminId: string,
+    action: "active" | "inactive"
+  ) => {
+    // @ts-ignore
+    dispatch(new UsersAPI().updateAdminStatus({ userId: adminId, status: action }));
+  };
+
+  useEffect(() => {
+    // Refresh the admins data
+    // @ts-ignore
+    dispatch(new UsersAPI().getMultipleAdmins({ page: 0, limit: 10 }));
+    // @ts-ignore
+    dispatch(new UsersAPI().getAdminsKPIData());
+
+    if (adminUpdateData.success)
+      toast.success("Admin updated successfully");
+    else if (adminUpdateData.error) toast.error("Error updating admin");
+
+  }, [adminUpdateData.success, adminUpdateData.error]);
 
   return (
     <>
@@ -74,7 +93,7 @@ export default function Admins() {
                 subtitle="Total Admins"
                 kpiIcon={<AttachMoney sx={{ color: "success.main" }} />}
                 total={`${formatNumberToMultipleCommas(
-                  adminKPIData.data?.totalAdminsCount
+                  adminKPIData.data?.totalAdminsCount ?? 0
                 )}`}
               />
 
@@ -82,15 +101,15 @@ export default function Admins() {
                 subtitle="Active Admins"
                 kpiIcon={<HandshakeRounded sx={{ color: "primary.main" }} />}
                 total={`${formatNumberToMultipleCommas(
-                  adminKPIData.data.activeAdminsCount
+                  adminKPIData.data.activeAdminsCount || 0
                 )}`}
               />
 
               <UsersKPIDisplay
-                subtitle="Inactive Admins"
+                subtitle="Suspended Admins"
                 kpiIcon={<FlagCircleRounded sx={{ color: "error.main" }} />}
                 total={`${formatNumberToMultipleCommas(
-                  adminKPIData.data.inactiveAdminsCount
+                  adminKPIData.data.suspendedAdminsCount
                 )}`}
               />
 
@@ -109,7 +128,7 @@ export default function Admins() {
             justifyContent="space-between"
             className="bg-white p-4 rounded-[12px]"
           >
-            {adminOverviewData.isLoading ? (
+            {allAdminsData.isLoading ? (
               <PrimaryTableSkeleton />
             ) : (
               <SearchFilterSortPaginateTable
@@ -128,7 +147,7 @@ export default function Admins() {
                     },
                     {
                       label: "Status",
-                      options: ["active", "suspended", "suspended"],
+                      options: ["active", "inactive"],
                     },
                   ],
                   action: tableFilterAction,
@@ -164,8 +183,39 @@ export default function Admins() {
                     numeric: false,
                     label: "Status",
                   },
+                  {
+                    id: "actions",
+                    numeric: false,
+                    label: "Actions",
+                  },
                 ]}
                 rows={rows}
+                actions={[
+                  {
+                    label: "Suspend",
+                    disabled: (row) => row.status === "suspended",
+                    onClick: (row) => {
+                      if (
+                        confirm(`Are you sure you want to suspend this admin?`)
+                      ) {
+                        handleAdminUpdate(row.adminId, "inactive");
+                      }
+                    },
+                  },
+                  {
+                    label: "Reactivate",
+                    disabled: (row) => row.status === "active",
+                    onClick: (row) => {
+                      if (
+                        confirm(
+                          `Are you sure you want to reactivate this admin?`
+                        )
+                      ) {
+                        handleAdminUpdate(row.adminId, "active");
+                      }
+                    },
+                  },
+                ]}
               />
             )}
           </Stack>

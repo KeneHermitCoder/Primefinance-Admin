@@ -65,8 +65,8 @@ export default class UsersAPI {
                     return createdAt.getTime() > sevenDaysAgo.getTime() && admin.role === 'admin';
                 }).length || 0,
                 totalAdminsCount: admins.length || 0,
-                activeAdminsCount: admins?.filter((admin: any) => admin.confirmed_at).length || 0,
-                inactiveAdminsCount: admins?.filter((admin: any) => !admin.confirmed_at).length || 0
+                activeAdminsCount: admins?.filter((admin: any) => admin.status === 'active').length || 0,
+                suspendedAdminsCount: admins?.filter((admin: any) => admin.status !== 'active').length || 0
             };
         } catch (error: any) {
             return thunkAPI.rejectWithValue(handleError(error));
@@ -126,19 +126,41 @@ export default class UsersAPI {
         }
     });
 
-    public updateUserStatus = createAsyncThunk('users/updateStatus', async ({
+    public updateUserStatus = createAsyncThunk('users/updateUserStatus', async ({
         userId,
         status,
-        userType = "user",
     }: {
         userId: string;
-        userType?: "admin" | "user";
         status: "active" | "inactive";
     }, thunkAPI) => {
         try {
             const response = await httpClient({
                 method: 'POST',
-                url: `/api/users/activate-${userType}`,
+                url: `/api/users/activate-user`,
+                data: { 
+                    userId,
+                    status,
+                 },
+                isAuth: true,
+            });
+            return response.data;
+        } catch (error: any) {
+            console.log(error);
+            return thunkAPI.rejectWithValue(handleError(error));
+        }
+    });
+
+    public updateAdminStatus = createAsyncThunk('users/updateAdminStatus', async ({
+        userId,
+        status,
+    }: {
+        userId: string;
+        status: "active" | "inactive";
+    }, thunkAPI) => {
+        try {
+            const response = await httpClient({
+                method: 'POST',
+                url: `/api/users/activate-admin`,
                 data: { 
                     userId,
                     status,

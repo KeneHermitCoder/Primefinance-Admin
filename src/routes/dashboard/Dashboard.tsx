@@ -6,7 +6,6 @@ import {
   LoanStatus,
   PrimaryTableSkeleton,
   DashboardAmountDisplay,
-  // TableErrorComponent,
 } from "../../components/";
 import {
   Reveal,
@@ -14,11 +13,11 @@ import {
   PrimaryLineChart,
   LoanSearchFilterSortPaginateTable,
 } from "../../components";
-import LoansAPI from "../../features/loans/LoansAPI";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../features";
+import { useEffect, useState } from "react";
 import { UsersAPI } from "../../features/users";
+import LoansAPI from "../../features/loans/LoansAPI";
+import { useDispatch, useSelector } from "react-redux";
 import { TransactionsAPI } from "../../features/transactions";
 
 export function Dashboard() {
@@ -85,7 +84,7 @@ export function Dashboard() {
     <>
       <Reveal>
         <Stack spacing={4} paddingX={1} paddingY={1}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
             <DashboardAmountDisplay
               title="Total transactions"
               amount={`₦${formatNumberToMultipleCommas(transactionKPIData.data.transactionsWithoutLoan)}`}
