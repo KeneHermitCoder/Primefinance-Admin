@@ -20,9 +20,12 @@ export interface IUserSliceState {
         newAdminsCount: number;
         totalAdminsCount: number;
         activeAdminsCount: number;
-        inactiveAdminsCount: number;
+        suspendedAdminsCount: number;
     }>;
     adminOverviewData: IResponseState<any[]> & IUserOverview;
+    adminUpdateData: IResponseState<{
+        updatingId: string | null;
+    }>;
     allUsersData: IResponseState<any[]>;
     userKPIData: IResponseState<{
         newUsersCount: number;

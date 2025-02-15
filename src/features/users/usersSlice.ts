@@ -1,6 +1,6 @@
 import UsersAPI from './UsersAPI';
+import { createSlice, } from '@reduxjs/toolkit';
 import { IUserSliceState } from '../../contracts';
-import { ActionReducerMapBuilder, createSlice, } from '@reduxjs/toolkit';
 import { handleFulfilledState, handlePendingState, handleRejectedState } from '../../utils';
 
 const usersAPI = new UsersAPI();
@@ -8,6 +8,7 @@ const usersAPI = new UsersAPI();
 const getAdminsKPIData = usersAPI.getAdminsKPIData;
 const getMultipleAdmins = usersAPI.getMultipleAdmins;
 const getAdminOverviewData = usersAPI.getAdminOverviewData;
+const updateAdminStatus = usersAPI.updateAdminStatus;
 
 const getUsersKPIData = usersAPI.getUsersKPIData;
 const getMultipleUsers = usersAPI.getMultipleUsers;
@@ -34,10 +35,18 @@ const usersSlice = createSlice({
                 newAdminsCount: 0,
                 totalAdminsCount: 0,
                 activeAdminsCount: 0,
-                inactiveAdminsCount: 0,
+                suspendedAdminsCount: 0,
             },
             error: null,
             isLoading: true,
+            success: false,
+        },
+        adminUpdateData: {
+            data: {
+                updatingId: null
+            },
+            error: null,
+            isLoading: false,
             success: false,
         },
         allUsersData: {
@@ -71,7 +80,7 @@ const usersSlice = createSlice({
             isLoading: false,
             success: false,
         }
-    },
+    } as IUserSliceState,
     reducers: {},
     extraReducers: (builder) => {
         builder
@@ -86,6 +95,10 @@ const usersSlice = createSlice({
             .addCase(getAdminsKPIData.pending, handlePendingState('adminKPIData'))
             .addCase(getAdminsKPIData.fulfilled, handleFulfilledState('adminKPIData'))
             .addCase(getAdminsKPIData.rejected, handleRejectedState('adminKPIData'))
+
+            .addCase(updateAdminStatus.pending, handlePendingState('adminUpdateData'))
+            .addCase(updateAdminStatus.fulfilled, handleFulfilledState('adminUpdateData'))
+            .addCase(updateAdminStatus.rejected, handleRejectedState('adminUpdateData'))
 
             .addCase(getMultipleUsers.pending, handlePendingState('allUsersData'))
             .addCase(getMultipleUsers.fulfilled, handleFulfilledState('allUsersData'))
@@ -103,11 +116,6 @@ const usersSlice = createSlice({
             .addCase(updateUserStatus.fulfilled, handleFulfilledState('userUpdateData'))
             .addCase(updateUserStatus.rejected, handleRejectedState('userUpdateData'));
     },
-} as {
-    name: string;
-    initialState: IUserSliceState;
-    reducers: any;
-    extraReducers: (builder: ActionReducerMapBuilder<IUserSliceState>) => void;
 });
 
 export const { reducer: users, } = usersSlice;

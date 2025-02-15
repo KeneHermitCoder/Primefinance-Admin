@@ -402,7 +402,7 @@ const LoanExpandableRow: React.FC<{
                   variant="contained"
                   color="success"
                   onClick={() => setLogModalData("decline")}
-                  disabled={['pending', 'accepted'].includes(loanDetails.activeStatus)}
+                  disabled={['accepted'].includes(loanDetails.activeStatus)}
                   className="self-end md:self-center"
                 >
                   Decline
@@ -410,7 +410,7 @@ const LoanExpandableRow: React.FC<{
                 <Button
                   variant="contained"
                   color="error"
-                  disabled={['pending', 'accepted'].includes(loanDetails.activeStatus)}
+                  disabled={['accepted'].includes(loanDetails.activeStatus)}
                   onClick={() => setLogModalData("approve")}
                   className="self-end md:self-center"
                 >
