@@ -28,7 +28,10 @@ export interface IUserSliceState {
         newUsersCount: number;
         totalUsersCount: number;
         activeUsersCount: number;
-        flaggedUsersCount: number;
+        suspendedUsersCount: number;
     }>;
     userOverviewData: IResponseState<any[]> & IUserOverview;
+    userUpdateData: IResponseState<{
+        updatingId: string | null;
+    }>
 }

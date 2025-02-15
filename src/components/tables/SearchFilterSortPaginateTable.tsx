@@ -23,6 +23,7 @@ interface Data {
 
 interface Action {
   label: string;
+  disabled?: (row: Data) => boolean;
   onClick: (row: Data) => void;
 }
 
@@ -115,15 +116,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   );
 }
 
-export default function SearchFilterSortPaginateTable({
-  rows = [],
-  filterParams,
-  headCells = [],
-  title = "Table Title",
-  searchParams,
-  isLoading = false,
-  actions,
-}: {
+interface SearchFilterSortPaginateTableProps {
   rows?: Data[];
   title?: string;
   filterParams?: {
@@ -134,10 +127,22 @@ export default function SearchFilterSortPaginateTable({
     action: (label: string, selected: any, option: any) => boolean;
   };
   searchParams?: string[];
-  headCells?: HeadCell[];
+  headCells: HeadCell[];
   isLoading?: boolean;
   actions?: Action[];
-}) {
+  updatingId?: string;
+}
+
+export default function SearchFilterSortPaginateTable({
+  rows = [],
+  filterParams,
+  headCells,
+  title = "Table Title",
+  searchParams,
+  isLoading = false,
+  actions,
+  updatingId,
+}: SearchFilterSortPaginateTableProps) {
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<string>('');
   const [page, setPage] = useState(0);
@@ -294,8 +299,9 @@ export default function SearchFilterSortPaginateTable({
                             onClick={(e) => handleMenuClick(e, row)}
                             className="btn btn-primary"
                             aria-label="actions"
+                            disabled={updatingId === row.userId}
                           >
-                            <MoreHorizIcon color="success" />
+                            <MoreHorizIcon color={updatingId === row.userId ? "disabled" : "success"} />
                           </button>
                         </Stack>
                       ) : row[headCell.id]}
@@ -323,6 +329,7 @@ export default function SearchFilterSortPaginateTable({
           <MenuItem 
             key={index}
             onClick={() => handleActionClick(action)}
+            disabled={selectedRow ? (action.disabled?.(selectedRow) || updatingId === selectedRow.userId) : false}
           >
             {action.label}
           </MenuItem>

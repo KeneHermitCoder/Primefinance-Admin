@@ -91,8 +91,8 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ data, columns }) => {
     setSelected(newSelected);
   };
 
-  const handleFlaggedAction = (userId: string) => {
-    console.log('Flagged user:', userId);
+  const handleSuspendedAction = (userId: string) => {
+    console.log('Suspended user:', userId);
   }
 
   const handleEditAction = (userId: string) => {
@@ -146,7 +146,7 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ data, columns }) => {
                 <TableCell key={column.field}>{row[column.field]}</TableCell>
               ))}
               <TableCell>
-                <IconButton onClick={() => handleFlaggedAction(row.UserID)} color="primary">
+                <IconButton onClick={() => handleSuspendedAction(row.UserID)} color="primary">
                   <FlagIcon />
                 </IconButton>
                 <IconButton onClick={() => handleEditAction(row.UserID)} color="secondary">

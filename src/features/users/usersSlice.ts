@@ -12,6 +12,7 @@ const getAdminOverviewData = usersAPI.getAdminOverviewData;
 const getUsersKPIData = usersAPI.getUsersKPIData;
 const getMultipleUsers = usersAPI.getMultipleUsers;
 const getUserOverviewData = usersAPI.getUserOverviewData;
+const updateUserStatus = usersAPI.updateUserStatus;
 
 const usersSlice = createSlice({
     name: 'users',
@@ -56,10 +57,18 @@ const usersSlice = createSlice({
                 newUsersCount: 0,
                 totalUsersCount: 0,
                 activeUsersCount: 0,
-                flaggedUsersCount: 0,
+                suspendedUsersCount: 0,
             },
             error: null,
             isLoading: true,
+            success: false,
+        },
+        userUpdateData: {
+            data: {
+                updatingId: null
+            },
+            error: null,
+            isLoading: false,
             success: false,
         }
     },
@@ -88,7 +97,11 @@ const usersSlice = createSlice({
 
             .addCase(getUsersKPIData.pending, handlePendingState('userKPIData'))
             .addCase(getUsersKPIData.fulfilled, handleFulfilledState('userKPIData'))
-            .addCase(getUsersKPIData.rejected, handleRejectedState('userKPIData'));
+            .addCase(getUsersKPIData.rejected, handleRejectedState('userKPIData'))
+
+            .addCase(updateUserStatus.pending, handlePendingState('userUpdateData'))
+            .addCase(updateUserStatus.fulfilled, handleFulfilledState('userUpdateData'))
+            .addCase(updateUserStatus.rejected, handleRejectedState('userUpdateData'));
     },
 } as {
     name: string;

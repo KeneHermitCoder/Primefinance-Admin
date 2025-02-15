@@ -109,7 +109,7 @@ export default function Transactions() {
                   },
                   {
                     label: "Type",
-                    options: ["loan", "paybills", "transfer"],
+                    options: ["debit", "airtime", "credit", "bettting, lottery and gaming", "others"],
                   },
                   {
                     label: "Status",

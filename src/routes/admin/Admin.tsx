@@ -128,7 +128,7 @@ export default function Admins() {
                     },
                     {
                       label: "Status",
-                      options: ["active", "flagged", "suspended"],
+                      options: ["active", "suspended", "suspended"],
                     },
                   ],
                   action: tableFilterAction,
