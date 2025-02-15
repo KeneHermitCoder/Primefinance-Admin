@@ -1,6 +1,6 @@
 import { Stack } from "@mui/material";
 import images from "../../constants/images";
-import { ArrowCircleDown, ArrowCircleUp, } from "@mui/icons-material";
+import { ArrowCircleDown, ArrowCircleUp, TrendingDown, TrendingUp } from "@mui/icons-material";
 import { formatNumberToMultipleCommas, tableFilterAction, } from "../../utils";
 import {
   LoanStatus,
@@ -85,15 +85,42 @@ export function Dashboard() {
     <>
       <Reveal>
         <Stack spacing={4} paddingX={1} paddingY={1}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5">
             <DashboardAmountDisplay
-              title="Total revenue"
+              title="Total transactions"
               amount={`₦${formatNumberToMultipleCommas(transactionKPIData.data.transactionsWithoutLoan)}`}
               trIcon={<ArrowCircleUp style={{ color: "#15792b" }} />}
               backgroundColour="#CCEFDD"
               bottomItem={
                 <div className="w-full flex justify-center items-center pr-5">
                   <img alt="" src={images.totalRevenueIndicator} />
+                </div>
+              }
+            />
+            <DashboardAmountDisplay
+              title="Debit transactions" 
+              amount="₦0"
+              backgroundColour="#FFE6E6"
+              trIcon={<ArrowCircleDown style={{ color: "#D32F2F" }} />}
+              bottomItem={
+                <div className="w-full flex justify-start items-center px-3 pt-2 pb-1">
+                  <TrendingDown sx={{ color: "#D32F2F", fontSize: 48 }} />
+                  <TrendingDown sx={{ color: "#D32F2F", fontSize: 48 }} />
+                  <TrendingDown sx={{ color: "#D32F2F", fontSize: 48 }} />
+                </div>
+              }
+            />
+            <DashboardAmountDisplay
+              title="Credit transactions"
+              // @ts-ignore
+              amount={`₦${formatNumberToMultipleCommas(transactionKPIData.data.creditTransactions || 0)}`}
+              backgroundColour="#CCEFDD"
+              trIcon={<ArrowCircleUp style={{ color: "#15792b" }} />}
+              bottomItem={
+                <div className="w-full flex justify-start items-center px-3 pt-2 pb-1">
+                  <TrendingUp sx={{ color: "#15792b", fontSize: 48 }} />
+                  <TrendingUp sx={{ color: "#15792b", fontSize: 48 }} />
+                  <TrendingUp sx={{ color: "#15792b", fontSize: 48 }} />
                 </div>
               }
             />
@@ -106,14 +133,6 @@ export function Dashboard() {
                 <div className="w-full flex justify-center items-center px-5 pb-1">
                   <img alt="" src={images.totalUsersIndicator} />
                 </div>
-              }
-            />
-            <DashboardAmountDisplay
-              title="Escrow funds"
-              amount="₦0"
-              backgroundColour="#d1e9fd"
-              bottomItem={
-                <div className="w-full flex justify-start items-center px-2 py-3 text-[#2699fb] text-2xl">{`+0 pending`}</div>
               }
             />
             <DashboardAmountDisplay

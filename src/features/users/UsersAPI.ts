@@ -73,7 +73,6 @@ export default class UsersAPI {
         }
     });
 
-
     public getMultipleUsers = createAsyncThunk('loans/getAllUsers', async ({
         // page = 1,
         // limit = 10,
@@ -85,7 +84,7 @@ export default class UsersAPI {
             const users = ((await this.fetchUsers(thunkAPI)) || []).filter((user: any) => user.role !== 'admin');
             return users?.filter((user: any) => user.role !== 'admin');
         } catch (error: any) {
-            thunkAPI.rejectWithValue(handleError(error));
+            return thunkAPI.rejectWithValue(handleError(error));
         }
     });
 
@@ -102,10 +101,9 @@ export default class UsersAPI {
                 id: users?.filter((user:any)=> user.id),
                 email: users?.filter((user: any)=> user.name),
                 last_login: users?.filter((user: any)=> user.name),
-
             }
         } catch (error: any) {
-            thunkAPI.rejectWithValue(handleError(error));
+            return thunkAPI.rejectWithValue(handleError(error));
         }
     });
 
@@ -119,15 +117,38 @@ export default class UsersAPI {
                     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
                     return createdAt.getTime() > sevenDaysAgo.getTime();
                 }).length || 0,
-                totalUsersCount: users?.length?? 0,
-                activeUsersCount: users?.filter((user: any) => user.confirmed_at).length || 0,
-                flaggedUsersCount: users?.filter((user: any) => !user.confirmed_at).length || 0
+                totalUsersCount: users?.length ?? 0,
+                activeUsersCount: users?.filter((user: any) => user.status === "active").length || 0,
+                suspendedUsersCount: users?.filter((user: any) => user.status === "inactive").length || 0
             }
         } catch (error: any) {
-            const errorResponse = handleError(error);
-            thunkAPI.rejectWithValue(errorResponse);
+            return thunkAPI.rejectWithValue(handleError(error));
         }
-        
     });
 
+    public updateUserStatus = createAsyncThunk('users/updateStatus', async ({
+        userId,
+        status,
+        userType = "user",
+    }: {
+        userId: string;
+        userType?: "admin" | "user";
+        status: "active" | "inactive";
+    }, thunkAPI) => {
+        try {
+            const response = await httpClient({
+                method: 'POST',
+                url: `/api/users/activate-${userType}`,
+                data: { 
+                    userId,
+                    status,
+                 },
+                isAuth: true,
+            });
+            return response.data;
+        } catch (error: any) {
+            console.log(error);
+            return thunkAPI.rejectWithValue(handleError(error));
+        }
+    });
 }

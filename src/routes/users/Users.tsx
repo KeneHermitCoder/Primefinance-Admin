@@ -4,10 +4,7 @@ import { useEffect, useState } from "react";
 import { UsersAPI } from "../../features/users";
 import { useDispatch, useSelector } from "react-redux";
 import UsersKPIDisplay from "../../components/usersKPI";
-import {
-  tableFilterAction,
-  formatNumberToMultipleCommas,
-} from "../../utils";
+import { tableFilterAction, formatNumberToMultipleCommas } from "../../utils";
 import {
   Reveal,
   KPILoadingSkeleton,
@@ -20,12 +17,13 @@ import {
   HandshakeRounded,
   FlagCircleRounded,
 } from "@mui/icons-material";
+import { toast } from "react-toastify";
 
 export default function Users() {
   const dispatch = useDispatch();
   const [rows, setRows] = useState<{ [key: string]: any }[]>([]);
 
-  const { userKPIData, userOverviewData, allUsersData, } = useSelector(
+  const { userKPIData, userOverviewData, allUsersData, userUpdateData, } = useSelector(
     (state: RootState) => state.users
   );
 
@@ -40,24 +38,46 @@ export default function Users() {
   }, [dispatch]);
 
   useEffect(() => {
+    console.log({allUsersData});
     if (allUsersData?.data?.length >= 0) {
-      const modifiedTransactionData = allUsersData.data.map(
-        (user: any) => ({
-          name: `${user?.user_metadata?.first_name} ${user?.user_metadata?.surname}`,
-          userId: user._id,
-          lastLogin: user.last_login,
-          userEmail: user.email,
-          status: user?.confirmed_at ? "active" : "inactive",
-          date: user.createdAt,
-          metadata: {
-            itemPhoto:
-              "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
-          },
-        })
-      );
+      const modifiedTransactionData = allUsersData.data.map((user: any) => ({
+        name: `${user?.user_metadata?.first_name} ${user?.user_metadata?.surname}`,
+        userId: user._id,
+        // lastLogin: user.last_login,
+        lastLogin: user.updatedAt,
+        userEmail: user.email,
+        status:
+          user?.status && user.status === "active" ? "active" : "suspended",
+        date: user.createdAt,
+        metadata: {
+          itemPhoto:
+            "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+        },
+      }));
       setRows(modifiedTransactionData);
     }
   }, [userOverviewData.data, setRows]);
+
+  const handleUserUpdate = async (
+    userId: string,
+    action: "active" | "inactive"
+  ) => {
+    // @ts-ignore
+    dispatch(new UsersAPI().updateUserStatus({ userId, status: action }));
+  };
+
+  useEffect(() => {
+    // Refresh the users data
+    // @ts-ignore
+    dispatch(new UsersAPI().getMultipleUsers({ page: 0, limit: 10 }));
+    // @ts-ignore
+    dispatch(new UsersAPI().getUsersKPIData());
+
+    if (userUpdateData.success)
+      toast.success("User updated successfully");
+    else if (userUpdateData.error) toast.error("Error updating user");
+
+  }, [userUpdateData.success, userUpdateData.error]);
 
   return (
     <>
@@ -71,7 +91,7 @@ export default function Users() {
                 subtitle="Total Users"
                 kpiIcon={<AttachMoney sx={{ color: "success.main" }} />}
                 total={`${formatNumberToMultipleCommas(
-                  userKPIData.data?.totalUsersCount?? 0
+                  userKPIData.data?.totalUsersCount ?? 0
                 )}`}
               />
 
@@ -84,10 +104,10 @@ export default function Users() {
               />
 
               <UsersKPIDisplay
-                subtitle="Flagged Users"
+                subtitle="Suspended Users"
                 kpiIcon={<FlagCircleRounded sx={{ color: "error.main" }} />}
                 total={`${formatNumberToMultipleCommas(
-                  userKPIData.data.flaggedUsersCount
+                  userKPIData.data.suspendedUsersCount
                 )}`}
               />
 
@@ -106,7 +126,7 @@ export default function Users() {
             justifyContent="space-between"
             className="bg-white p-4 rounded-[12px]"
           >
-            {userOverviewData.isLoading ? (
+            {allUsersData.isLoading ? (
               <PrimaryTableSkeleton />
             ) : (
               <SearchFilterSortPaginateTable
@@ -125,7 +145,7 @@ export default function Users() {
                     },
                     {
                       label: "Status",
-                      options: ["active", "flagged", "suspended"],
+                      options: ["active", "suspended"],
                     },
                   ],
                   action: tableFilterAction,
@@ -171,18 +191,28 @@ export default function Users() {
                 actions={[
                   {
                     label: "Suspend",
+                    disabled: (row) => row.status === "suspended",
                     onClick: (row) => {
-                      if (confirm(`Are you sure you want to perform this action_`))
-                        console.log("Suspend user", row.userId);
-                    }
+                      if (
+                        confirm(`Are you sure you want to suspend this user?`)
+                      ) {
+                        handleUserUpdate(row.userId, "inactive");
+                      }
+                    },
                   },
                   {
-                    label: "Reactivate", 
+                    label: "Reactivate",
+                    disabled: (row) => row.status === "active",
                     onClick: (row) => {
-                      if (confirm(`Are you sure you want to perform this action_`))
-                        console.log("Reactivate user", row.userId);
-                    }
-                  }
+                      if (
+                        confirm(
+                          `Are you sure you want to reactivate this user?`
+                        )
+                      ) {
+                        handleUserUpdate(row.userId, "active");
+                      }
+                    },
+                  },
                 ]}
               />
             )}
