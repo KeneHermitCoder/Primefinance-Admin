@@ -28,6 +28,8 @@ const initialState: ITransactionSliceState = {
       failedTranxCount: 0,
       totalTransactions: 0,
       pendingTranxCount: 0,
+      debitTransactions: 0,
+      creditTransactions: 0,
       failedTransactions: 0,
       pendingTransactions: 0,
       successfulTranxCount: 0,

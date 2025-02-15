@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import { visuallyHidden } from "@mui/utils";
 import DropDownSelect from "../DropDownSelect";
-import { TableRow, Stack } from "@mui/material";
+import { TableRow, Stack, IconButton } from "@mui/material";
 import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
 import TableCell from "@mui/material/TableCell";
@@ -15,6 +15,7 @@ import TablePagination from "@mui/material/TablePagination";
 import { Skeleton } from "@mui/material";
 import { Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
+import ClearIcon from '@mui/icons-material/Clear';
 
 interface Data {
   [key: string]: any;
@@ -188,6 +189,19 @@ export default function LoanSearchFilterSortPaginateTable({
     }));
   };
 
+  const clearSearch = () => {
+    setSearchTerm('');
+  };
+
+  const clearFilters = () => {
+    setFilters({});
+  };
+
+  const clearAll = () => {
+    clearSearch();
+    clearFilters();
+  };
+
   const visibleRows = useMemo(() => {
     if (isLoading) return [];
     
@@ -219,22 +233,42 @@ export default function LoanSearchFilterSortPaginateTable({
         <Typography variant="h6" className="font-medium">
           {title}
         </Typography>
-        <div className="flex flex-col md:flex-row gap-4">
-          <TextField
-            size="small"
-            placeholder="Search..."
-            value={searchTerm}
-            onChange={handleSearch}
-            disabled={isLoading}
-          />
+        <div className="flex flex-col md:flex-row gap-4 items-center">
+          <div className="relative">
+            <TextField
+              size="small"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={handleSearch}
+              disabled={isLoading}
+            />
+            {searchTerm && (
+              <IconButton
+                size="small"
+                onClick={clearSearch}
+                sx={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)' }}
+              >
+                <ClearIcon fontSize="small" />
+              </IconButton>
+            )}
+          </div>
           {filterParams?.data.map((filter) => (
             <DropDownSelect
               key={filter.label}
               label={filter.label}
               options={filter.options}
               onSelected={(value: string) => handleFilter(filter.label, value)}
+              value={filters[filter.label] || ''}
             />
           ))}
+          {(searchTerm || Object.keys(filters).length > 0) && (
+            <button
+              onClick={clearAll}
+              className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+            >
+              Clear All
+            </button>
+          )}
         </div>
       </div>
 

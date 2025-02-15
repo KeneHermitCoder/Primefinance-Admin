@@ -99,13 +99,13 @@ const loansSlice = createSlice({
     approveLoanData: {
       data: {},
       error: null,
-      isLoading: true,
+      isLoading: false,
       success: false,
     },
     declineLoanData: {
       data: {},
       error: null,
-      isLoading: true,
+      isLoading: false,
       success: false,
     },
   },

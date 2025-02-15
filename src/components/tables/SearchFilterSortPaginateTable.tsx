@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import { visuallyHidden } from "@mui/utils";
 import DropDownSelect from "../DropDownSelect";
-import { TableRow, Stack } from "@mui/material";
+import { TableRow, Stack, IconButton } from "@mui/material";
 import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
 import TableCell from "@mui/material/TableCell";
@@ -16,6 +16,7 @@ import { Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import ClearIcon from '@mui/icons-material/Clear';
 
 interface Data {
   [key: string]: any;
@@ -153,23 +154,36 @@ export default function SearchFilterSortPaginateTable({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedRow, setSelectedRow] = useState<Data | null>(null);
 
-  const handleMenuClick = (event: React.MouseEvent<HTMLElement>, row: Data) => {
+  const handleMenuClick = useCallback((event: React.MouseEvent<HTMLElement>, row: Data) => {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
     setSelectedRow(row);
-  };
+  }, []);
 
-  const handleMenuClose = () => {
+  const handleMenuClose = useCallback(() => {
     setAnchorEl(null);
     setSelectedRow(null);
-  };
+  }, []);
 
-  const handleActionClick = (action: Action) => {
+  const handleActionClick = useCallback((action: Action) => {
     if (selectedRow) {
       action.onClick(selectedRow);
       handleMenuClose();
     }
-  };
+  }, [selectedRow, handleMenuClose]);
+
+  const clearSearch = useCallback(() => {
+    setSearchTerm('');
+  }, []);
+
+  const clearFilters = useCallback(() => {
+    setFilters({});
+  }, []);
+
+  const clearAll = useCallback(() => {
+    clearSearch();
+    clearFilters();
+  }, [clearSearch, clearFilters]);
 
   // Reset pagination when rows change
   useEffect(() => {
@@ -205,16 +219,16 @@ export default function SearchFilterSortPaginateTable({
     setPage(0);
   }, [searchTerm, filters, rows, searchParams, filterParams]);
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-  };
+  }, []);
 
-  const handleFilter = (label: string, value: string) => {
+  const handleFilter = useCallback((label: string, value: string) => {
     setFilters(prev => ({
       ...prev,
       [label]: value
     }));
-  };
+  }, []);
 
   const visibleRows = useMemo(() => {
     if (isLoading) return [];
@@ -232,14 +246,14 @@ export default function SearchFilterSortPaginateTable({
     setOrderBy(property.toString());
   }, [order, orderBy]);
 
-  const handleChangePage = (_: unknown, newPage: number) => {
+  const handleChangePage = useCallback((_: unknown, newPage: number) => {
     setPage(newPage);
-  };
+  }, []);
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
+  }, []);
 
   return (
     <Box sx={{ width: "100%" }} className="flex flex-col gap-3">
@@ -247,8 +261,8 @@ export default function SearchFilterSortPaginateTable({
         <Typography variant="h6" className="font-medium">
           {title}
         </Typography>
-        <div className="flex flex-col md:flex-row gap-4">
-          {searchParams && searchParams.length > 0 && (
+        <div className="flex flex-col md:flex-row gap-4 items-center">
+          <div className="relative">
             <TextField
               size="small"
               placeholder="Search..."
@@ -256,15 +270,33 @@ export default function SearchFilterSortPaginateTable({
               onChange={handleSearch}
               disabled={isLoading}
             />
-          )}
+            {searchTerm && (
+              <IconButton
+                size="small"
+                onClick={clearSearch}
+                sx={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)' }}
+              >
+                <ClearIcon fontSize="small" />
+              </IconButton>
+            )}
+          </div>
           {filterParams?.data.map((filter) => (
             <DropDownSelect
               key={filter.label}
               label={filter.label}
               options={filter.options}
               onSelected={(value: string) => handleFilter(filter.label, value)}
+              value={filters[filter.label] || ''}
             />
           ))}
+          {(searchTerm || Object.keys(filters).length > 0) && (
+            <button
+              onClick={clearAll}
+              className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+            >
+              Clear All
+            </button>
+          )}
         </div>
       </div>
 
