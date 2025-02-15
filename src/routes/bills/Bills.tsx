@@ -225,11 +225,6 @@ export default function Bills() {
                     numeric: false,
                     label: "Status",
                   },
-                  {
-                    id: "actions",
-                    numeric: false,
-                    label: "Actions",
-                  },
                 ]}
                 rows={rows}
               />

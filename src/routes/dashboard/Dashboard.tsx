@@ -12,7 +12,7 @@ import {
   Reveal,
   PrimaryPieChart,
   PrimaryLineChart,
-  SearchFilterSortPaginateTable,
+  LoanSearchFilterSortPaginateTable,
 } from "../../components";
 import LoansAPI from "../../features/loans/LoansAPI";
 import { useEffect, useState } from "react";
@@ -22,11 +22,10 @@ import { UsersAPI } from "../../features/users";
 import { TransactionsAPI } from "../../features/transactions";
 
 export function Dashboard() {
-
   const dispatch = useDispatch();
   const [rows, setRows] = useState<{ [key: string]: any }[]>([]);
 
-  const { loanKPIData, loanOverviewData } = useSelector(
+  const { loanKPIData, allLoansData } = useSelector(
     (state: RootState) => state.loans
   );
   const { userKPIData, } = useSelector((state: RootState) => state.users);
@@ -35,7 +34,7 @@ export function Dashboard() {
   useEffect(() => {
     // Fetch loans when the component mounts
     // @ts-ignore
-    dispatch(new LoansAPI().getLoanOverviewData({ page: 0, limit: 10 }));
+    dispatch(new LoansAPI().getMultipleLoans({ page: 0, limit: 10 }));
     // @ts-ignore
     dispatch(new LoansAPI().getLoansKPIData({ page: 0, limit: 10 }));
 
@@ -45,23 +44,43 @@ export function Dashboard() {
     // @ts-ignore
     dispatch(new TransactionsAPI().getTransactionsKPIData());
   }, [dispatch]);
+
   useEffect(() => {
-    console.log({loanOverviewData})
-    if (loanOverviewData?.data?.length > 0) {
-      const modifiedLoansData = loanOverviewData.data.map((loan: any) => ({
+    if (!allLoansData.isLoading && Array.isArray(allLoansData.data)) {
+      const modifiedLoansData = allLoansData.data.map((loan: any) => ({
         customerName: `${loan.first_name} ${loan.last_name}`,
-        loanId: loan.id,
-        amount: `₦${loan.amount}`,
-        interest: `₦${((loan.percentage / 100) * loan.amount).toFixed(2)}`,
+        loanId: loan._id,
+        userId: loan.userId,
+        amount: `₦ ${formatNumberToMultipleCommas(loan.amount)}`,
+        interest: `${loan.percentage?.includes("%") ? loan.percentage : `${loan.percentage}%`}`,
         date: loan.repayment_date,
         status: loan.status,
+        actions: [],
         metadata: {
-          itemPhoto: "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+          itemPhoto: loan.base64Image || "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
         },
+        loanDetails: {
+          loanType: loan.type,
+          activeStatus: loan.status,
+          balance: loan.outstanding,
+          job: "Software Engineer",
+          relativePhone: loan.guarantor_1_phone,
+          accountTier: "Tier 1",
+          homeAddress: loan.address,
+          highestBalance: 60000,
+          income: 120000,
+          address: loan.address,
+          phoneNumber: loan.phone,
+          bvn: loan.bvn,
+          nin: loan.nin,
+          userId: loan.userId,
+          repayment_history: loan.repayment_history,
+        }
       }));
       setRows(modifiedLoansData);
     }
-  }, [loanOverviewData.data, setRows]);
+  }, [allLoansData.data, allLoansData.isLoading]);
+
   return (
     <>
       <Reveal>
@@ -106,7 +125,6 @@ export function Dashboard() {
           <div className="flex flex-col xl:flex-row gap-6">
             <Stack
               spacing={2.5}
-              // justifyContent="space-between"
               className="w-full xl:w-2/5 bg-white p-4 rounded-[12px] self-start"
             >
               <PrimaryPieChart
@@ -144,24 +162,13 @@ export function Dashboard() {
                           ? "Loan due"
                           : "Loan overdue"
                       }
-                      photo={
-                        row.metadata.itemPhoto ||
-                        "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80"
-                      }
+                      photo={row.metadata.itemPhoto}
                     />
                   ))}
-                {/* <LoanStatus
-                  name="John Doe"
-                  status="failed"
-                  timestamp="12:37"
-                  details="Loan failed"
-                  photo="https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80"
-                /> */}
               </Stack>
             </Stack>
             <Stack
               spacing={2.5}
-              // justifyContent="space-between"
               className="w-full xl:w-3/5"
             >
               <Stack
@@ -177,20 +184,10 @@ export function Dashboard() {
                 justifyContent="space-between"
                 className="bg-white p-4 rounded-[12px]"
               >
-                {loanOverviewData.isLoading ? (
+                {allLoansData.isLoading ? (
                   <PrimaryTableSkeleton />
-                  // THIS SHOULD BE UPDATED WHEN 404 IS NO LONGER BEING TRHOWN FROM THE BACKEND
-                // ) : loanOverviewData.error ? (
-                //   <TableErrorComponent
-                //     message={loanOverviewData.error}
-                //     onRetry={() => {
-                //       // @ts-ignore
-                //       dispatch(new LoansAPI().getLoanOverviewData({ page: 0, limit: 10, }));
-                //     }}
-                //   />
-                // ) : (
                 ) : (
-                  <SearchFilterSortPaginateTable
+                  <LoanSearchFilterSortPaginateTable
                     title="Loan Overview"
                     searchParams={["customerName", "loanId", "status"]}
                     filterParams={{
@@ -206,7 +203,7 @@ export function Dashboard() {
                         },
                         {
                           label: "Status",
-                          options: ["pending", "active", "repaid"],
+                          options: ["pending", "accepted", "rejected"],
                         },
                       ],
                       action: tableFilterAction,
@@ -249,12 +246,12 @@ export function Dashboard() {
                       },
                     ]}
                     rows={rows}
+                    isLoading={allLoansData.isLoading}
                   />
                 )}
               </Stack>
             </Stack>
           </div>
-          {/* </Stack> */}
         </Stack>
       </Reveal>
     </>

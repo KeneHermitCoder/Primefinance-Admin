@@ -22,7 +22,6 @@ import {
 } from "@mui/icons-material";
 
 export default function Users() {
-
   const dispatch = useDispatch();
   const [rows, setRows] = useState<{ [key: string]: any }[]>([]);
 
@@ -41,7 +40,6 @@ export default function Users() {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log({ allUsersData, });
     if (allUsersData?.data?.length >= 0) {
       const modifiedTransactionData = allUsersData.data.map(
         (user: any) => ({
@@ -49,7 +47,7 @@ export default function Users() {
           userId: user._id,
           lastLogin: user.last_login,
           userEmail: user.email,
-          status: user?.confirmed_at? "active" : "inactive",
+          status: user?.confirmed_at ? "active" : "inactive",
           date: user.createdAt,
           metadata: {
             itemPhoto:
@@ -57,21 +55,7 @@ export default function Users() {
           },
         })
       );
-      setRows([
-        ...modifiedTransactionData,
-        // {
-        //   name: "Chinwe Okafor",
-        //   userId: "LN12347",
-        //   lastLogin: "4:56pm",
-        //   userEmail: "chinwe.okafor@me.com",
-        //   status: "flagged",
-        //   date: "10/01/2025",
-        //   metadata: {
-        //     itemPhoto:
-        //       "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
-        //   },
-        // },
-      ]);
+      setRows(modifiedTransactionData);
     }
   }, [userOverviewData.data, setRows]);
 
@@ -184,6 +168,22 @@ export default function Users() {
                   },
                 ]}
                 rows={rows}
+                actions={[
+                  {
+                    label: "Suspend",
+                    onClick: (row) => {
+                      if (confirm(`Are you sure you want to perform this action_`))
+                        console.log("Suspend user", row.userId);
+                    }
+                  },
+                  {
+                    label: "Reactivate", 
+                    onClick: (row) => {
+                      if (confirm(`Are you sure you want to perform this action_`))
+                        console.log("Reactivate user", row.userId);
+                    }
+                  }
+                ]}
               />
             )}
           </Stack>

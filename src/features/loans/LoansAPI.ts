@@ -13,19 +13,15 @@ export default class LoansAPI {
         isAuth: true,
       });
 
-      // Extract data from the response
-      const loan = response.data;
+      // Ensure we're getting an array
+      const loans = response.data;
+      if (!loans) {
+        return [];
+      }
 
-      console.log({loan})
-      // Validate the response structure
-      if (!loan) throw new Error("No loan data available");
-
-      // Ensure loans are always returned as an array
-      return Array.isArray(loan)
-        ? loan
-        : [loan];
+      return Array.isArray(loans) ? loans : [loans];
     } catch (error) {
-      // Handle exceptions properly
+      console.error('Error fetching loans:', error);
       throw error;
     }
   }
@@ -37,10 +33,10 @@ export default class LoansAPI {
       thunkAPI
     ) => {
       try {
-        const response = await this.fetchLoans(thunkAPI, page, limit);
-        console.log({response})
-        return response;
+        const loans = await this.fetchLoans(thunkAPI, page, limit);
+        return loans;
       } catch (error: any) {
+        console.error('Get multiple loans error:', error);
         return thunkAPI.rejectWithValue(handleError(error));
       }
     }

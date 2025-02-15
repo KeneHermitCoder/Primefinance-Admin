@@ -8,7 +8,6 @@ import {
   Reveal,
   PrimaryPieChart,
   PrimaryBarChart,
-  PrimaryTableSkeleton,
   KPILoadingSkeleton,
   LoanSearchFilterSortPaginateTable,
 } from "../../components";
@@ -26,32 +25,37 @@ import {
 export default function Loans() {
   const dispatch = useDispatch();
   const [rows, setRows] = useState<{ [key: string]: any }[]>([]);
+  const { allLoansData, loanKPIData } = useSelector((state: RootState) => state.loans);
 
-  const {
-    loanKPIData,
-    allLoansData,
-    loanOverviewData,
-  } = useSelector((state: RootState) => state.loans);
-
+  // Fetch data only once when component mounts
   useEffect(() => {
-    // @ts-ignore
-    dispatch(new LoansAPI().getLoanOverviewData({ page: 0, limit: 10 }));
-    // @ts-ignore
-    dispatch(new LoansAPI().getLoansKPIData({ page: 0, limit: 10 }));
-    // @ts-ignore
-    dispatch(new LoansAPI().getMultipleLoans({ page: 0, limit: 10 }));
+    const fetchData = async () => {
+      try {
+        await Promise.all([
+          // @ts-ignore
+          dispatch(new LoansAPI().getLoanOverviewData({ page: 0, limit: 10 })),
+          // @ts-ignore
+          dispatch(new LoansAPI().getLoansKPIData({ page: 0, limit: 10 })),
+          // @ts-ignore
+          dispatch(new LoansAPI().getMultipleLoans({ page: 0, limit: 10 }))
+        ]);
+      } catch (error) {
+        console.error('Error fetching loan data:', error);
+      }
+    };
+
+    fetchData();
   }, [dispatch]);
 
+  // Separate effect for processing the data
   useEffect(() => {
-    console.log({ allLoansData });
-    if (allLoansData?.data?.length > 0) {
+    if (!allLoansData.isLoading && Array.isArray(allLoansData.data)) {
       const modifiedLoansData = allLoansData.data.map((loan: any) => ({
         customerName: `${loan.first_name} ${loan.last_name}`,
         loanId: loan._id,
         userId: loan.userId,
         amount: `₦ ${formatNumberToMultipleCommas(loan.amount)}`,
-        // interest: `₦${(((loan.percentage || 0) / 100) * loan.amount).toFixed(2)}`,
-        interest: `${`${loan.percentage}`?.includes("%") ? loan.percentage : `${loan.percentage}%`}`,
+        interest: `${loan.percentage?.includes("%") ? loan.percentage : `${loan.percentage}%`}`,
         date: loan.repayment_date,
         status: loan.status,
         actions: [],
@@ -78,7 +82,7 @@ export default function Loans() {
       }));
       setRows(modifiedLoansData);
     }
-  }, [loanOverviewData?.data],);
+  }, [allLoansData.data, allLoansData.isLoading]);
 
   return (
     <Reveal>
@@ -139,132 +143,63 @@ export default function Loans() {
           justifyContent="space-between"
           className="bg-white p-4 rounded-[12px]"
         >
-          {allLoansData.isLoading ? (
-            <PrimaryTableSkeleton />
-          ) : (
-            <LoanSearchFilterSortPaginateTable
-              title="Loans"
-              searchParams={["customerName", "loanId", "status"]}
-              filterParams={{
-                data: [
-                  {
-                    label: "Date",
-                    options: ["Today", "This Week", "This Month", "This Year"],
-                  },
-                  {
-                    label: "Status",
-                    options: ["pending", "accepted", "rejected"],
-                  },
-                ],
-                action: tableFilterAction,
-              }}
-              headCells={[
+          <LoanSearchFilterSortPaginateTable
+            title="Loans"
+            searchParams={["customerName", "loanId", "status"]}
+            filterParams={{
+              data: [
                 {
-                  id: "customerName",
-                  numeric: false,
-                  label: "Name",
+                  label: "Date",
+                  options: ["Today", "This Week", "This Month", "This Year"],
                 },
                 {
-                  id: "loanId",
-                  numeric: true,
-                  label: "Loan Id",
-                },
-                {
-                  id: "amount",
-                  numeric: true,
-                  label: "Amount",
-                },
-                {
-                  id: "interest",
-                  numeric: true,
-                  label: "Interest",
-                },
-                {
-                  id: "date",
-                  numeric: false,
-                  label: "Due Date",
-                },
-                {
-                  id: "status",
-                  numeric: false,
                   label: "Status",
+                  options: ["pending", "accepted", "rejected"],
                 },
-                {
-                  id: "actions",
-                  numeric: false,
-                  label: "Actions",
-                },
-              ]}
-              rows={rows}
-            />
-          )}
+              ],
+              action: tableFilterAction,
+            }}
+            headCells={[
+              {
+                id: "customerName",
+                numeric: false,
+                label: "Name",
+              },
+              {
+                id: "loanId",
+                numeric: true,
+                label: "Loan Id",
+              },
+              {
+                id: "amount",
+                numeric: true,
+                label: "Amount",
+              },
+              {
+                id: "interest",
+                numeric: true,
+                label: "Interest",
+              },
+              {
+                id: "date",
+                numeric: false,
+                label: "Due Date",
+              },
+              {
+                id: "status",
+                numeric: false,
+                label: "Status",
+              },
+              {
+                id: "actions",
+                numeric: false,
+                label: "Actions",
+              },
+            ]}
+            rows={rows}
+            isLoading={allLoansData.isLoading}
+          />
         </Stack>
-
-        {/* <Stack
-          spacing={1}
-          justifyContent="space-between"
-          className="bg-white p-4 rounded-[12px]"
-        >
-          {allLoansData.isLoading ? (
-            <PrimaryTableSkeleton />
-          ) : (
-            <LoanSearchFilterSortPaginateTable
-              title="Working Loans"
-              searchParams={["customerName", "loanId", "status"]}
-              filterParams={{
-                data: [
-                  {
-                    label: "Date",
-                    options: ["Today", "This Week", "This Month", "This Year"],
-                  },
-                  {
-                    label: "Status",
-                    options: ["pending", "active", "repaid"],
-                  },
-                ],
-                action: tableFilterAction,
-              }}
-              headCells={[
-                {
-                  id: "customerName",
-                  numeric: false,
-                  label: "Name",
-                },
-                {
-                  id: "loanId",
-                  numeric: true,
-                  label: "Loan Id",
-                },
-                {
-                  id: "amount",
-                  numeric: true,
-                  label: "Amount",
-                },
-                {
-                  id: "interest",
-                  numeric: true,
-                  label: "Interest",
-                },
-                {
-                  id: "date",
-                  numeric: false,
-                  label: "Due Date",
-                },
-                {
-                  id: "status",
-                  numeric: false,
-                  label: "Status",
-                },
-                {
-                  id: "actions",
-                  numeric: false,
-                  label: "Actions",
-                },
-              ]}
-              rows={rows}
-            />
-          )}
-        </Stack> */}
 
         <div className="flex flex-col xl:flex-row gap-6">
           <Stack
