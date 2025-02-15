@@ -57,7 +57,7 @@ export default function Loans() {
         amount: `₦ ${formatNumberToMultipleCommas(loan.amount)}`,
         interest: `${loan.percentage?.includes("%") ? loan.percentage : `${loan.percentage}%`}`,
         date: loan.repayment_date,
-        status: loan.loan_repayment_status || loan.status,
+        status: loan.loan_payment_status,// || loan.status,
         actions: [],
         metadata: {
           itemPhoto: loan.base64Image || "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
@@ -155,7 +155,7 @@ export default function Loans() {
                 },
                 {
                   label: "Status",
-                  options: ["pending", "accepted", "rejected", "overdue", "repaid"],
+                  options: [...new Set(rows.map((row) => row.status))],
                 },
               ],
               action: tableFilterAction,
