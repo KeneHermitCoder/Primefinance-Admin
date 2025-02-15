@@ -35,6 +35,7 @@ export default class LoansAPI {
     ) => {
       try {
         const loans = await this.fetchLoans(thunkAPI, page, limit);
+        // console.log(JSON.stringify(loans))
         return loans;
       } catch (error: any) {
         return thunkAPI.rejectWithValue(handleError(error));
@@ -84,7 +85,6 @@ export default class LoansAPI {
 
         const loan = response;
 
-        // alert(JSON.stringify(loan));
         const totalLoans = loan.filter((l: any) => l.status !== 'rejected')
           .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         const totalLoansAmount = totalLoans.reduce(
@@ -248,15 +248,18 @@ export default class LoansAPI {
       thunkAPI
     ) => {
       try {
+        // alert(JSON.stringify({ loanId, amount, duration, userId}))
+        // return {}
         const response = await httpClient({
           method: "POST",
           url: `/api/loans/create-and-disburse-loan`,
           isAuth: true,
           data: {
             userId,
-            duration: duration || '30',
+            duration: duration,
             transactionId: loanId,
-            amount: `${amount.toString}` },
+            amount: String(amount),
+          }
         });
 
         return response.data;

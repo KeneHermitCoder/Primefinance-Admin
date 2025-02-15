@@ -18,6 +18,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import { TransitionProps } from "@mui/material/transitions";
 import DialogContentText from "@mui/material/DialogContentText";
+import { toast } from "react-toastify";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -52,7 +53,14 @@ export default function LoanSlideInAlertDialog({
   const [reason, setReason] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
 
-  const { approveLoanData } = useSelector((state: RootState) => state.loans);
+  const { approveLoanData, declineLoanData } = useSelector((state: RootState) => state.loans);
+
+  const handleClose = React.useCallback(() => {
+    handleOpen();
+    setAmount("");
+    setReason("");
+    setErrorMessage("");
+  }, [handleOpen]);
 
   const handleAccept = React.useCallback(async () => {
     const numAmount = parseFloat(amount);
@@ -79,24 +87,31 @@ export default function LoanSlideInAlertDialog({
   }, [dispatch, type, amount, loanDetails]);
 
   React.useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-    if (approveLoanData.error) {
-      setErrorMessage(approveLoanData.error);
-      timeoutId = setTimeout(() => {
-        setErrorMessage("");
-      }, 3000);
+    if (approveLoanData.error && open) {
+      toast.error(approveLoanData.error);
     }
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId);
-    };
-  }, [approveLoanData.error]);
+    if (declineLoanData.error && open) {
+      toast.error(declineLoanData.error);
+    }
+  }, [approveLoanData.error, declineLoanData.error, open]);
 
-  const handleClose = React.useCallback(() => {
-    handleOpen();
-    setAmount("");
-    setReason("");
-    setErrorMessage("");
-  }, [handleOpen]);
+  React.useEffect(() => {
+    if (approveLoanData.success && open) {
+      toast.success("Loan approved successfully");
+      // @ts-ignore
+      dispatch(new LoansAPI().getMultipleLoans({ page: 1, limit: 10 }));
+      handleClose();
+    }
+  }, [approveLoanData.success, dispatch, handleClose, open]);
+
+  React.useEffect(() => {
+    if (declineLoanData.success && open) {
+      toast.success("Loan declined successfully");
+      // @ts-ignore
+      dispatch(new LoansAPI().getMultipleLoans({ page: 1, limit: 10 }));
+      handleClose();
+    }
+  }, [declineLoanData.success, dispatch, handleClose, open]);
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -186,10 +201,10 @@ export default function LoanSlideInAlertDialog({
           <Button
             color="error"
             variant="contained"
-            disabled={approveLoanData.isLoading}
+            disabled={approveLoanData.isLoading || declineLoanData.isLoading}
             onClick={handleAccept}
           >
-            {approveLoanData.isLoading ? (
+            {(approveLoanData.isLoading || declineLoanData.isLoading) ? (
               <div className="flex items-center">
                 <div className="mr-2">Please wait...</div>
                 <div className={`animate-spin rounded-full h-4 w-4 border-b-2 border-white`} />
