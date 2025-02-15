@@ -78,7 +78,6 @@ const LoanExpandableRow: React.FC<{
   }
 
   const setLogModalData = (type: 'approve' | 'decline') => {
-    console.log({ type, loanDetails });
     setModalData({
       type,
       loanDetails,

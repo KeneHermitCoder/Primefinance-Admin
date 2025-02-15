@@ -56,7 +56,6 @@ export default function LoanSlideInAlertDialog({
     approveLoanData,
   } = useSelector((state: RootState) => state.loans);
   const handleAccept = async () => {
-    console.log({ loanDetails });
     type === "approve" &&
     dispatch(
       // @ts-ignore

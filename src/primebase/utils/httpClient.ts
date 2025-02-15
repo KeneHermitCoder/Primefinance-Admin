@@ -11,8 +11,6 @@ export interface httpResult {
 export const httpClient = async (url: string, method: string, data: any = {}, auth: boolean): Promise<httpResult> => {
   // const access_token = await localforage.getItem("access_token");
   const access_token = await useAccessToken('get')
-  console.log({ access_token, })
-
   const config: AxiosRequestConfig = {
     baseURL: APP_BASE_URL,
     url,
@@ -25,10 +23,8 @@ export const httpClient = async (url: string, method: string, data: any = {}, au
 
   try {
     const response = await axios(config);
-    console.log({ response });
     return { data: response.data.data, status: response.data.status, message: "" };
   } catch (error: any) {
-    console.log({ error });
     return { data: null, message: error.response?.data?.message || error.message || "Request failed", status: "failed" };
   }
 };

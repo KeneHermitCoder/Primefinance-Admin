@@ -21,8 +21,6 @@
 //   try {
 //     const accessToken = useAccessToken('get');
 //     // const accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50VHlwZSI6ImFkbWluIiwiaWQiOiI2Nzk5MGMxYzUxZWMwNzAxYzY5MzQyNTciLCJpYXQiOjE3MzgxMjQ1MTcsImV4cCI6MTc1Mzg0OTMxN30.EaTf8JKDMcZpNlj9zJqdC2GHeRQvJloc7SsV3gT0LzQ';
-//     console.log({ accessToken,})
-//     console.log(`${baseURL}${options.url}`)
 //     if (!options.isAuth && options.headers) options.headers.Authorization = `Bearer  ${accessToken}`
 //     const response = await client.request({
 //       method: options.method,
@@ -33,8 +31,6 @@
 //     });
 //     return response.data;
 //   } catch (error) {
-//     // Handle error appropriately
-//     console.error('HTTP Request Error:', error);
 //     throw error;
 //   }
 // };
@@ -62,10 +58,6 @@ interface RequestOptions extends AxiosRequestConfig {
 const httpClient = async (options: RequestOptions) => {
   try {
     const accessToken = useAccessToken('get');
-    
-    console.log({ accessToken });
-    console.log(`${baseURL}${options.url}`);
-
     // Ensure headers exist and properly assign Authorization
     options.headers = options.headers || {}; // Initialize headers if undefined
     if (options.isAuth) {
@@ -85,7 +77,6 @@ const httpClient = async (options: RequestOptions) => {
 
     return response.data;
   } catch (error) {
-    console.error('HTTP Request Error:', error);
     throw error;
   }
 };

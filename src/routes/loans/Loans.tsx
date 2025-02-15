@@ -27,7 +27,6 @@ export default function Loans() {
   const [rows, setRows] = useState<{ [key: string]: any }[]>([]);
   const { allLoansData, loanKPIData } = useSelector((state: RootState) => state.loans);
 
-  // Fetch data only once when component mounts
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -40,6 +39,7 @@ export default function Loans() {
           dispatch(new LoansAPI().getMultipleLoans({ page: 0, limit: 10 }))
         ]);
       } catch (error) {
+        // Keep error logging for critical errors
         console.error('Error fetching loan data:', error);
       }
     };

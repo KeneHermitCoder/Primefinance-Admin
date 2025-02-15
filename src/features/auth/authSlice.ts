@@ -1,6 +1,6 @@
-import AuthAPI from './AuthAPI';
-import useLocalStorage from '../hooks/useLocalStorage';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import AuthAPI from "./AuthAPI";
+import useLocalStorage from "../hooks/useLocalStorage";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface Admin {
   id?: string;
@@ -31,13 +31,11 @@ const initialState: AuthState = {
 };
 
 const authSlice = createSlice({
-  name: 'adminAuth',
+  name: "adminAuth",
   initialState,
   reducers: {
     getAdminCredentials: (state, action: PayloadAction<Admin | null>) => {
-      console.log('action.payload before:', action.payload);
       state.admin = action.payload;
-      console.log('Something shaa dey happen!');
     },
     logout: (state) => {
       state.admin = null;
@@ -45,27 +43,24 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-    .addCase(login.pending, (state) => {
-      state.isLoading = true;
-      state.success = false;
-      state.error = null;
-    })
-    .addCase(
-      login.fulfilled,
-      (state, action: PayloadAction<any>) => {
+      .addCase(login.pending, (state) => {
+        state.isLoading = true;
+        state.success = false;
+        state.error = null;
+      })
+      .addCase(login.fulfilled, (state, action: PayloadAction<any>) => {
         state.isLoading = false;
         state.success = true;
         state.error = null;
         state.admin = action.payload;
-        useLocalStorage('set', { name: 'adminDetails', value: action.payload });
-      }
-    )
-    .addCase(login.rejected, (state, action: PayloadAction<any>) => {
-      state.isLoading = false;
-      state.admin = null;
-      state.success = false;
-      state.error = action.payload?.message || 'Login failed';
-    })
+        useLocalStorage("set", { name: "adminDetails", value: action.payload });
+      })
+      .addCase(login.rejected, (state, action: PayloadAction<any>) => {
+        state.isLoading = false;
+        state.admin = null;
+        state.success = false;
+        state.error = action.payload?.message || "Login failed";
+      })
       .addCase(register.pending, (state) => {
         state.isLoading = true;
         state.success = false;
@@ -80,7 +75,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.success = false;
         state.admin = null;
-        state.error = action.error?.message || 'Registration failed';
+        state.error = action.error?.message || "Registration failed";
       })
       .addCase(logout.pending, (state) => {
         state.isLoading = true;
@@ -93,13 +88,13 @@ const authSlice = createSlice({
         state.admin = null;
         state.error = null;
 
-        useLocalStorage('set', { name: 'adminDetails', value: null });
+        useLocalStorage("set", { name: "adminDetails", value: null });
       })
       .addCase(logout.rejected, (state, action) => {
         state.isLoading = false;
         state.success = false;
         state.admin = null;
-        state.error = action.error?.message || 'Logout failed';
+        state.error = action.error?.message || "Logout failed";
       });
   },
 });

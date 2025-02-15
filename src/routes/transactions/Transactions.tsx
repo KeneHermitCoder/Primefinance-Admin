@@ -54,7 +54,6 @@ export default function Transactions() {
         })
       );
       setRows(modifiedTransactionData);
-      console.log(modifiedTransactionData);
     }
   }, [transactionOverviewData.data, setRows]);
 

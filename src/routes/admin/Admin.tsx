@@ -41,7 +41,6 @@ export default function Admins() {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log({ allAdminsData, });
     if (allAdminsData?.data?.length >= 0) {
       const modifiedTransactionData = allAdminsData.data.map(
         (admin: any) => ({

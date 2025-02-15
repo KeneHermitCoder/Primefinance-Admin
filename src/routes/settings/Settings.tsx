@@ -46,7 +46,6 @@ const navigationData = [
 export default function Settings() {
   const [currentNavItem, setCurrentNavItem] = useState(navigationData[0]);
   const handleClickAction = (target: string) => {
-    console.log(target);
     const item = navigationData.find((item) => item.id === target);
     if (item) setCurrentNavItem(item);
   };

@@ -21,7 +21,6 @@ export default class LoansAPI {
 
       return Array.isArray(loans) ? loans : [loans];
     } catch (error) {
-      console.error('Error fetching loans:', error);
       throw error;
     }
   }
@@ -36,7 +35,6 @@ export default class LoansAPI {
         const loans = await this.fetchLoans(thunkAPI, page, limit);
         return loans;
       } catch (error: any) {
-        console.error('Get multiple loans error:', error);
         return thunkAPI.rejectWithValue(handleError(error));
       }
     }
@@ -201,7 +199,6 @@ export default class LoansAPI {
         // Ensure 'data' is not null before accessing it
         if (!response || !response.data) return thunkAPI.rejectWithValue("No loan data available");
 
-        console.log({responseufbbrubrubiure: response.data});
         const creditScoredata = response?.data?.credit_score || {};
         return {
           loanId: creditScoredata?.loanId || "",
@@ -255,7 +252,6 @@ export default class LoansAPI {
 
         return response.data;
       } catch (error) {
-        console.log(JSON.stringify(error, null, 2));
         return thunkAPI.rejectWithValue(handleError(error));
       }
     }
@@ -267,23 +263,21 @@ export default class LoansAPI {
       {
         loanId,
         amount,
-        duration,
       }: {
         loanId: string;
         amount: number;
-        duration: number;
+        duration?: number;
       },
       thunkAPI
     ) => {
       try {
-        console.log({ loanId, amount, duration });
         const response = await httpClient({
           method: "POST",
           url: `/api/loans/reject-loan`,
           isAuth: true,
           data: { 
             transactionId: loanId,
-            amount, 
+            amount,
             duration: 30 
           },
         });
