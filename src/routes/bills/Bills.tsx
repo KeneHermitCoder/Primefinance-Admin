@@ -45,7 +45,6 @@ export default function Bills() {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log({ allBillsData });
     if (allBillsData.data.length > 0) {
       const modifiedBillData = allBillsData.data.map((bill: any) => ({
         name: `${bill.name}`,

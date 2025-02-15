@@ -85,9 +85,7 @@ export default class UsersAPI {
             const users = ((await this.fetchUsers(thunkAPI)) || []).filter((user: any) => user.role !== 'admin');
             return users?.filter((user: any) => user.role !== 'admin');
         } catch (error: any) {
-            console.log({ error, });
-            const errorResponse = handleError(error);
-            thunkAPI.rejectWithValue(errorResponse);
+            thunkAPI.rejectWithValue(handleError(error));
         }
     });
 

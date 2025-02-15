@@ -1,6 +1,5 @@
 import { Stack } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
-import { useEffect } from "react";
 
 const rawData = [2400, 1398, 9800, 3908];
 const rawXLabels = ["Active", "Repaid", "Overdue", "Pending"];
@@ -17,9 +16,6 @@ export default function PrimaryBarChart({
   xLabels?: Array<string>;
   }) {
 
-  useEffect(() => {
-    console.log({ data, xLabels})
-  }, [data])
   return (
     <Stack width={"100%"}>
       <Stack>{title && <h3 className="text-xl">{title}</h3>}</Stack>

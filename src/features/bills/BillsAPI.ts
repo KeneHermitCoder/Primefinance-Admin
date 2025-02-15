@@ -38,9 +38,7 @@ export default class BillsAPI {
         const transactions: Transaction[] = await this.fetchTransactions(
           thunkAPI
         );
-        console.log({ transactions });
         return transactions?.filter((trnx) => trnx) || [];
-        //   .slice((page - 1) * limit, page * limit) || [];
       } catch (error: any) {
         return thunkAPI.rejectWithValue(handleError(error));
       }

@@ -13,17 +13,9 @@ const ProtectedRoute = () => {
   
   useEffect(() => {
     const checkAuth = () => {
-      console.log("Checking auth...");
-      console.log("No access token found, redirecting to login...");
-
       // If accessToken is not available, redirect to login
-      if (!accessToken) {
-        console.log("No access token found, redirecting to login...");
-        setIsAuthenticated(false);
-      } else {
-        console.log("Access Token:", accessToken);
-        setIsAuthenticated(true);
-      }
+      if (!accessToken) setIsAuthenticated(false);
+      else setIsAuthenticated(true);
 
       // Ensure loading state is set after the check
       setLoading(false);

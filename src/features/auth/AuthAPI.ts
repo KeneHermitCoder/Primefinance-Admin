@@ -12,8 +12,6 @@ class AuthAPI {
             phone: string;
   
         }, thunkAPI) => {
-            console.log({ registrationDetails, })
-            
             try {
                 const response = await httpClient({
                     method: 'POST',
@@ -24,9 +22,7 @@ class AuthAPI {
                 });
                 return response;
             } catch (error: any) {
-                console.log({ error, });
-                const errorResponse = handleError(error);
-                thunkAPI.rejectWithValue(errorResponse);
+                thunkAPI.rejectWithValue(handleError(error));
             }
         });
 
@@ -43,9 +39,7 @@ class AuthAPI {
         })
         return response.data || {};
       } catch (error: any) {
-        console.log({ error });
-        const errorResponse = handleError(error);
-        return thunkAPI.rejectWithValue(errorResponse);
+        return thunkAPI.rejectWithValue(handleError(error));
       }
     }
   );
@@ -61,9 +55,7 @@ class AuthAPI {
             });
             return response.data;
         } catch (error: any) {
-            console.log({ error, });
-            const errorResponse = handleError(error);
-            thunkAPI.rejectWithValue(errorResponse);
+            thunkAPI.rejectWithValue(handleError(error));
         }
   });
 
@@ -79,9 +71,7 @@ class AuthAPI {
                 });
                 return response.data;
             } catch (error: any) {
-                console.log({ error, });
-                const errorResponse = handleError(error);
-                thunkAPI.rejectWithValue(errorResponse);
+                thunkAPI.rejectWithValue(handleError(error));
             }
     });
 }
