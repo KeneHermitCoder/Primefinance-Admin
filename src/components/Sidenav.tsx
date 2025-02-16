@@ -2,7 +2,7 @@ import "../styles/navigation.style.css";
 
 import { AuthAPI } from "../features/auth";
 import { getAccessToken } from "../features";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { SlideInAlertDialog } from "./dialogs";
 import { useRef, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -100,10 +100,11 @@ export default function SideNav({
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const sidenavRef = useRef<HTMLDivElement>(null);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
   // @ts-ignore
-	const { isLoading, error, success } = useSelector((state) => state.auth);
+  const { isLoading, error, success } = useSelector((state) => state.auth);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { navigation } = useSelector((state: { navigation: any }) => state);
   const tabDecoration = (index: number) => (
@@ -118,7 +119,7 @@ export default function SideNav({
     if (tab !== "logout") {
       dispatch(tabSwitch(tab));
       dispatch(mainTabSwitch(tab));
-      navigate(link, { state: { from: { pathname: location.pathname } } });
+      navigate(link, { state: { from: location.pathname } });
       toggleSideNav();
     } else setLogoutModalOpen(true);
   }
@@ -126,12 +127,23 @@ export default function SideNav({
   const handleCancelLogout = async () => {
     setLogoutModalOpen(false);
   };
+
   const handleLogout = async () => {
-    // @ts-ignore
-    dispatch(new AuthAPI().logout(getAccessToken()));
-    setLogoutModalOpen(false);
-    // navigate("/login", { state: { from: { pathname: location.pathname } } });
-    navigate("/login");
+    try {
+      const accessToken = getAccessToken();
+      // @ts-ignore
+      await dispatch(new AuthAPI().logout(accessToken));
+      setLogoutModalOpen(false);
+      
+      // Clear any auth related state/storage
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('adminDetails');
+      
+      // Force navigation to login
+      navigate('/login', { replace: true });
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
 
   useEffect(() => {
@@ -156,9 +168,12 @@ export default function SideNav({
   }, [visible, toggleSideNav]);
 
   useEffect(() => {
-    let currentMainTab = navData.flat().find((item) => item.tab === location?.pathname?.split("/")[1]);
-    if (currentMainTab) handleNavigation(currentMainTab.link, currentMainTab.tab);
-  }, [location.pathname, navData]);
+    const currentPath = location.pathname.split("/")[1];
+    const currentMainTab = navData.flat().find((item) => item.tab === currentPath);
+    if (currentMainTab && currentPath !== 'logout') {
+      handleNavigation(currentMainTab.link, currentMainTab.tab);
+    }
+  }, [location.pathname]);
 
   return (
     <>
