@@ -34,7 +34,7 @@ export interface LoanOwnerDetails {
   activeStatus: LOANSTATUS;
   balance: number;
   job: string;
-  relativePhone: number;
+  relativePhone: string | number | (string | number)[];
   accountTier: ACCOUNTTIER;
   homeAddress: string;
   highestBalance: number;

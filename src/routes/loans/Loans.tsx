@@ -67,7 +67,7 @@ export default function Loans() {
           activeStatus: loan.status,
           balance: loan.outstanding,
           job: "Software Engineer",
-          relativePhone: loan.guarantor_1_phone,
+          relativePhone: [loan.guarantor_1_phone, loan.guarantor_2_phone].filter(Boolean).join(", "),
           accountTier: "Tier 1",
           homeAddress: loan.address,
           highestBalance: 60000,
