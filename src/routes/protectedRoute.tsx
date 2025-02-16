@@ -9,8 +9,7 @@ const ProtectedRoute = () => {
 
   // Get the accessToken from localStorage via the custom hook
   const accessToken = useAccessToken("get");
-  
-  
+
   useEffect(() => {
     const checkAuth = () => {
       // If accessToken is not available, redirect to login
@@ -22,7 +21,7 @@ const ProtectedRoute = () => {
     };
 
     checkAuth();
-  }, []); // Dependency on accessToken to update when token changes
+  }, [accessToken]); // Added accessToken as dependency since we use it in effect
 
   // Loading state
   if (loading) {
