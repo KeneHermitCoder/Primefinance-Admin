@@ -63,7 +63,7 @@ export function Dashboard() {
           activeStatus: loan.status,
           balance: loan.outstanding,
           job: "Software Engineer",
-          relativePhone: [loan.guarantor_1_phone, loan.guarantor_2_phone].filter(Boolean),
+          relativePhone: [loan.guarantor_1_phone, loan.guarantor_2_phone].filter(Boolean).join(", "),
           accountTier: "Tier 1",
           homeAddress: loan.address,
           highestBalance: 60000,
