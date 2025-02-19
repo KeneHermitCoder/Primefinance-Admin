@@ -142,7 +142,6 @@ export default function SearchFilterSortPaginateTable({
   searchParams,
   isLoading = false,
   actions,
-  updatingId,
 }: SearchFilterSortPaginateTableProps) {
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<string>('');
@@ -327,14 +326,16 @@ export default function SearchFilterSortPaginateTable({
                     <TableCell key={`cell-${headCell.id}`} align={headCell.numeric ? "right" : "left"}>
                       {headCell.id === "actions" && actions ? (
                         <Stack direction="row">
-                          <button
+                          <IconButton
                             onClick={(e) => handleMenuClick(e, row)}
-                            className="btn btn-primary"
-                            aria-label="actions"
-                            disabled={updatingId === row.userId}
+                            // disabled={updatingId === row.userId || updatingId === row.adminId}
+                            size="small"
                           >
-                            <MoreHorizIcon color={updatingId === row.userId ? "disabled" : "success"} />
-                          </button>
+                            <MoreHorizIcon
+                            color='inherit'
+                            // color={updatingId === row.userId || updatingId === row.adminId ? "disabled" : "inherit"}
+                            />
+                          </IconButton>
                         </Stack>
                       ) : row[headCell.id]}
                     </TableCell>
@@ -361,7 +362,7 @@ export default function SearchFilterSortPaginateTable({
           <MenuItem 
             key={index}
             onClick={() => handleActionClick(action)}
-            disabled={selectedRow ? (action.disabled?.(selectedRow) || updatingId === selectedRow.userId) : false}
+            disabled={selectedRow ? (action.disabled?.(selectedRow)) : false}
           >
             {action.label}
           </MenuItem>

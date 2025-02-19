@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import { visuallyHidden } from "@mui/utils";
 import DropDownSelect from "../DropDownSelect";
-import { TableRow, Stack, IconButton } from "@mui/material";
+import { TableRow, Stack, IconButton, Avatar } from "@mui/material";
 import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
 import TableCell from "@mui/material/TableCell";
@@ -298,7 +298,16 @@ export default function LoanSearchFilterSortPaginateTable({
                   <TableRow hover sx={{ cursor: "pointer" }}>
                     {headCells.map((headCell) => (
                       <TableCell key={`cell-${headCell.id}`} align={headCell.numeric ? "right" : "left"}>
-                        {headCell.id === "actions" ? (
+                        {headCell.id === "customerName" ? (
+                          <div className="flex items-center gap-2">
+                            <Avatar 
+                              src={row.metadata?.itemPhoto} 
+                              alt={row[headCell.id]}
+                              sx={{ width: 32, height: 32 }}
+                            />
+                            {row[headCell.id]}
+                          </div>
+                        ) : headCell.id === "actions" ? (
                           <Stack direction="row">
                             <button
                               onClick={() => handleExpandClick(row.loanId)}

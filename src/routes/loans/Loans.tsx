@@ -49,6 +49,7 @@ export default function Loans() {
 
   // Separate effect for processing the data
   useEffect(() => {
+    console.log(allLoansData.data);
     if (!allLoansData.isLoading && Array.isArray(allLoansData.data)) {
       const modifiedLoansData = allLoansData.data.map((loan: any) => ({
         customerName: `${loan.first_name} ${loan.last_name}`,
@@ -57,7 +58,7 @@ export default function Loans() {
         amount: `₦ ${formatNumberToMultipleCommas(loan.amount)}`,
         interest: `${loan.percentage?.includes("%") ? loan.percentage : `${loan.percentage}%`}`,
         date: loan.repayment_date,
-        status: loan.loan_payment_status,// || loan.status,
+        status: [''].includes(loan.status)? loan.status: loan.repayment_status || loan.status,
         actions: [],
         metadata: {
           itemPhoto: loan.base64Image || "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
@@ -66,13 +67,14 @@ export default function Loans() {
           loanType: loan.type,
           activeStatus: loan.status,
           balance: loan.outstanding,
-          job: "Software Engineer",
+          job: loan.job || "N/A",
+          dob: loan.dob || "N/A",
           relativePhone: [loan.guarantor_1_phone, loan.guarantor_2_phone].filter(Boolean).join(", "),
           accountTier: "Tier 1",
           homeAddress: loan.address,
           highestBalance: 60000,
           income: 120000,
-          address: loan.address,
+          address: !loan.address || loan.address === 'undefined' ? "N/A" : loan.address,
           phoneNumber: loan.phone,
           bvn: loan.bvn,
           nin: loan.nin,

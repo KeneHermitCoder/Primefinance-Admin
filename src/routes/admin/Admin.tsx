@@ -44,6 +44,7 @@ export default function Admins() {
     if (allAdminsData?.data?.length >= 0) {
       const modifiedTransactionData = allAdminsData.data.map(
         (admin: any) => ({
+          id: admin._id,
           name: `${admin?.user_metadata?.first_name} ${admin?.user_metadata?.surname}`,
           adminId: admin._id,
           lastLogin: admin.updatedAt,
@@ -65,7 +66,7 @@ export default function Admins() {
     action: "active" | "inactive"
   ) => {
     // @ts-ignore
-    dispatch(new UsersAPI().updateAdminStatus({ userId: adminId, status: action }));
+    dispatch(new UsersAPI().updateAdminStatus({ adminId, status: action }));
   };
 
   useEffect(() => {
