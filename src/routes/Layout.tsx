@@ -19,7 +19,7 @@ export default function Layout() {
 
   useEffect(() => {
     const adminDetails = useLocalStorage('get', 'adminDetails');
-    setAdminInfo({ 
+    setAdminInfo({
       name: `${adminDetails?.user_metadata?.first_name || ''} ${adminDetails?.user_metadata?.surname || ''}`, 
       profilePhoto: adminDetails?.user_metadata?.profilePhoto || '' 
     });

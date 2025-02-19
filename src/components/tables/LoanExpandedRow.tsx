@@ -33,7 +33,8 @@ export interface LoanOwnerDetails {
   loanType: LOANTYPE;
   activeStatus: LOANSTATUS;
   balance: number;
-  job: string;
+  // job: string;
+  dob: string;
   relativePhone: string | number | (string | number)[];
   accountTier: ACCOUNTTIER;
   homeAddress: string;
@@ -143,11 +144,17 @@ const LoanExpandableRow: React.FC<{
             </Typography>
             <Typography variant="body2">{loanDetails.balance}</Typography>
           </Grid>
-          <Grid item xs={3}>
+          {/* <Grid item xs={3}>
             <Typography variant="caption" sx={{ color: "gray" }}>
               <strong>Job:</strong>
             </Typography>
             <Typography variant="body2">{loanDetails.job}</Typography>
+          </Grid> */}
+          <Grid item xs={3}>
+            <Typography variant="caption" sx={{ color: "gray" }}>
+              <strong>Date of Birth:</strong>
+            </Typography>
+            <Typography variant="body2">{loanDetails.dob}</Typography>
           </Grid>
           <Grid item xs={3}>
             <Typography variant="caption" sx={{ color: "gray" }}>

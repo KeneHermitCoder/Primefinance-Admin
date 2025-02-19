@@ -151,10 +151,10 @@ export default class UsersAPI {
     });
 
     public updateAdminStatus = createAsyncThunk('users/updateAdminStatus', async ({
-        userId,
+        adminId,
         status,
     }: {
-        userId: string;
+        adminId: string;
         status: "active" | "inactive";
     }, thunkAPI) => {
         try {
@@ -162,7 +162,7 @@ export default class UsersAPI {
                 method: 'POST',
                 url: `/api/users/activate-admin`,
                 data: { 
-                    userId,
+                    adminId,
                     status,
                  },
                 isAuth: true,
