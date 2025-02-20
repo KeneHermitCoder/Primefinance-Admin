@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import { visuallyHidden } from "@mui/utils";
 import DropDownSelect from "../DropDownSelect";
-import { TableRow, Stack, IconButton, Avatar } from "@mui/material";
+import { TableRow, Stack, IconButton, Avatar, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
 import TableCell from "@mui/material/TableCell";
@@ -16,6 +16,9 @@ import { Skeleton } from "@mui/material";
 import { Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import ClearIcon from '@mui/icons-material/Clear';
+import CloseIcon from '@mui/icons-material/Close';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 interface Data {
   [key: string]: any;
@@ -139,9 +142,36 @@ export default function LoanSearchFilterSortPaginateTable({
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState<{[key: string]: string}>({});
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
+  const [openImageDialog, setOpenImageDialog] = useState(false);
+  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [selectedCustomerName, setSelectedCustomerName] = useState('');
 
   const handleExpandClick = (id: number) => {
     setExpandedRow((prevRow) => (prevRow === id ? null : id));
+  };
+
+  const handleImageClick = (photos: string | string[], customerName: string) => {
+    const imageArray = Array.isArray(photos) ? photos : [photos];
+    setSelectedImages(imageArray);
+    setCurrentImageIndex(0);
+    setSelectedCustomerName(customerName);
+    setOpenImageDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenImageDialog(false);
+    setSelectedImages([]);
+    setCurrentImageIndex(0);
+    setSelectedCustomerName('');
+  };
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : selectedImages.length - 1));
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prev) => (prev < selectedImages.length - 1 ? prev + 1 : 0));
   };
 
   // Reset pagination when rows change
@@ -301,9 +331,15 @@ export default function LoanSearchFilterSortPaginateTable({
                         {headCell.id === "customerName" ? (
                           <div className="flex items-center gap-2">
                             <Avatar 
-                              src={row.metadata?.itemPhoto} 
+                              src={Array.isArray(row.metadata?.itemPhoto) ? row.metadata?.itemPhoto[0] : row.metadata?.itemPhoto}
                               alt={row[headCell.id]}
-                              sx={{ width: 32, height: 32 }}
+                              sx={{ width: 32, height: 32, cursor: 'pointer' }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (row.metadata?.itemPhoto) {
+                                  handleImageClick(row.metadata.itemPhoto, row.customerName);
+                                }
+                              }}
                             />
                             {row[headCell.id]}
                           </div>
@@ -350,6 +386,78 @@ export default function LoanSearchFilterSortPaginateTable({
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+
+      <Dialog 
+        open={openImageDialog} 
+        onClose={handleCloseDialog}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle sx={{ 
+          m: 0, 
+          p: 2, 
+          display: 'flex', 
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          borderBottom: '1px solid rgba(0, 0, 0, 0.12)'
+        }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: 500 }}>
+            {selectedCustomerName}'s Loan Documents
+          </Typography>
+          <IconButton
+            onClick={handleCloseDialog}
+            sx={{
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <div className="relative">
+            <img
+              src={selectedImages[currentImageIndex]}
+              alt={`Image ${currentImageIndex + 1}`}
+              style={{ width: '100%', height: 'auto', maxHeight: '70vh', objectFit: 'contain' }}
+            />
+            {selectedImages.length > 1 && (
+              <>
+                <IconButton
+                  onClick={handlePrevImage}
+                  sx={{
+                    position: 'absolute',
+                    left: 8,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    bgcolor: 'rgba(255, 255, 255, 0.8)',
+                    '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.9)' },
+                  }}
+                >
+                  <ArrowBackIosIcon />
+                </IconButton>
+                <IconButton
+                  onClick={handleNextImage}
+                  sx={{
+                    position: 'absolute',
+                    right: 8,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    bgcolor: 'rgba(255, 255, 255, 0.8)',
+                    '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.9)' },
+                  }}
+                >
+                  <ArrowForwardIosIcon />
+                </IconButton>
+              </>
+            )}
+          </div>
+          {selectedImages.length > 1 && (
+            <Typography align="center" sx={{ mt: 2 }}>
+              {currentImageIndex + 1} / {selectedImages.length}
+            </Typography>
+          )}
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 }
