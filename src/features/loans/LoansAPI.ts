@@ -125,7 +125,7 @@ export default class LoansAPI {
           .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         const repaidLoansAmount = repaidLoans.reduce(
           (acc: number, l: any) =>
-            acc + (isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)) + 500,
+            acc + (isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)),
           0
         );
         const repaidLoansCount = repaidLoans.length;
