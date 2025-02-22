@@ -109,24 +109,18 @@ export default class LoansAPI {
         const activeLoans = loan.filter((l: any) => l.status === "accepted" && l.loan_payment_status !== 'complete');
         const activeLoansAmount = activeLoans.reduce(
           (acc: number, l: any) =>
-            acc + (isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)),
+            acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),
           0
         );
         const activeLoansCount = activeLoans.length;
 
-        const repaidLoans = loan.filter((l: any) => l.loan_payment_status === "complete");
-        const repaidLoansAmount = repaidLoans.reduce(
-          (acc: number, l: any) =>
-            acc + (isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)),
-          0
-        );
+        const repaidLoans = loan.filter((l: any) => l.loan_payment_status === "complete" || l.repayment_history?.length > 0);
+        const repaidLoansAmount = repaidLoans.reduce((acc: number, loan: any) => {
+          const historyTotal = loan.repayment_history?.reduce((historyAcc: number, payment: any) => 
+            historyAcc + (isNaN(Number.parseFloat(payment.amount)) ? 0 : Number(payment.amount)), 0) || 0;
+          return acc + historyTotal;
+        }, 0);
         const repaidLoansCount = repaidLoans.length;
-
-        const loansRevenue = repaidLoans.reduce(
-          (acc: number, l: any) =>
-            acc + ((isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)) - (isNaN(Number.parseFloat(l.requested_amount)) ? 0 : Number(l.requested_amount))),
-          0
-        );
 
         const disbursedLoans = loan.filter((l: any) => l.status === "accepted");
         const disbursedLoansAmount = disbursedLoans.reduce(
@@ -135,6 +129,10 @@ export default class LoansAPI {
           0
         );
         const disbursedLoansCount = disbursedLoans.length;
+
+        const loansRevenue = repaidLoansAmount - repaidLoans.reduce((acc: number, loan: any) => (
+          acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount))
+        ), 0);
 
         const overdueLoans = loan.filter((l: any) => new Date(l?.repayment_date || new Date()).getTime() < new Date().getTime() && l.status === "pending");
         const overdueLoansAmount = overdueLoans.reduce(

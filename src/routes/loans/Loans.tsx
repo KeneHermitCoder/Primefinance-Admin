@@ -65,7 +65,8 @@ export default function Loans() {
           // minute: '2-digit'
         }),
         dueDate: loan.repayment_date,
-        status: [''].includes(loan.status)? loan.status: loan.repayment_status || loan.status,
+        status: loan.status,
+        repaymentStatus: loan.loan_payment_status,
         actions: [],
         metadata: {
           itemPhoto: loan.base64Image || "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
@@ -155,7 +156,7 @@ export default function Loans() {
         >
           <LoanSearchFilterSortPaginateTable
             title="Loans"
-            searchParams={["customerName", "loanId", "status"]}
+            searchParams={["customerName", "loanId", "status", "repaymentStatus"]}
             filterParams={{
               data: [
                 {
@@ -165,6 +166,10 @@ export default function Loans() {
                 {
                   label: "Status",
                   options: [...new Set(rows.map((row) => row.status))],
+                },
+                {
+                  label: "Repayment Status",
+                  options: [...new Set(rows.map((row) => row.repaymentStatus))],
                 },
               ],
               action: tableFilterAction,
@@ -206,6 +211,11 @@ export default function Loans() {
                 label: "Status",
               },
               {
+                id: "repaymentStatus",
+                numeric: false,
+                label: "Repayment Status",
+              },
+              {
                 id: "actions",
                 numeric: false,
                 label: "Actions",
@@ -229,9 +239,9 @@ export default function Loans() {
                   ? []
                   : [
                       loanKPIData.data.activeLoansAmount,
-                      loanKPIData.data.repaidLoansAmount || 10,
+                      loanKPIData.data.repaidLoansAmount || 0,
                       loanKPIData.data.dueLoansAmount,
-                      loanKPIData.data.overdueLoansAmount || 10,
+                      loanKPIData.data.overdueLoansAmount || 0,
                     ]
               }
               xLabels={["Active", "Repaid", "Overdue", "Pending"]}

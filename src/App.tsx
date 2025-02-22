@@ -4,9 +4,9 @@ import "react-toastify/dist/ReactToastify.css";
 import React from "react";
 import store from "./store";
 import { Provider } from "react-redux";
-import { ErrorPage, NotFoundPage } from "./components";
 import { ToastContainer } from "react-toastify";
 import ProtectedRoute from "./routes/protectedRoute";
+import { ErrorPage, NotFoundPage } from "./components";
 import { ResponsiveProvider } from "./context/responsiveContext";
 import { createBrowserRouter, RouterProvider, } from "react-router-dom";
 import {
@@ -16,7 +16,7 @@ import {
   Layout,
   // Escrow,
   // Settings,
-  Register,
+  // Register,
   Dashboard,
   LoansHome,
   Transactions,
@@ -30,11 +30,11 @@ const router = createBrowserRouter([
     element: <Login />,
     errorElement: <ErrorPage />,
   },
-  {
-    path: "/register",
-    element: <Register />,
-    errorElement: <ErrorPage />,
-  },
+  // {
+  //   path: "/register",
+  //   element: <Register />,
+  //   errorElement: <ErrorPage />,
+  // },
   {
     element: <ProtectedRoute />,
     children: [
