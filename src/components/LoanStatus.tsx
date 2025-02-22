@@ -4,14 +4,14 @@ export default function LoanStatus({
   name,
   details,
   timestamp,
-  status = "overdue",
+  status = "complete",
   photo = 'https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80',
 }: {
   name?: string;
   photo?: string;
   details?: string;
   timestamp?: string;
-  status?: "success" | "overdue" | "failed";
+  status?: "complete" | "in-progress" | "not-started";
 }) {
   return (
     <Stack
@@ -45,11 +45,11 @@ export default function LoanStatus({
         className={`w-4 h-4 rounded-full`}
         style={{
           background:
-            status === "success"
+            status === "complete"
               ? "#4CAF50"
-              : status === "overdue"
-              ? "#D43033"
-              : "#DEA438",
+              : status === "in-progress"
+              ? "#DEA438"
+              : "#D43033",
         }}
       ></div>
     </Stack>

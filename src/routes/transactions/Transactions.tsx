@@ -40,10 +40,10 @@ export default function Transactions() {
     if (transactionOverviewData.data.length > 0) {
       const modifiedTransactionData = transactionOverviewData.data.map(
         (transaction: any) => ({
-          name: `${transaction.name}`,
           transactionId: transaction._id,
           // type: transaction.type,
           type: transaction.category,
+          description: `${transaction.name}`,
           amount: `₦${transaction.amount}`,
           date: transaction.createdAt,
           status: transaction.status,
@@ -120,13 +120,8 @@ export default function Transactions() {
               }}
               headCells={[
                 {
-                  id: "name",
-                  numeric: false,
-                  label: "Name",
-                },
-                {
                   id: "transactionId",
-                  numeric: true,
+                  numeric: false,
                   label: "Transaction Id",
                 },
                 {
@@ -138,6 +133,11 @@ export default function Transactions() {
                   id: "type",
                   numeric: true,
                   label: "Type",
+                },
+                {
+                  id: "description",
+                  numeric: false,
+                  label: "Description",
                 },
                 {
                   id: "date",

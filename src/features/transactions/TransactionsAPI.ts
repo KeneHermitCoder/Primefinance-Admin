@@ -37,7 +37,7 @@ type TimeRange = '24hrs' | '7days' | '1month' | '1year';
 export default class TransactionsAPI {
   private async fetchTransactions(): Promise<Transaction[]> {
     const response = await httpClient({
-      method: "GET",
+      method: "GET", 
       url: "/api/data/all-transactions",
       data: {},
       isAuth: true,
@@ -49,7 +49,12 @@ export default class TransactionsAPI {
       throw new Error("No transaction data available");
     }
 
-    return Array.isArray(transactions) ? transactions : [transactions];
+    const sortedTransactions = Array.isArray(transactions) ? transactions : [transactions];
+
+    // Sort transactions by date descending (most recent first)
+    return sortedTransactions.sort((a, b) => 
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
   }
 
   private getFilteredTransactionsByDate(transactions: Transaction[], timeRange: TimeRange): Transaction[] {

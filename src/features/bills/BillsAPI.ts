@@ -7,7 +7,7 @@ export default class BillsAPI {
     try {
       const response = await httpClient({
         method: "GET",
-        url: "/api/data/all-transactions",
+        url: "/api/data/all-transactions", 
         data: {},
         isAuth: true,
       });
@@ -20,8 +20,11 @@ export default class BillsAPI {
       // Validate the response structure
       if (!transaction) throw new Error("No transaction data available");
 
-      // Ensure transactions are always returned as an array
-      return Array.isArray(transaction) ? transaction : [transaction];
+      // Ensure transactions are always returned as an array and sorted by date
+      const transactions = Array.isArray(transaction) ? transaction : [transaction];
+      return transactions.sort((a, b) => 
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
     } catch (error) {
       throw error;
     }
