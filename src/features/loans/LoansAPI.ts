@@ -109,7 +109,7 @@ export default class LoansAPI {
         const activeLoans = loan.filter((l: any) => l.status === "accepted" && l.loan_payment_status !== 'complete');
         const activeLoansAmount = activeLoans.reduce(
           (acc: number, l: any) =>
-            acc + (isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)),
+            acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),
           0
         );
         const activeLoansCount = activeLoans.length;

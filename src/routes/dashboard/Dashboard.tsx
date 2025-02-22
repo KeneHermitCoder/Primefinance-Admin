@@ -1,4 +1,5 @@
 import { Stack } from "@mui/material";
+import { Link } from "react-router-dom";
 import images from "../../constants/images";
 import { ArrowCircleDown, ArrowCircleUp, TrendingDown, TrendingUp } from "@mui/icons-material";
 import { formatNumberToMultipleCommas, tableFilterAction, } from "../../utils";
@@ -23,6 +24,8 @@ import { TransactionsAPI } from "../../features/transactions";
 export function Dashboard() {
   const dispatch = useDispatch();
   const [rows, setRows] = useState<{ [key: string]: any }[]>([]);
+  const [showMore, setShowMore] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   const { loanKPIData, allLoansData } = useSelector(
     (state: RootState) => state.loans
@@ -87,6 +90,70 @@ export function Dashboard() {
       setRows(modifiedLoansData);
     }
   }, [allLoansData.data, allLoansData.isLoading]);
+
+  // Add this helper function at the top of the component
+  const getLoanStatusDetails = (row: any) => {
+    const repaymentDate = row.dueDate ? new Date(row.dueDate) : null;
+    const isValidDate = repaymentDate && !isNaN(repaymentDate.getTime());
+    const isOverdue = isValidDate && repaymentDate < new Date();
+
+    if (row.loanDetails.repayment_status === "complete") return "Loan completed";
+    if (row.status === "accepted") {
+      if (row.loanDetails.repayment_status === "in-progress") {
+        return isOverdue ? "Loan overdue" : "Loan in progress";
+      }
+      return isOverdue ? "Loan overdue" : "Loan in progress";
+    }
+    if (row.status === "pending") return "Loan pending";
+    return "Loan " + row.status;
+  };
+
+  // Replace the existing loan status rendering with this simplified version
+  const renderLoanStatuses = (startIndex: number, endIndex: number) => {
+    return rows.slice(startIndex, endIndex).map((row: any) => (
+      <LoanStatus
+        key={row.loanId}
+        name={row.customerName}
+        status={[row.loanDetails.repayment_status, row.status]}
+        timestamp={row.dueDate}
+        details={getLoanStatusDetails(row)}
+        photo={row.metadata.itemPhoto}
+      />
+    ));
+  };
+
+  // Replace the pagination controls with this simplified version
+  const renderPaginationControls = () => {
+    if (rows.length <= 5) return null;
+
+    return (
+      <div className="flex justify-center">
+        {rows.length <= 10 ? (
+          <button 
+            className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+            onClick={() => setShowMore(!showMore)}
+          >
+            {showMore ? 'See Less' : 'See More'}
+          </button>
+        ) : (
+          <>
+            <button 
+              className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+              onClick={() => setShowAll(!showAll)}
+            >
+              {showAll ? 'See Less' : 'See More'}
+            </button>
+            <Link
+              to="/loans"
+              className="text-blue-600 hover:text-blue-800 text-sm font-medium ml-4"
+            >
+              View All Loans
+            </Link>
+          </>
+        )}
+      </div>
+    );
+  };
 
   return (
     <>
@@ -173,32 +240,13 @@ export function Dashboard() {
                 }}
               />
               <Stack spacing={1.5}>
-                {rows.length > 0 &&
-                  rows.map((row: any) => (
-                    <LoanStatus
-                      key={row.loanId}
-                      name={row.customerName}
-                      status={row.loanDetails.repayment_status || "not-started"}
-                      timestamp={row.dateTaken}
-                      details={(() => {
-                        // Parse date safely
-                        const repaymentDate = row.dueDate ? new Date(row.dueDate) : null;
-                        const isValidDate = repaymentDate && !isNaN(repaymentDate.getTime());
-                        const isOverdue = isValidDate && repaymentDate < new Date();
-
-                        if (row.loanDetails.repayment_status === "complete") return "Loan successful";
-                        if (row.status === "accepted") {
-                          if (row.loanDetails.repayment_status === "in-progress") {
-                            return isOverdue ? "Loan overdue" : "Loan in progress";
-                          }
-                          return isOverdue ? "Loan overdue" : "Loan due";
-                        }
-                        if (row.status === "pending") return "Loan pending";
-                        return "Loan " + row.status;
-                      })()}
-                      photo={row.metadata.itemPhoto}
-                    />
-                  ))}
+                {rows.length > 0 && (
+                  <>
+                    {renderLoanStatuses(0, 5)}
+                    {showMore && renderLoanStatuses(5, 10)}
+                    {renderPaginationControls()}
+                  </>
+                )}
               </Stack>
             </Stack>
             <Stack

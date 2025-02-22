@@ -4,15 +4,17 @@ export default function LoanStatus({
   name,
   details,
   timestamp,
-  status = "complete",
+  status = ['in-progress', 'accepted'],
   photo = 'https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80',
 }: {
   name?: string;
   photo?: string;
   details?: string;
   timestamp?: string;
-  status?: "complete" | "in-progress" | "not-started";
+  // An array of two status in the order of (loan_repayment_status, loan_status)
+  status?: ["complete" | "in-progress" | "not-started", "accepted" | "pending" | "rejected"];
 }) {
+  console.log(status);
   return (
     <Stack
       direction="row"
@@ -45,9 +47,9 @@ export default function LoanStatus({
         className={`w-4 h-4 rounded-full`}
         style={{
           background:
-            status === "complete"
+            status[0] === "complete"
               ? "#4CAF50"
-              : status === "in-progress"
+              : status[0] === "in-progress" || (status[0] === "not-started" && status[1] === "accepted")
               ? "#DEA438"
               : "#D43033",
         }}

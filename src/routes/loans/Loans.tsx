@@ -229,9 +229,9 @@ export default function Loans() {
                   ? []
                   : [
                       loanKPIData.data.activeLoansAmount,
-                      loanKPIData.data.repaidLoansAmount || 10,
+                      loanKPIData.data.repaidLoansAmount || 0,
                       loanKPIData.data.dueLoansAmount,
-                      loanKPIData.data.overdueLoansAmount || 10,
+                      loanKPIData.data.overdueLoansAmount || 0,
                     ]
               }
               xLabels={["Active", "Repaid", "Overdue", "Pending"]}
