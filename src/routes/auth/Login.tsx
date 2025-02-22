@@ -102,7 +102,8 @@ export function Login() {
         </form>
         <div className="w-full flex items-center justify-center gap-2 py-8">
           <p>Don't have an account?</p>
-          <Link to="/register" className="text-[#089C48] underline">
+          {/* <Link to="/" className="text-[#089C48] underline"> */}
+          <Link to="/#" className="text-[#089C48] underline">
             Register
           </Link>
         </div>
