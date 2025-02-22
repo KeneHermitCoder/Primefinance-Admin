@@ -13,8 +13,10 @@ export default class UsersAPI {
                 isAuth: true,
             });
             const users = response.data;
-            if (!users) throw new Error('No user data available');
-            return Array.isArray(users) ? users : [users];
+            const sortedUsers = Array.isArray(users) ? users : [users];
+            return sortedUsers.sort((a, b) => 
+                new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            );
         } catch (error) {
             throw error;
         }

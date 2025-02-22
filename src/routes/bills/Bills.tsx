@@ -45,14 +45,15 @@ export default function Bills() {
   }, [dispatch]);
 
   useEffect(() => {
+    console.log(allBillsData.data);
     if (allBillsData.data.length > 0) {
       const modifiedBillData = allBillsData.data.map((bill: any) => ({
-        name: `${bill.name}`,
         transactionId: bill._id,
         // type: bill.type,
         type: bill.category,
+        description: `${bill.name}`,
         amount: `₦${bill.amount}`,
-        date: bill.created_at,
+        date: bill.createdAt,
         status: bill.status,
         metadata: {
           itemPhoto:
@@ -188,17 +189,12 @@ export default function Bills() {
                     },
                     {
                       label: "Status",
-                      options: ["failed", "pending", "completed"],
+                      options: ["failed", "pending", "success"],
                     },
                   ],
                   action: tableFilterAction,
                 }}
                 headCells={[
-                  {
-                    id: "name",
-                    numeric: false,
-                    label: "Name",
-                  },
                   {
                     id: "transactionId",
                     numeric: false,
@@ -213,6 +209,11 @@ export default function Bills() {
                     id: "type",
                     numeric: false,
                     label: "Type",
+                  },
+                  {
+                    id: "description",
+                    numeric: false,
+                    label: "Description",
                   },
                   {
                     id: "date",

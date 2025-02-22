@@ -52,7 +52,14 @@ export function Dashboard() {
         userId: loan.userId,
         amount: `₦ ${formatNumberToMultipleCommas(loan.amount)}`,
         interest: `${loan.percentage?.includes("%") ? loan.percentage : `${loan.percentage}%`}`,
-        date: loan.repayment_date,
+        dateTaken: new Date(loan.createdAt).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          // hour: '2-digit',
+          // minute: '2-digit'
+        }),
+        dueDate: loan.repayment_date,
         status: loan.status,
         actions: [],
         metadata: {
@@ -74,6 +81,7 @@ export function Dashboard() {
           nin: loan.nin,
           userId: loan.userId,
           repayment_history: loan.repayment_history,
+          repayment_status: loan.loan_payment_status,
         }
       }));
       setRows(modifiedLoansData);
@@ -170,15 +178,24 @@ export function Dashboard() {
                     <LoanStatus
                       key={row.loanId}
                       name={row.customerName}
-                      status={row.status}
-                      timestamp={row.date}
-                      details={
-                        row.status === "success"
-                          ? "Loan successful"
-                          : row.date < new Date()
-                          ? "Loan due"
-                          : "Loan overdue"
-                      }
+                      status={row.loanDetails.repayment_status || "not-started"}
+                      timestamp={row.dateTaken}
+                      details={(() => {
+                        // Parse date safely
+                        const repaymentDate = row.dueDate ? new Date(row.dueDate) : null;
+                        const isValidDate = repaymentDate && !isNaN(repaymentDate.getTime());
+                        const isOverdue = isValidDate && repaymentDate < new Date();
+
+                        if (row.loanDetails.repayment_status === "complete") return "Loan successful";
+                        if (row.status === "accepted") {
+                          if (row.loanDetails.repayment_status === "in-progress") {
+                            return isOverdue ? "Loan overdue" : "Loan in progress";
+                          }
+                          return isOverdue ? "Loan overdue" : "Loan due";
+                        }
+                        if (row.status === "pending") return "Loan pending";
+                        return "Loan " + row.status;
+                      })()}
                       photo={row.metadata.itemPhoto}
                     />
                   ))}
@@ -247,10 +264,16 @@ export function Dashboard() {
                         label: "Interest",
                       },
                       {
-                        id: "date",
+                        id: "dateTaken",
+                        numeric: false,
+                        label: "Date Taken",
+                      },
+                      {
+                        id: "dueDate",
                         numeric: false,
                         label: "Due Date",
                       },
+                      
                       {
                         id: "status",
                         numeric: false,

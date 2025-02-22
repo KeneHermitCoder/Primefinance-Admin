@@ -57,11 +57,19 @@ export default function Loans() {
         userId: loan.userId,
         amount: `₦ ${formatNumberToMultipleCommas(loan.amount)}`,
         interest: `${loan.percentage?.includes("%") ? loan.percentage : `${loan.percentage}%`}`,
-        date: loan.repayment_date,
+        dateTaken: new Date(loan.createdAt).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          // hour: '2-digit',
+          // minute: '2-digit'
+        }),
+        dueDate: loan.repayment_date,
         status: [''].includes(loan.status)? loan.status: loan.repayment_status || loan.status,
         actions: [],
         metadata: {
-          itemPhoto: loan.base64Image || "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+          // itemPhoto: loan.base64Image || "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
+          itemPhoto: [loan.base64Image, 'https://images.pexels.com/photos/30824250/pexels-photo-30824250/free-photo-of-playful-seals-on-rocky-san-diego-shore.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load', 'https://images.pexels.com/photos/30810205/pexels-photo-30810205/free-photo-of-flock-of-birds-in-flight-against-clear-sky.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load'].filter(Boolean),
         },
         loanDetails: {
           loanType: loan.type,
@@ -184,7 +192,12 @@ export default function Loans() {
                 label: "Interest",
               },
               {
-                id: "date",
+                id: "dateTaken",
+                numeric: false,
+                label: "Date Taken",
+              },
+              {
+                id: "dueDate",
                 numeric: false,
                 label: "Due Date",
               },

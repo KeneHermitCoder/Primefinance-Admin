@@ -35,7 +35,6 @@ export default class LoansAPI {
     ) => {
       try {
         const loans = await this.fetchLoans(thunkAPI, page, limit);
-        // console.log(JSON.stringify(loans))
         return loans;
       } catch (error: any) {
         return thunkAPI.rejectWithValue(handleError(error));
@@ -79,14 +78,11 @@ export default class LoansAPI {
       try {
         const response = await this.fetchLoans(thunkAPI, page, limit);
 
-        // Ensure 'data' is not null before accessing it
-        // if (!response || response?.length < 1) return thunkAPI.rejectWithValue("No loan data available");
         if(!response) throw new Error("No loan data available")
 
         const loan = response;
 
-        const totalLoans = loan.filter((l: any) => l.status !== 'rejected')
-          .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        const totalLoans = loan.filter((l: any) => l.status !== 'rejected');
         const totalLoansAmount = totalLoans.reduce(
           (acc: number, l: any) =>
             acc + (isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)),
@@ -94,8 +90,7 @@ export default class LoansAPI {
         );
         const totalLoansCount = totalLoans.length;
 
-        const dueLoans = loan.filter((l: any) => l.status === "due")
-          .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        const dueLoans = loan.filter((l: any) => l.status === "due");
         const dueLoansAmount = dueLoans.reduce(
           (acc: number, l: any) =>
             acc + (isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)),
@@ -103,8 +98,7 @@ export default class LoansAPI {
         );
         const dueLoansCount = dueLoans.length;
 
-        const pendingLoans = loan.filter((l: any) => l.status === "pending")
-          .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        const pendingLoans = loan.filter((l: any) => l.status === "pending");
         const pendingLoansAmount = pendingLoans.reduce(
           (acc: number, l: any) =>
             acc + (isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)),
@@ -112,8 +106,7 @@ export default class LoansAPI {
         );
         const pendingLoansCount = pendingLoans.length;
 
-        const activeLoans = loan.filter((l: any) => l.status === "accepted" && l.loan_payment_status !== 'complete')
-          .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        const activeLoans = loan.filter((l: any) => l.status === "accepted" && l.loan_payment_status !== 'complete');
         const activeLoansAmount = activeLoans.reduce(
           (acc: number, l: any) =>
             acc + (isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)),
@@ -121,8 +114,7 @@ export default class LoansAPI {
         );
         const activeLoansCount = activeLoans.length;
 
-        const repaidLoans = loan.filter((l: any) => l.loan_payment_status === "complete")
-          .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        const repaidLoans = loan.filter((l: any) => l.loan_payment_status === "complete");
         const repaidLoansAmount = repaidLoans.reduce(
           (acc: number, l: any) =>
             acc + (isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)),
@@ -132,13 +124,11 @@ export default class LoansAPI {
 
         const loansRevenue = repaidLoans.reduce(
           (acc: number, l: any) =>
-            // acc + ((isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)) - (isNaN(Number.parseFloat(l.requested_amount)) ? 0 : Number(l.requested_amount))) + 500,
             acc + ((isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)) - (isNaN(Number.parseFloat(l.requested_amount)) ? 0 : Number(l.requested_amount))),
           0
         );
 
-        const disbursedLoans = loan.filter((l: any) => l.status === "accepted")
-          .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        const disbursedLoans = loan.filter((l: any) => l.status === "accepted");
         const disbursedLoansAmount = disbursedLoans.reduce(
           (acc: number, l: any) =>
             acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),
@@ -146,16 +136,13 @@ export default class LoansAPI {
         );
         const disbursedLoansCount = disbursedLoans.length;
 
-
-        const overdueLoans = loan.filter((l: any) => new Date(l?.repayment_date || new Date()).getTime() < new Date().getTime() && l.status === "pending")
-          .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        const overdueLoans = loan.filter((l: any) => new Date(l?.repayment_date || new Date()).getTime() < new Date().getTime() && l.status === "pending");
         const overdueLoansAmount = overdueLoans.reduce(
           (acc: number, l: any) =>
             acc + (isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)),
           0
         );
         const overdueLoansCount = overdueLoans.length;
-
 
         return {
           loansRevenue,
@@ -249,8 +236,6 @@ export default class LoansAPI {
       thunkAPI
     ) => {
       try {
-        // alert(JSON.stringify({ loanId, amount, duration, userId}))
-        // return {}
         const response = await httpClient({
           method: "POST",
           url: `/api/loans/create-and-disburse-loan`,
