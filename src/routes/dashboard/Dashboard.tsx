@@ -64,6 +64,7 @@ export function Dashboard() {
         }),
         dueDate: loan.repayment_date,
         status: loan.status,
+        repaymentStatus: loan.loan_payment_status,
         actions: [],
         metadata: {
           itemPhoto: loan.base64Image || "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
@@ -84,7 +85,6 @@ export function Dashboard() {
           nin: loan.nin,
           userId: loan.userId,
           repayment_history: loan.repayment_history,
-          repayment_status: loan.loan_payment_status,
         }
       }));
       setRows(modifiedLoansData);
@@ -97,9 +97,9 @@ export function Dashboard() {
     const isValidDate = repaymentDate && !isNaN(repaymentDate.getTime());
     const isOverdue = isValidDate && repaymentDate < new Date();
 
-    if (row.loanDetails.repayment_status === "complete") return "Loan completed";
+    if (row.repaymentStatus === "complete") return "Loan completed";
     if (row.status === "accepted") {
-      if (row.loanDetails.repayment_status === "in-progress") {
+      if (row.repaymentStatus === "in-progress") {
         return isOverdue ? "Loan overdue" : "Loan in progress";
       }
       return isOverdue ? "Loan overdue" : "Loan in progress";
@@ -114,7 +114,7 @@ export function Dashboard() {
       <LoanStatus
         key={row.loanId}
         name={row.customerName}
-        status={[row.loanDetails.repayment_status, row.status]}
+        status={[row.repaymentStatus, row.status]}
         timestamp={row.dueDate}
         details={getLoanStatusDetails(row)}
         photo={row.metadata.itemPhoto}
@@ -271,7 +271,7 @@ export function Dashboard() {
                 ) : (
                   <LoanSearchFilterSortPaginateTable
                     title="Loan Overview"
-                    searchParams={["customerName", "loanId", "status"]}
+                    searchParams={["customerName", "loanId", "status", "repaymentStatus"]}
                     filterParams={{
                       data: [
                         {
@@ -285,7 +285,11 @@ export function Dashboard() {
                         },
                         {
                           label: "Status",
-                          options: ["pending", "accepted", "rejected"],
+                          options: [...new Set(rows.map((row: any) => row.status))],
+                        },
+                        {
+                          label: "Repayment Status",
+                          options: [...new Set(rows.map((row: any) => row.repaymentStatus))],
                         },
                       ],
                       action: tableFilterAction,
@@ -325,7 +329,12 @@ export function Dashboard() {
                       {
                         id: "status",
                         numeric: false,
-                        label: "Status",
+                        label: "Approval Status",
+                      },
+                      {
+                        id: "repaymentStatus",
+                        numeric: false,
+                        label: "Repayment Status",
                       },
                       {
                         id: "actions",
