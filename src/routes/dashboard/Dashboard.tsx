@@ -48,6 +48,13 @@ export function Dashboard() {
   }, [dispatch]);
 
   useEffect(() => {
+    const loanStatusHandler = {
+      overdue: (loan: any) => new Date(loan.repayment_date || new Date()).getTime() < new Date().getTime() && loan.status === "pending",
+      rejected: (loan: any) => loan.status === "rejected",
+      due: (loan: any) => new Date(loan.repayment_date || new Date()).getTime() > new Date().getTime() && loan.status === "pending",
+      active: (loan: any) => loan.status === "accepted" && loan.loan_payment_status !== 'complete',
+      complete: (loan: any) => loan.status === "accepted" && loan.loan_payment_status === 'complete',
+    }
     if (!allLoansData.isLoading && Array.isArray(allLoansData.data)) {
       const modifiedLoansData = allLoansData.data.map((loan: any) => ({
         customerName: `${loan.first_name} ${loan.last_name}`,
@@ -63,7 +70,7 @@ export function Dashboard() {
           // minute: '2-digit'
         }),
         dueDate: loan.repayment_date,
-        status: loan.status,
+        status: Object.entries(loanStatusHandler).find(([_key, handler]) => handler(loan))?.at(0) || 'failed',
         repaymentStatus: loan.loan_payment_status,
         actions: [],
         metadata: {
@@ -271,7 +278,7 @@ export function Dashboard() {
                 ) : (
                   <LoanSearchFilterSortPaginateTable
                     title="Loan Overview"
-                    searchParams={["customerName", "loanId", "status", "repaymentStatus"]}
+                    searchParams={["customerName", "loanId", "status"]}
                     filterParams={{
                       data: [
                         {
@@ -286,10 +293,6 @@ export function Dashboard() {
                         {
                           label: "Status",
                           options: [...new Set(rows.map((row: any) => row.status))],
-                        },
-                        {
-                          label: "Repayment Status",
-                          options: [...new Set(rows.map((row: any) => row.repaymentStatus))],
                         },
                       ],
                       action: tableFilterAction,
@@ -330,11 +333,6 @@ export function Dashboard() {
                         id: "status",
                         numeric: false,
                         label: "Approval Status",
-                      },
-                      {
-                        id: "repaymentStatus",
-                        numeric: false,
-                        label: "Repayment Status",
                       },
                       {
                         id: "actions",

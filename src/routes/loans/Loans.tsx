@@ -49,7 +49,13 @@ export default function Loans() {
 
   // Separate effect for processing the data
   useEffect(() => {
-    console.log(allLoansData.data);
+    const loanStatusHandler = {
+      overdue: (loan: any) => new Date(loan.repayment_date || new Date()).getTime() < new Date().getTime() && loan.status === "pending",
+      rejected: (loan: any) => loan.status === "rejected",
+      due: (loan: any) => new Date(loan.repayment_date || new Date()).getTime() > new Date().getTime() && loan.status === "pending",
+      active: (loan: any) => loan.status === "accepted" && loan.loan_payment_status !== 'complete',
+      complete: (loan: any) => loan.status === "accepted" && loan.loan_payment_status === 'complete',
+    }
     if (!allLoansData.isLoading && Array.isArray(allLoansData.data)) {
       const modifiedLoansData = allLoansData.data.map((loan: any) => ({
         customerName: `${loan.first_name} ${loan.last_name}`,
@@ -65,8 +71,7 @@ export default function Loans() {
           // minute: '2-digit'
         }),
         dueDate: loan.repayment_date,
-        status: loan.status,
-        repaymentStatus: loan.loan_payment_status,
+        status: Object.entries(loanStatusHandler).find(([_key, handler]) => handler(loan))?.at(0) || 'failed',
         actions: [],
         metadata: {
           itemPhoto: loan.base64Image || "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
@@ -156,7 +161,7 @@ export default function Loans() {
         >
           <LoanSearchFilterSortPaginateTable
             title="Loans"
-            searchParams={["customerName", "loanId", "status", "repaymentStatus"]}
+            searchParams={["customerName", "loanId", "status"]}
             filterParams={{
               data: [
                 {
@@ -166,10 +171,6 @@ export default function Loans() {
                 {
                   label: "Status",
                   options: [...new Set(rows.map((row) => row.status))],
-                },
-                {
-                  label: "Repayment Status",
-                  options: [...new Set(rows.map((row) => row.repaymentStatus))],
                 },
               ],
               action: tableFilterAction,
@@ -209,11 +210,6 @@ export default function Loans() {
                 id: "status",
                 numeric: false,
                 label: "Status",
-              },
-              {
-                id: "repaymentStatus",
-                numeric: false,
-                label: "Repayment Status",
               },
               {
                 id: "actions",
