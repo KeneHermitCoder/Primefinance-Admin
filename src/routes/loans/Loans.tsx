@@ -68,8 +68,7 @@ export default function Loans() {
         status: [''].includes(loan.status)? loan.status: loan.repayment_status || loan.status,
         actions: [],
         metadata: {
-          // itemPhoto: loan.base64Image || "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
-          itemPhoto: [loan.base64Image, 'https://images.pexels.com/photos/30824250/pexels-photo-30824250/free-photo-of-playful-seals-on-rocky-san-diego-shore.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load', 'https://images.pexels.com/photos/30810205/pexels-photo-30810205/free-photo-of-flock-of-birds-in-flight-against-clear-sky.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load'].filter(Boolean),
+          itemPhoto: loan.base64Image || "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
         },
         loanDetails: {
           loanType: loan.type,
