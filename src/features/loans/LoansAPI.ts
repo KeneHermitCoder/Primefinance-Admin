@@ -89,11 +89,18 @@ export default class LoansAPI {
           0
         );
         const totalLoansCount = totalLoans.length;
-
-        const dueLoans = loan.filter((l: any) => l.status === "due");
+        const dueLoans = loan.filter((l: any) => {
+          const repaymentDate = new Date(l.repayment_date).getTime();
+          const now = new Date().getTime();
+          const twoDaysInMs = 1000 * 60 * 60 * 24 * 2;
+          return repaymentDate < now + twoDaysInMs &&
+                 repaymentDate > now &&
+                 l.status === "accepted" && 
+                 l.loan_payment_status !== 'complete';
+        });
         const dueLoansAmount = dueLoans.reduce(
           (acc: number, l: any) =>
-            acc + (isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)),
+            acc + (isNaN(Number.parseFloat(l.outstanding)) ? 0 : Number(l.outstanding)),
           0
         );
         const dueLoansCount = dueLoans.length;
@@ -109,7 +116,7 @@ export default class LoansAPI {
         const activeLoans = loan.filter((l: any) => l.status === "accepted" && l.loan_payment_status !== 'complete');
         const activeLoansAmount = activeLoans.reduce(
           (acc: number, l: any) =>
-            acc + (isNaN(Number.parseFloat(l.amount)) ? 0 : Number(l.amount)),
+            acc + (isNaN(Number.parseFloat(l.outstanding)) ? 0 : Number(l.outstanding)),
           0
         );
         const activeLoansCount = activeLoans.length;
@@ -134,13 +141,22 @@ export default class LoansAPI {
           acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount))
         ), 0);
 
-        const overdueLoans = loan.filter((l: any) => new Date(l?.repayment_date || new Date()).getTime() < new Date().getTime() && l.status === "pending");
+        const overdueLoans = loan.filter((l: any) => {
+          const repaymentDate = new Date(l.repayment_date).getTime();
+          const now = new Date().getTime();
+          const twoDaysInMs = 1000 * 60 * 60 * 24 * 2;
+          return repaymentDate < now + twoDaysInMs &&
+                 repaymentDate < now &&
+                 l.status === "accepted" && 
+                 l.loan_payment_status !== 'complete';
+        });
         const overdueLoansAmount = overdueLoans.reduce(
           (acc: number, l: any) =>
-            acc + (isNaN(Number.parseFloat(l.repayment_amount)) ? 0 : Number(l.repayment_amount)),
+            acc + (isNaN(Number.parseFloat(l.outstanding)) ? 0 : Number(l.outstanding)),
           0
         );
         const overdueLoansCount = overdueLoans.length;
+        console.log({overdueLoans, overdueLoansAmount})
 
         return {
           loansRevenue,

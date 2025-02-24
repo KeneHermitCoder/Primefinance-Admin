@@ -50,11 +50,28 @@ export default function Loans() {
   // Separate effect for processing the data
   useEffect(() => {
     const loanStatusHandler = {
-      overdue: (loan: any) => new Date(loan.repayment_date || new Date()).getTime() < new Date().getTime() && loan.status === "pending",
+      overdue: (loan: any) => {
+        const repaymentDate = new Date(loan.repayment_date).getTime();
+        const now = new Date().getTime();
+        const twoDaysInMs = 1000 * 60 * 60 * 24 * 2;
+        return repaymentDate < now + twoDaysInMs &&
+               repaymentDate < now &&
+               loan.status === "accepted" && 
+               loan.loan_payment_status !== 'complete';
+      },
       rejected: (loan: any) => loan.status === "rejected",
-      due: (loan: any) => new Date(loan.repayment_date || new Date()).getTime() > new Date().getTime() && loan.status === "pending",
-      active: (loan: any) => loan.status === "accepted" && loan.loan_payment_status !== 'complete',
+      due: (loan: any) => {
+        const repaymentDate = new Date(loan.repayment_date).getTime();
+        const now = new Date().getTime();
+        const oneDayInMs = 1000 * 60 * 60 * 24;
+        
+        return repaymentDate < now + oneDayInMs && 
+               repaymentDate > now && 
+               loan.status === "accepted" && 
+               loan.loan_payment_status !== 'complete';
+      },
       complete: (loan: any) => loan.status === "accepted" && loan.loan_payment_status === 'complete',
+      active: (loan: any) => new Date(loan.repayment_date).getTime() > new Date().getTime() && loan.status === "accepted" && loan.loan_payment_status !== 'in-progress',
     }
     if (!allLoansData.isLoading && Array.isArray(allLoansData.data)) {
       const modifiedLoansData = allLoansData.data.map((loan: any) => ({
@@ -62,6 +79,7 @@ export default function Loans() {
         loanId: loan._id,
         userId: loan.userId,
         amount: `₦ ${formatNumberToMultipleCommas(loan.amount)}`,
+        outstanding: `₦ ${formatNumberToMultipleCommas(loan.outstanding)}`,
         interest: `${loan.percentage?.includes("%") ? loan.percentage : `${loan.percentage}%`}`,
         dateTaken: new Date(loan.createdAt).toLocaleDateString('en-US', {
           year: 'numeric',
@@ -130,10 +148,10 @@ export default function Loans() {
 
             <UsersKPIDisplay
               subtitle={`Overdue Loans (${formatNumberToMultipleCommas(
-                loanKPIData.data.overdueLoansAmount
+                loanKPIData.data.overdueLoansCount
               )})`}
               kpiIcon={<PersonAdd sx={{ color: "primary.main" }} />}
-              total={`₦${formatNumberToMultipleCommas(loanKPIData.data.overdueLoansCount)}`}
+              total={`₦${formatNumberToMultipleCommas(loanKPIData.data.overdueLoansAmount)}`}
             />
 
             <UsersKPIDisplay
@@ -190,6 +208,11 @@ export default function Loans() {
                 id: "amount",
                 numeric: true,
                 label: "Amount",
+              },
+              {
+                id: "outstanding",
+                numeric: true,
+                label: "Outstanding",
               },
               {
                 id: "interest",
