@@ -27,9 +27,7 @@ export function Dashboard() {
   const [showMore, setShowMore] = useState(false);
   const [showAll, setShowAll] = useState(false);
 
-  const { loanKPIData, allLoansData } = useSelector(
-    (state: RootState) => state.loans
-  );
+  const { loanKPIData, allLoansData } = useSelector((state: RootState) => state.loans);
   const { userKPIData, } = useSelector((state: RootState) => state.users);
   const { transactionKPIData, } = useSelector((state: RootState) => state.transactions);
 
@@ -48,42 +46,69 @@ export function Dashboard() {
   }, [dispatch]);
 
   useEffect(() => {
+    console.log({allLoansData })
+    const loanStatusHandler = {
+      overdue: (loan: any) => {
+        const repaymentDate = new Date(loan.repayment_date).getTime();
+        const now = new Date().getTime();
+        const twoDaysInMs = 1000 * 60 * 60 * 24 * 2;
+        return repaymentDate < now + twoDaysInMs &&
+               repaymentDate < now &&
+               loan.status === "accepted" && 
+               loan.loan_payment_status !== 'complete';
+      },
+      rejected: (loan: any) => loan.status === "rejected",
+      due: (loan: any) => {
+        const repaymentDate = new Date(loan.repayment_date).getTime();
+        const now = new Date().getTime();
+        const oneDayInMs = 1000 * 60 * 60 * 24;
+        
+        return repaymentDate < now + oneDayInMs && 
+               repaymentDate > now && 
+               loan.status === "accepted" && 
+               loan.loan_payment_status !== 'complete';
+      },
+      complete: (loan: any) => loan.status === "accepted" && loan.loan_payment_status === 'complete',
+      active: (loan: any) => new Date(loan.repayment_date).getTime() > new Date().getTime() && loan.status === "accepted" && loan.loan_payment_status !== 'in-progress',
+    }
+
     if (!allLoansData.isLoading && Array.isArray(allLoansData.data)) {
       const modifiedLoansData = allLoansData.data.map((loan: any) => ({
         customerName: `${loan.first_name} ${loan.last_name}`,
         loanId: loan._id,
         userId: loan.userId,
         amount: `₦ ${formatNumberToMultipleCommas(loan.amount)}`,
+        outstanding: `₦ ${formatNumberToMultipleCommas(loan.outstanding)}`,
         interest: `${loan.percentage?.includes("%") ? loan.percentage : `${loan.percentage}%`}`,
         dateTaken: new Date(loan.createdAt).toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'short',
           day: 'numeric',
-          // hour: '2-digit',
-          // minute: '2-digit'
         }),
         dueDate: loan.repayment_date,
-        status: loan.status,
-        repaymentStatus: loan.loan_payment_status,
+        status: Object.entries(loanStatusHandler).find(([_key, handler]) => handler(loan))?.at(0) || 'failed',
         actions: [],
         metadata: {
           itemPhoto: loan.base64Image || "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
         },
+        repaymentStatus: loan.loan_payment_status,
         loanDetails: {
           loanType: loan.type,
           activeStatus: loan.status,
           balance: loan.outstanding,
-          job: "Software Engineer",
+          job: loan.job || "N/A",
+          dob: loan.dob || "N/A",
           relativePhone: [loan.guarantor_1_phone, loan.guarantor_2_phone].filter(Boolean).join(", "),
           accountTier: "Tier 1",
           homeAddress: loan.address,
           highestBalance: 60000,
           income: 120000,
-          address: loan.address,
+          address: !loan.address || loan.address === 'undefined' ? "N/A" : loan.address,
           phoneNumber: loan.phone,
           bvn: loan.bvn,
           nin: loan.nin,
           userId: loan.userId,
+          duration: loan.duration,
           repayment_history: loan.repayment_history,
         }
       }));
@@ -271,25 +296,16 @@ export function Dashboard() {
                 ) : (
                   <LoanSearchFilterSortPaginateTable
                     title="Loan Overview"
-                    searchParams={["customerName", "loanId", "status", "repaymentStatus"]}
+                    searchParams={["customerName", "loanId", "status"]}
                     filterParams={{
                       data: [
                         {
                           label: "Date",
-                          options: [
-                            "Today",
-                            "This Week",
-                            "This Month",
-                            "This Year",
-                          ],
+                          options: ["Today", "This Week", "This Month", "This Year"],
                         },
                         {
                           label: "Status",
-                          options: [...new Set(rows.map((row: any) => row.status))],
-                        },
-                        {
-                          label: "Repayment Status",
-                          options: [...new Set(rows.map((row: any) => row.repaymentStatus))],
+                          options: [...new Set(rows.map((row) => row.status))],
                         },
                       ],
                       action: tableFilterAction,
@@ -311,6 +327,11 @@ export function Dashboard() {
                         label: "Amount",
                       },
                       {
+                        id: "outstanding",
+                        numeric: true,
+                        label: "Outstanding",
+                      },
+                      {
                         id: "interest",
                         numeric: true,
                         label: "Interest",
@@ -325,16 +346,10 @@ export function Dashboard() {
                         numeric: false,
                         label: "Due Date",
                       },
-                      
                       {
                         id: "status",
                         numeric: false,
-                        label: "Approval Status",
-                      },
-                      {
-                        id: "repaymentStatus",
-                        numeric: false,
-                        label: "Repayment Status",
+                        label: "Status",
                       },
                       {
                         id: "actions",

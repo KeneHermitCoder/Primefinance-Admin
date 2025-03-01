@@ -49,13 +49,37 @@ export default function Loans() {
 
   // Separate effect for processing the data
   useEffect(() => {
-    console.log(allLoansData.data);
+    const loanStatusHandler = {
+      overdue: (loan: any) => {
+        const repaymentDate = new Date(loan.repayment_date).getTime();
+        const now = new Date().getTime();
+        const twoDaysInMs = 1000 * 60 * 60 * 24 * 2;
+        return repaymentDate < now + twoDaysInMs &&
+               repaymentDate < now &&
+               loan.status === "accepted" && 
+               loan.loan_payment_status !== 'complete';
+      },
+      rejected: (loan: any) => loan.status === "rejected",
+      due: (loan: any) => {
+        const repaymentDate = new Date(loan.repayment_date).getTime();
+        const now = new Date().getTime();
+        const oneDayInMs = 1000 * 60 * 60 * 24;
+        
+        return repaymentDate < now + oneDayInMs && 
+               repaymentDate > now && 
+               loan.status === "accepted" && 
+               loan.loan_payment_status !== 'complete';
+      },
+      complete: (loan: any) => loan.status === "accepted" && loan.loan_payment_status === 'complete',
+      active: (loan: any) => new Date(loan.repayment_date).getTime() > new Date().getTime() && loan.status === "accepted" && loan.loan_payment_status !== 'in-progress',
+    }
     if (!allLoansData.isLoading && Array.isArray(allLoansData.data)) {
       const modifiedLoansData = allLoansData.data.map((loan: any) => ({
         customerName: `${loan.first_name} ${loan.last_name}`,
         loanId: loan._id,
         userId: loan.userId,
         amount: `₦ ${formatNumberToMultipleCommas(loan.amount)}`,
+        outstanding: `₦ ${formatNumberToMultipleCommas(loan.outstanding)}`,
         interest: `${loan.percentage?.includes("%") ? loan.percentage : `${loan.percentage}%`}`,
         dateTaken: new Date(loan.createdAt).toLocaleDateString('en-US', {
           year: 'numeric',
@@ -65,8 +89,7 @@ export default function Loans() {
           // minute: '2-digit'
         }),
         dueDate: loan.repayment_date,
-        status: loan.status,
-        repaymentStatus: loan.loan_payment_status,
+        status: Object.entries(loanStatusHandler).find(([_key, handler]) => handler(loan))?.at(0) || 'failed',
         actions: [],
         metadata: {
           itemPhoto: loan.base64Image || "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
@@ -125,10 +148,10 @@ export default function Loans() {
 
             <UsersKPIDisplay
               subtitle={`Overdue Loans (${formatNumberToMultipleCommas(
-                loanKPIData.data.overdueLoansAmount
+                loanKPIData.data.overdueLoansCount
               )})`}
               kpiIcon={<PersonAdd sx={{ color: "primary.main" }} />}
-              total={`₦${formatNumberToMultipleCommas(loanKPIData.data.overdueLoansCount)}`}
+              total={`₦${formatNumberToMultipleCommas(loanKPIData.data.overdueLoansAmount)}`}
             />
 
             <UsersKPIDisplay
@@ -156,7 +179,7 @@ export default function Loans() {
         >
           <LoanSearchFilterSortPaginateTable
             title="Loans"
-            searchParams={["customerName", "loanId", "status", "repaymentStatus"]}
+            searchParams={["customerName", "loanId", "status"]}
             filterParams={{
               data: [
                 {
@@ -166,10 +189,6 @@ export default function Loans() {
                 {
                   label: "Status",
                   options: [...new Set(rows.map((row) => row.status))],
-                },
-                {
-                  label: "Repayment Status",
-                  options: [...new Set(rows.map((row) => row.repaymentStatus))],
                 },
               ],
               action: tableFilterAction,
@@ -191,6 +210,11 @@ export default function Loans() {
                 label: "Amount",
               },
               {
+                id: "outstanding",
+                numeric: true,
+                label: "Outstanding",
+              },
+              {
                 id: "interest",
                 numeric: true,
                 label: "Interest",
@@ -209,11 +233,6 @@ export default function Loans() {
                 id: "status",
                 numeric: false,
                 label: "Status",
-              },
-              {
-                id: "repaymentStatus",
-                numeric: false,
-                label: "Repayment Status",
               },
               {
                 id: "actions",

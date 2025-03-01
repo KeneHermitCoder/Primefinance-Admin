@@ -49,6 +49,8 @@ export default function LoanStatus({
           background:
             status[0] === "complete"
               ? "#4CAF50"
+              : status[1] === "rejected"
+              ? "purple"
               : status[0] === "in-progress" || (status[0] === "not-started" && status[1] === "accepted")
               ? "#DEA438"
               : "#D43033",
