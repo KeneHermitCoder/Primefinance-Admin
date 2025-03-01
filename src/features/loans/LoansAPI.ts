@@ -137,9 +137,39 @@ export default class LoansAPI {
         );
         const disbursedLoansCount = disbursedLoans.length;
 
-        const loansRevenue = -((repaidLoansAmount - repaidLoans.reduce((acc: number, loan: any) => (
-          acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount))
-        ), 0)) || 0);
+        // const loansRevenue = -((repaidLoansAmount - repaidLoans.reduce((acc: number, loan: any) => (
+        //   acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount))
+        // ), 0)) || 0);
+
+        function calculateDaysOverdue(repaymentDateStr: string, currentDateStr: string): number | null {
+          // Convert the date strings to Date objects
+          const repaymentDate = new Date(repaymentDateStr);
+          const currentDate = new Date(currentDateStr);
+          
+          if (repaymentDate < currentDate) {
+            const diffInTime = currentDate.getTime() - repaymentDate.getTime();
+            const diffInDays = diffInTime / (1000 * 60 * 60 * 24);
+            return Math.floor(diffInDays);
+          }
+          
+          return null;
+        }
+
+        let loansRevenue = 0
+
+        const ltest = loan.map(l => {
+          if(l.loan_payment_status === 'complete'){
+            const days = calculateDaysOverdue(l.repayment_date, l.repayment_history[l.repayment_history.length - 1].date)
+            const daysOverdue = days? ((days) * l.amount) / 100 : 0;
+            const outstanding = l.category == "personal"? ((l.amount * 10) / 100) + 500 + daysOverdue : ((l.amount * 4) / 100) + 500 + daysOverdue;
+
+            console.log({ outstanding });
+
+            loansRevenue = loansRevenue + outstanding;
+          }
+        })
+
+        console.log({ ltest });
 
         const overdueLoans = loan.filter((l: any) => {
           const repaymentDate = new Date(l.repayment_date).getTime();
