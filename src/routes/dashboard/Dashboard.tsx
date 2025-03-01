@@ -27,9 +27,7 @@ export function Dashboard() {
   const [showMore, setShowMore] = useState(false);
   const [showAll, setShowAll] = useState(false);
 
-  const { loanKPIData, allLoansData } = useSelector(
-    (state: RootState) => state.loans
-  );
+  const { loanKPIData, allLoansData } = useSelector((state: RootState) => state.loans);
   const { userKPIData, } = useSelector((state: RootState) => state.users);
   const { transactionKPIData, } = useSelector((state: RootState) => state.transactions);
 
@@ -48,6 +46,7 @@ export function Dashboard() {
   }, [dispatch]);
 
   useEffect(() => {
+    console.log({allLoansData })
     const loanStatusHandler = {
       overdue: (loan: any) => {
         const repaymentDate = new Date(loan.repayment_date).getTime();
@@ -92,6 +91,7 @@ export function Dashboard() {
         metadata: {
           itemPhoto: loan.base64Image || "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
         },
+        repaymentStatus: loan.loan_payment_status,
         loanDetails: {
           loanType: loan.type,
           activeStatus: loan.status,

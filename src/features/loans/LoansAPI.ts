@@ -137,9 +137,9 @@ export default class LoansAPI {
         );
         const disbursedLoansCount = disbursedLoans.length;
 
-        const loansRevenue = repaidLoansAmount - repaidLoans.reduce((acc: number, loan: any) => (
+        const loansRevenue = -((repaidLoansAmount - repaidLoans.reduce((acc: number, loan: any) => (
           acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount))
-        ), 0);
+        ), 0)) || 0);
 
         const overdueLoans = loan.filter((l: any) => {
           const repaymentDate = new Date(l.repayment_date).getTime();
