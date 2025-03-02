@@ -48,32 +48,36 @@ export function Dashboard() {
   useEffect(() => {
     console.log({allLoansData })
     const loanStatusHandler = {
+      // due: (loan: any) => {
+      //   const repaymentDate = new Date(loan.repayment_date).getTime();
+      //   const now = new Date().getTime();
+      //   const oneDayInMs = 1000 * 60 * 60 * 24;
+
+      //   return repaymentDate < now + oneDayInMs && 
+      //          repaymentDate > now && 
+      //          loan.status === "accepted" && 
+      //          loan.loan_payment_status !== 'complete';
+      // },
       overdue: (loan: any) => {
         const repaymentDate = new Date(loan.repayment_date).getTime();
         const now = new Date().getTime();
-        const twoDaysInMs = 1000 * 60 * 60 * 24 * 2;
+        const twoDaysInMs = 1000 * 60 * 60 * 24 * 1;
         return repaymentDate < now + twoDaysInMs &&
                repaymentDate < now &&
                loan.status === "accepted" && 
                loan.loan_payment_status !== 'complete';
       },
-      rejected: (loan: any) => loan.status === "rejected",
-      due: (loan: any) => {
-        const repaymentDate = new Date(loan.repayment_date).getTime();
-        const now = new Date().getTime();
-        const oneDayInMs = 1000 * 60 * 60 * 24;
-        
-        return repaymentDate < now + oneDayInMs && 
-               repaymentDate > now && 
-               loan.status === "accepted" && 
-               loan.loan_payment_status !== 'complete';
-      },
       complete: (loan: any) => loan.status === "accepted" && loan.loan_payment_status === 'complete',
       active: (loan: any) => new Date(loan.repayment_date).getTime() > new Date().getTime() && loan.status === "accepted" && loan.loan_payment_status !== 'in-progress',
+      rejected: (loan: any) => loan.status === "rejected",
+      accepted: (loan: any) => loan.status === "accepted",
+      pending: (loan: any) => loan.status === 'pending',
     }
 
     if (!allLoansData.isLoading && Array.isArray(allLoansData.data)) {
-      const modifiedLoansData = allLoansData.data.map((loan: any) => ({
+      const modifiedLoansData = allLoansData.data.map((loan: any) => {
+        console.log({ loanStatus: getLoanStatusDetails(loan) });
+        return ({
         customerName: `${loan.first_name} ${loan.last_name}`,
         loanId: loan._id,
         userId: loan.userId,
@@ -111,7 +115,7 @@ export function Dashboard() {
           duration: loan.duration,
           repayment_history: loan.repayment_history,
         }
-      }));
+      })});
       setRows(modifiedLoansData);
     }
   }, [allLoansData.data, allLoansData.isLoading]);
@@ -139,7 +143,8 @@ export function Dashboard() {
       <LoanStatus
         key={row.loanId}
         name={row.customerName}
-        status={[row.repaymentStatus, row.status]}
+        // status={[row.repaymentStatus, row.status]}
+        status={row.status}
         timestamp={row.dueDate}
         details={getLoanStatusDetails(row)}
         photo={row.metadata.itemPhoto}
