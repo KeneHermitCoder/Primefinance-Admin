@@ -7,3 +7,4 @@ export { default as handleError, } from './handleError';
 export { default as supabaseClient, } from './supabaseClient';
 export { default as toggleUnderline, } from './toggleUnderline';
 export { default as tableFilterAction, } from './tableFilterAction';
+export { default as loanStatusHandler, } from './loanStatusHandler';
