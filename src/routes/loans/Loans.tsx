@@ -21,6 +21,7 @@ import {
   tableFilterAction,
   formatNumberToMultipleCommas,
 } from "../../utils";
+import loanStatusHandler from "../../utils/loanStatusHandler";
 
 export default function Loans() {
   const dispatch = useDispatch();
@@ -49,32 +50,6 @@ export default function Loans() {
 
   // Separate effect for processing the data
   useEffect(() => {
-    const loanStatusHandler = {
-      // due: (loan: any) => {
-      //   const repaymentDate = new Date(loan.repayment_date).getTime();
-      //   const now = new Date().getTime();
-      //   const oneDayInMs = 1000 * 60 * 60 * 24;
-
-      //   return repaymentDate < now + oneDayInMs && 
-      //          repaymentDate > now && 
-      //          loan.status === "accepted" && 
-      //          loan.loan_payment_status !== 'complete';
-      // },
-      overdue: (loan: any) => {
-        const repaymentDate = new Date(loan.repayment_date).getTime();
-        const now = new Date().getTime();
-        const twoDaysInMs = 1000 * 60 * 60 * 24 * 1;
-        return repaymentDate < now + twoDaysInMs &&
-               repaymentDate < now &&
-               loan.status === "accepted" && 
-               loan.loan_payment_status !== 'complete';
-      },
-      complete: (loan: any) => loan.status === "accepted" && loan.loan_payment_status === 'complete',
-      active: (loan: any) => new Date(loan.repayment_date).getTime() > new Date().getTime() && loan.status === "accepted" && loan.loan_payment_status !== 'in-progress',
-      rejected: (loan: any) => loan.status === "rejected",
-      accepted: (loan: any) => loan.status === "accepted",
-      pending: (loan: any) => loan.status === 'pending',
-    }
     if (!allLoansData.isLoading && Array.isArray(allLoansData.data)) {
       const modifiedLoansData = allLoansData.data.map((loan: any) => ({
         customerName: `${loan.first_name} ${loan.last_name}`,
@@ -91,7 +66,7 @@ export default function Loans() {
           // minute: '2-digit'
         }),
         dueDate: loan.repayment_date,
-        status: Object.entries(loanStatusHandler).find(([_key, handler]) => handler(loan))?.at(0),
+        status: Object.entries(loanStatusHandler(loan)).find(([_key, handler]) => handler())?.at(0),
         actions: [],
         metadata: {
           itemPhoto: loan.base64Image || "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
@@ -140,13 +115,13 @@ export default function Loans() {
               kpiIcon={<HandshakeRounded sx={{ color: "primary.main" }} />}
               total={`₦${formatNumberToMultipleCommas(loanKPIData.data.activeLoansAmount)}`}
             />
-            <UsersKPIDisplay
+            {/* <UsersKPIDisplay
               subtitle={`Due loans (${formatNumberToMultipleCommas(
                 loanKPIData.data.dueLoansCount
               )})`}
               kpiIcon={<PersonAdd sx={{ color: "primary.main" }} />}
               total={`₦${formatNumberToMultipleCommas(loanKPIData.data.dueLoansAmount)}`}
-            />
+            /> */}
 
             <UsersKPIDisplay
               subtitle={`Overdue Loans (${formatNumberToMultipleCommas(

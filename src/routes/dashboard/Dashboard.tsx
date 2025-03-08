@@ -2,7 +2,7 @@ import { Stack } from "@mui/material";
 import { Link } from "react-router-dom";
 import images from "../../constants/images";
 import { ArrowCircleDown, ArrowCircleUp, TrendingDown, TrendingUp } from "@mui/icons-material";
-import { formatNumberToMultipleCommas, tableFilterAction, } from "../../utils";
+import { formatNumberToMultipleCommas, loanStatusHandler, tableFilterAction, } from "../../utils";
 import {
   LoanStatus,
   PrimaryTableSkeleton,
@@ -47,32 +47,6 @@ export function Dashboard() {
 
   useEffect(() => {
     console.log({allLoansData })
-    const loanStatusHandler = {
-      // due: (loan: any) => {
-      //   const repaymentDate = new Date(loan.repayment_date).getTime();
-      //   const now = new Date().getTime();
-      //   const oneDayInMs = 1000 * 60 * 60 * 24;
-
-      //   return repaymentDate < now + oneDayInMs && 
-      //          repaymentDate > now && 
-      //          loan.status === "accepted" && 
-      //          loan.loan_payment_status !== 'complete';
-      // },
-      overdue: (loan: any) => {
-        const repaymentDate = new Date(loan.repayment_date).getTime();
-        const now = new Date().getTime();
-        const twoDaysInMs = 1000 * 60 * 60 * 24 * 1;
-        return repaymentDate < now + twoDaysInMs &&
-               repaymentDate < now &&
-               loan.status === "accepted" && 
-               loan.loan_payment_status !== 'complete';
-      },
-      complete: (loan: any) => loan.status === "accepted" && loan.loan_payment_status === 'complete',
-      active: (loan: any) => new Date(loan.repayment_date).getTime() > new Date().getTime() && loan.status === "accepted" && loan.loan_payment_status !== 'in-progress',
-      rejected: (loan: any) => loan.status === "rejected",
-      accepted: (loan: any) => loan.status === "accepted",
-      pending: (loan: any) => loan.status === 'pending',
-    }
 
     if (!allLoansData.isLoading && Array.isArray(allLoansData.data)) {
       const modifiedLoansData = allLoansData.data.map((loan: any) => {
@@ -90,7 +64,7 @@ export function Dashboard() {
           day: 'numeric',
         }),
         dueDate: loan.repayment_date,
-        status: Object.entries(loanStatusHandler).find(([_key, handler]) => handler(loan))?.at(0) || 'failed',
+        status: Object.entries(loanStatusHandler(loan)).find(([_key, handler]) => handler())?.at(0) || 'failed',
         actions: [],
         metadata: {
           itemPhoto: loan.base64Image || "https://images.unsplash.com/photo-1499714608240-22fc6ad53fb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=76&q=80",
