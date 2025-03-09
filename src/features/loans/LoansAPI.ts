@@ -89,21 +89,6 @@ export default class LoansAPI {
           0
         );
         const totalLoansCount = totalLoans.length;
-        // const dueLoans = loan.filter((l: any) => {
-        //   const repaymentDate = new Date(l.repayment_date).getTime();
-        //   const now = new Date().getTime();
-        //   const oneDayInMs = 1000 * 60 * 60 * 24 * 1;
-        //   return repaymentDate < now + oneDayInMs &&
-        //          repaymentDate > now &&
-        //          l.status === "accepted" && 
-        //          l.loan_payment_status !== 'complete';
-        // });
-        // const dueLoansAmount = dueLoans.reduce(
-        //   (acc: number, l: any) =>
-        //     acc + (isNaN(Number.parseFloat(l.outstanding)) ? 0 : Number(l.outstanding)),
-        //   0
-        // );
-        // const dueLoansCount = dueLoans.length;
 
         const pendingLoans = loan.filter((l: any) => l.status === "pending");
         const pendingLoansAmount = pendingLoans.reduce(
@@ -113,13 +98,12 @@ export default class LoansAPI {
         );
         const pendingLoansCount = pendingLoans.length;
 
-        // const activeLoans = loan.filter((l: any) => l.status === "accepted" && l.loan_payment_status !== 'complete');
         const activeLoans = loan.filter((l: any) => {
-          const repaymentDate = new Date(l.repayment_date).setHours(23, 59, 59, 999);
-          const now = new Date().setHours(23, 59, 59, 999);
-          const twoDayInMs = 1000 * 60 * 60 * 24 * 2;
-          return repaymentDate >= now &&
-                 repaymentDate < (now + twoDayInMs) &&
+          const repaymentDate = new Date(l.repayment_date).setHours(0, 0, 0, 0);
+          const today = new Date().setHours(0, 0, 0, 0);
+          const oneDayInMs = 1000 * 60 * 60 * 24;
+          return repaymentDate >= today &&
+                 repaymentDate < (today + oneDayInMs) &&
                  l.status === "accepted" && 
                  l.loan_payment_status !== 'complete';
         });
@@ -145,10 +129,6 @@ export default class LoansAPI {
           0
         );
         const disbursedLoansCount = disbursedLoans.length;
-
-        // const loansRevenue = -((repaidLoansAmount - repaidLoans.reduce((acc: number, loan: any) => (
-        //   acc + (isNaN(Number.parseFloat(loan.amount)) ? 0 : Number(loan.amount))
-        // ), 0)) || 0);
 
         function calculateDaysOverdue(repaymentDateStr: string, currentDateStr: string): number | null {
           // Convert the date strings to Date objects
@@ -181,12 +161,12 @@ export default class LoansAPI {
         console.log({ ltest });
 
         const overdueLoans = loan.filter((l: any) => {
-          const repaymentDate = new Date(l.repayment_date).setHours(23, 59, 59, 999);
-          const now = new Date().setHours(23, 59, 59, 999);
-          const twoDaysInMs = 1000 * 60 * 60 * 24 * 2;
-          return repaymentDate > (now + twoDaysInMs) &&
+          const repaymentDate = new Date(l.repayment_date).setHours(0, 0, 0, 0);
+          const now = new Date().setHours(0, 0, 0, 0);
+          // const oneDayInMs = 1000 * 60 * 60 * 24;
+          return repaymentDate < now &&
                  l.status === "accepted" && 
-                 l.loan_payment_status !== 'complete';
+                 Number(l.outstanding) > 0;
         });
         const overdueLoansAmount = overdueLoans.reduce(
           (acc: number, l: any) =>
@@ -201,9 +181,6 @@ export default class LoansAPI {
 
           totalLoansCount,
           totalLoansAmount,
-
-          // dueLoansCount,
-          // dueLoansAmount,
 
           pendingLoansCount,
           pendingLoansAmount,
