@@ -101,7 +101,7 @@ export default function Loans() {
         {loanKPIData.isLoading ? (
           <KPILoadingSkeleton />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 md:divide-x-2 divide-y-2 lg:divide-0">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md:divide-x-2 divide-y-2 lg:divide-0">
             <UsersKPIDisplay
               subtitle={`Total Loans`}
               kpiIcon={<AttachMoney sx={{ color: "success.main" }} />}
@@ -115,13 +115,13 @@ export default function Loans() {
               kpiIcon={<HandshakeRounded sx={{ color: "primary.main" }} />}
               total={`₦${formatNumberToMultipleCommas(loanKPIData.data.activeLoansAmount)}`}
             />
-            {/* <UsersKPIDisplay
+            <UsersKPIDisplay
               subtitle={`Due loans (${formatNumberToMultipleCommas(
                 loanKPIData.data.dueLoansCount
               )})`}
               kpiIcon={<PersonAdd sx={{ color: "primary.main" }} />}
               total={`₦${formatNumberToMultipleCommas(loanKPIData.data.dueLoansAmount)}`}
-            /> */}
+            />
 
             <UsersKPIDisplay
               subtitle={`Overdue Loans (${formatNumberToMultipleCommas(
