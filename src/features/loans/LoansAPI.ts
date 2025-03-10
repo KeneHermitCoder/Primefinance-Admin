@@ -103,7 +103,7 @@ export default class LoansAPI {
           const today = new Date().setHours(0, 0, 0, 0);
           const oneDayInMs = 1000 * 60 * 60 * 24;
           return repaymentDate >= today &&
-                 repaymentDate < (today + oneDayInMs) &&
+                 repaymentDate <= (today + oneDayInMs) &&
                  l.status === "accepted" && 
                  l.loan_payment_status !== 'complete';
         });
