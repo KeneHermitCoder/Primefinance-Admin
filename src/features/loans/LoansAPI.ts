@@ -159,6 +159,20 @@ export default class LoansAPI {
         })
 
         console.log({ ltest });
+        
+        const dueLoans = loan.filter((l: any) => {
+          const repaymentDate = new Date(l.repayment_date).setHours(0, 0, 0, 0);
+          const now = new Date().setHours(0, 0, 0, 0);
+          return repaymentDate === now &&
+                 l.status === "accepted" && 
+                 Number(l.outstanding) > 0;
+        });
+        const dueLoansAmount = dueLoans.reduce(
+          (acc: number, l: any) =>
+            acc + (isNaN(Number.parseFloat(l.outstanding)) ? 0 : Number(l.outstanding)),
+          0
+        );
+        const dueLoansCount = dueLoans.length;
 
         const overdueLoans = loan.filter((l: any) => {
           const repaymentDate = new Date(l.repayment_date).setHours(0, 0, 0, 0);
@@ -190,6 +204,9 @@ export default class LoansAPI {
 
           repaidLoansCount,
           repaidLoansAmount,
+
+          dueLoansCount,
+          dueLoansAmount,
 
           overdueLoansCount,
           overdueLoansAmount,

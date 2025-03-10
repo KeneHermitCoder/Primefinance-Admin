@@ -115,13 +115,13 @@ export default function Loans() {
               kpiIcon={<HandshakeRounded sx={{ color: "primary.main" }} />}
               total={`₦${formatNumberToMultipleCommas(loanKPIData.data.activeLoansAmount)}`}
             />
-            {/* <UsersKPIDisplay
+            <UsersKPIDisplay
               subtitle={`Due loans (${formatNumberToMultipleCommas(
                 loanKPIData.data.dueLoansCount
               )})`}
               kpiIcon={<PersonAdd sx={{ color: "primary.main" }} />}
               total={`₦${formatNumberToMultipleCommas(loanKPIData.data.dueLoansAmount)}`}
-            /> */}
+            />
 
             <UsersKPIDisplay
               subtitle={`Overdue Loans (${formatNumberToMultipleCommas(
